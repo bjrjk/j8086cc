@@ -1,4 +1,5 @@
 // Generated from j8086cc.g4 by ANTLR 4.8
+package com.renjikai.j8086cc.antlr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
