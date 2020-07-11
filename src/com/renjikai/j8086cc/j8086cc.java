@@ -1,6 +1,6 @@
 package com.renjikai.j8086cc;
 import com.renjikai.j8086cc.antlr.*;
-import com.renjikai.j8086cc.backend.*;
+import com.renjikai.j8086cc.intermediate.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.FileInputStream;
