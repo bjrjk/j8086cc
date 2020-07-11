@@ -15,7 +15,7 @@ public class Symbol {
 	public int allocateSize;
 	public boolean isArray;
 	public int dimension;
-	public ArrayList<Integer> arrayDimSize;
+	public ArrayList<Integer> arrayDimSize,arrDimPostProduct;
 	
 	public Symbol(String name,int dataType,int scope) {
 		this.name=name;
@@ -35,6 +35,7 @@ public class Symbol {
 		this.isArray=false;
 		this.dimension=0;
 		this.arrayDimSize=null;
+		this.arrDimPostProduct=null;
 	}
 	
 	public Symbol(String name,int dataType,int scope,ArrayList<Integer> arrayDimSize) {
@@ -58,6 +59,13 @@ public class Symbol {
 		this.isArray=true;
 		this.dimension=arrayDimSize.size();
 		this.arrayDimSize=arrayDimSize;
+		this.arrDimPostProduct=new ArrayList<Integer>();
+		while(arrDimPostProduct.size()!=arrayDimSize.size())
+			arrDimPostProduct.add(0);
+		arrDimPostProduct.set(arrDimPostProduct.size()-1, 1);
+		for(int i=arrDimPostProduct.size()-2;i>=0;i--) {
+			arrDimPostProduct.set(i, arrDimPostProduct.get(i+1)*arrayDimSize.get(i+1));
+		}
 	}
 	
 	//Perform Semantic Check before Calling this function
@@ -69,6 +77,11 @@ public class Symbol {
 			elementIndex+=arrayDimIndex.get(i);
 		}
 		return this.dataSize*elementIndex;
+	}
+	
+	//Perform Semantic Check before Calling this function
+	public int getDimensionSize(int dim) {
+		return arrDimPostProduct.get(dim);
 	}
 	
 	@Override
