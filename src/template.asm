@@ -50,7 +50,7 @@ stack ends
 code segment
 	assume cs:code,ds:data,ss:stack
 	
-__Builtin__putchar PROC
+putchar PROC
 	; void putchar(char ASCIICode)
 	; Print an ASCII Character via DOS SysCall No.2
 	PROTECT_SITE
@@ -59,9 +59,9 @@ __Builtin__putchar PROC
 	mov AH,02h
 	int 21h
 	RESTORE_SITE 2
-__Builtin__putchar ENDP
+putchar ENDP
 
-__Builtin__getchar PROC
+getchar PROC
 	; char getchar(void)
 	; Get an ASCII Character via DOS SysCall No.1
 	; Return Value: ASCII char code in AL
@@ -69,7 +69,7 @@ __Builtin__getchar PROC
 	int 21h
 	mov AH,0
 	ret
-__Builtin__getchar ENDP
+getchar ENDP
 	
 %%CODE_TEXT%%
 code ends

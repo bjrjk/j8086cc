@@ -35,4 +35,8 @@ public class InterDefines {
 	public final static String JMP = "jmp";
 	public final static String CALL = "call";
 	public final static String RET = "ret";
+	
+	public final static String UINT = "uint";
+	public final static String INT = "int";
+	public final static String CHAR = "char";
 }

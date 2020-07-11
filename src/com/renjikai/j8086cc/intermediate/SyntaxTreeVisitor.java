@@ -1,14 +1,38 @@
 package com.renjikai.j8086cc.intermediate;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.renjikai.j8086cc.antlr.j8086ccBaseVisitor;
 import com.renjikai.j8086cc.antlr.j8086ccParser;
+import com.renjikai.j8086cc.utils.Logger;
 
 public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
+	
+	HashMap<String,Symbol> globalSymbolTable=new HashMap<String,Symbol>();
+	FunctionTable functionTable=new FunctionTable();
 	
 	@Override
 
 	public String visitProgram(j8086ccParser.ProgramContext ctx) {
-		return visitChildren(ctx);
+		SymbolTable tmpSymbolTable=new SymbolTable(globalSymbolTable);
+		String dataSeg=InterDefines.DECL_HEAD+"\n";
+		for(int i=0;i<ctx.varDeclare().size();i++) {
+			ArrayList<Symbol> varStorage=SyntaxTreeHelper.packVariable(ctx.varDeclare(i), SymbolTable.GLOBAL_VAR);
+			for(int j=0;j<varStorage.size();j++) {
+				boolean flag=tmpSymbolTable.insert(varStorage.get(j));
+				if(!flag)
+					Logger.throwError("Global Variable Redefined: "+varStorage.get(j).name);
+			}
+		}
+		for(String key: globalSymbolTable.keySet()) {
+			dataSeg+=InterDefines.DECL_HEAD+" "+globalSymbolTable.get(key).toString()+"\n";
+		}
+		String codeSeg=InterDefines.CSEG_HEAD+"\n";
+		for(int i=0;i<ctx.function().size();i++) {
+			codeSeg+=visit(ctx.function(i))+"\n";
+		}
+		return dataSeg+codeSeg;
 	}
 
 	@Override

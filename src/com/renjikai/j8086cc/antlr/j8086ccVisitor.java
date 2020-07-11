@@ -211,4 +211,10 @@ public interface j8086ccVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExprList(j8086ccParser.ExprListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link j8086ccParser#basicType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBasicType(j8086ccParser.BasicTypeContext ctx);
 }

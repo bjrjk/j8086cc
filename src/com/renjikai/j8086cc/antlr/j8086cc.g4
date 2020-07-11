@@ -1,10 +1,10 @@
 grammar j8086cc; 
 program		:	(varDeclare | function)+ 							;
-function	:	BASICTYPE IDENTIFIER '(' paramList? ')' block		;
+function	:	basicType IDENTIFIER '(' paramList? ')' block		;
 paramList	:	parameter (',' parameter)* 							;
 parameter	:	varType IDENTIFIER									;
 varDeclare	:	varType IDENTIFIER (',' IDENTIFIER)* ';' 			;
-varType		:	BASICTYPE ('[' expr ']')*							;
+varType		:	basicType ('[' INT ']')*							;
 block		:	'{' statement* '}' 									;
 leftValue	:	IDENTIFIER ('[' expr ']')*							;
 statement	:	block												# subBlock
@@ -32,7 +32,7 @@ expr		:	'(' expr ')'										# parenExpr
 			;
 exprList	:	expr (',' expr)* 									;
 
-BASICTYPE	:	TYPE_UINT | TYPE_INT | TYPE_CHAR;
+basicType	:	TYPE_UINT | TYPE_INT | TYPE_CHAR;
 TYPE_UINT	:	'uint' ;
 TYPE_INT	:	'int';
 TYPE_CHAR	:	'char';
