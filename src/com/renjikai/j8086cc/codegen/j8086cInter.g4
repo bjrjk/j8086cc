@@ -7,8 +7,10 @@ varName		:	'$' scope=(GLOB_SCOPE|LOC_SCOPE|TMP_SCOPE)
 				INT '_' IDENTIFIER '$' ;
 codeSegment	:	CSEG_HEAD function+ ;
 function	:	FUNC_HEAD IDENTIFIER statement FUNC_TAIL ;
-statement	:	'mov' varName ',' SUB? INT						# MOVI
+statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	'mov' varName ',' varName						# MOV
+			|	'movrm' varName ',' '[' varName ']'				# MOVRM
+			|	'movmr' '[' varName ']' ',' varName				# MOVMR
 			|	'add' varName ',' varName ',' varName			# ADD
 			|	'sub' varName ',' varName ',' varName			# SUB
 			|	'mul' varName ',' varName ',' varName			# MUL

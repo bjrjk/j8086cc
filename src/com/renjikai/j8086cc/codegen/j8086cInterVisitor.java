@@ -61,6 +61,20 @@ public interface j8086cInterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMOV(j8086cInterParser.MOVContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code MOVRM}
+	 * labeled alternative in {@link j8086cInterParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMOVRM(j8086cInterParser.MOVRMContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MOVMR}
+	 * labeled alternative in {@link j8086cInterParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMOVMR(j8086cInterParser.MOVMRContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ADD}
 	 * labeled alternative in {@link j8086cInterParser#statement}.
 	 * @param ctx the parse tree
