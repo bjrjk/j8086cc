@@ -2,7 +2,7 @@ grammar j8086cInter;
 program		:	dataSegment codeSegment ;
 dataSegment	:	DSEG_HEAD varDecl* ;
 varDecl		:	DECL_HEAD varName ;
-varName		:	'$' scope=(GLOB_SCOPE|LOC_SCOPE|TMP_SCOPE) 
+varName		:	'$' scope=(GLOB_SCOPE|LOC_SCOPE|TMP_SCOPE|PARAM_SCOPE) 
 				dataType=(TYPE_UINT|TYPE_INT|TYPE_CHAR) '_'
 				INT '_' IDENTIFIER '$' ;
 codeSegment	:	CSEG_HEAD function+ ;
@@ -38,6 +38,7 @@ TYPE_CHAR	:	'c' ;
 GLOB_SCOPE	:	'GLOBALVAR_' ;
 LOC_SCOPE	:	'LOCALVAR_' ;
 TMP_SCOPE	:	'TMPVAR_' ;
+PARAM_SCOPE	:	'PARAMVAR_' ;
 
 DSEG_HEAD	:	'.data' ;
 CSEG_HEAD	:	'.code' ;

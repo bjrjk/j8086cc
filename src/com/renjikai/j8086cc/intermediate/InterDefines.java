@@ -5,6 +5,7 @@ public class InterDefines {
 	public final static String varTypeFormat = "%c_%d_%s";
 	public final static String tmpVarFormat = "$TMPVAR_%s$";
 	public final static String localVarFormat = "$LOCALVAR_%s$";
+	public final static String paramVarFormat = "$PARAMVAR_%s$";
 	public final static String globalVarFormat = "$GLOBALVAR_%s$";
 	
 	public final static String DSEG_HEAD = ".data";

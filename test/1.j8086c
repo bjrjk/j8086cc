@@ -1,0 +1,9 @@
+int[20] arr1,arr2;
+uint[30][20] uarr;
+char[50] str;
+int fun(int x,int y,uint a,char[20] str){
+
+}
+int main(){
+
+}

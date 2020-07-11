@@ -1,15 +1,15 @@
 package com.renjikai.j8086cc.intermediate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.renjikai.j8086cc.antlr.j8086ccParser;
 
 public class SyntaxTreeHelper {
-	public static ArrayList<Symbol> packVariable(j8086ccParser.VarDeclareContext ctx,int scope) {
-		ArrayList<Symbol> arr=new ArrayList<Symbol>();
-		j8086ccParser.VarTypeContext varTypeRef=ctx.varType();
+	
+	public static int funcTypeStr2IntType(String s) {
 		int varBasicType;
-		switch(varTypeRef.basicType().getText()) {
+		switch(s) {
 			case InterDefines.UINT:
 				varBasicType=Symbol.TYPE_UINT;
 				break;
@@ -20,6 +20,13 @@ public class SyntaxTreeHelper {
 				varBasicType=Symbol.TYPE_CHAR;
 				break;
 		}
+		return varBasicType;
+	}
+	
+	public static ArrayList<Symbol> packVariable(j8086ccParser.VarDeclareContext ctx,int scope) {
+		ArrayList<Symbol> arr=new ArrayList<Symbol>();
+		j8086ccParser.VarTypeContext varTypeRef=ctx.varType();
+		int varBasicType=funcTypeStr2IntType(varTypeRef.basicType().getText());
 		ArrayList<Integer> arrayDimSize=null;
 		if(varTypeRef.INT().size()!=0) {
 			arrayDimSize=new ArrayList<Integer>();
@@ -34,7 +41,44 @@ public class SyntaxTreeHelper {
 				templateSymbol=new Symbol(varName,varBasicType,scope);
 			else
 				templateSymbol=new Symbol(varName,varBasicType,scope,arrayDimSize);
+			arr.add(templateSymbol);
 		}
 		return arr;
+	}
+	
+	public static Symbol packParameter(j8086ccParser.ParameterContext ctx) {
+		j8086ccParser.VarTypeContext varTypeRef=ctx.varType();
+		int varBasicType=funcTypeStr2IntType(varTypeRef.basicType().getText());
+		ArrayList<Integer> arrayDimSize=null;
+		if(varTypeRef.INT().size()!=0) {
+			arrayDimSize=new ArrayList<Integer>();
+			for(int i=0;i<varTypeRef.INT().size();i++) {
+				arrayDimSize.add(Integer.valueOf(varTypeRef.INT(i).getText()));
+			}
+		}
+		String varName=ctx.IDENTIFIER().getText();
+		Symbol s=new Symbol(varName,varBasicType,SymbolTable.LOCAL_VAR,true);
+		return s;
+	}
+	
+	public static Function packFunctionHeader(j8086ccParser.FunctionContext ctx) {
+		String funcName=ctx.IDENTIFIER().getText();
+		int retType=funcTypeStr2IntType(ctx.basicType().getText());
+		Function newFunc=new Function(retType,funcName);
+		ArrayList<Symbol> paramList=newFunc.paramList;
+		if(ctx.paramList()==null)return newFunc;
+		List<j8086ccParser.ParameterContext> params=ctx.paramList().parameter();
+		for(int i=0;i<params.size();i++) {
+			paramList.add(packParameter(params.get(i)));
+		}
+		return newFunc;
+	}
+	
+	public static Symbol genTmpFatherNode(Counter cnter,Symbol s1,Symbol s2) {
+		Symbol res=new Symbol(cnter.getNewStringID(),
+				Math.min(s1.dataType, s2.dataType),
+				SymbolTable.TMP_VAR
+				);
+		return res;
 	}
 }

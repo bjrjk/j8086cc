@@ -13,6 +13,7 @@ public class Symbol {
 	public int scope;
 	public int dataSize;
 	public int allocateSize;
+	public boolean isParameter;
 	public boolean isArray;
 	public int dimension;
 	public ArrayList<Integer> arrayDimSize,arrDimPostProduct;
@@ -33,9 +34,16 @@ public class Symbol {
 				break;
 		}
 		this.isArray=false;
+		this.isParameter=false;
 		this.dimension=0;
 		this.arrayDimSize=null;
 		this.arrDimPostProduct=null;
+	}
+	
+	public Symbol(String name,int dataType,int scope,boolean isParameter) {
+		this(name,dataType,scope);
+		this.isParameter=isParameter;
+		if(isParameter)this.allocateSize=2;
 	}
 	
 	public Symbol(String name,int dataType,int scope,ArrayList<Integer> arrayDimSize) {
@@ -97,7 +105,10 @@ public class Symbol {
 			formatRef=InterDefines.globalVarFormat;
 			break;
 		case SymbolTable.LOCAL_VAR:
-			formatRef=InterDefines.localVarFormat;
+			if(!this.isParameter)
+				formatRef=InterDefines.localVarFormat;
+			else
+				formatRef=InterDefines.paramVarFormat;
 			break;
 		default: //case SymbolTable.TMP_VAR
 			formatRef=InterDefines.tmpVarFormat;

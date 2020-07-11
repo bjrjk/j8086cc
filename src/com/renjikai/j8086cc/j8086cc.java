@@ -21,7 +21,8 @@ public class j8086cc {
         }
         ParseTree tree = parser.program();
         try {
-        	visitor.visit(tree);
+        	String s=visitor.visit(tree);
+        	System.out.println(s);
         }catch(Exception e) {
         	System.err.println("An Unexcepted Exception occured, j8086cc terminated. Please report this incident to developer.");
         	System.err.println(e);

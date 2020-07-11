@@ -21,10 +21,10 @@ public class j8086cInterParser extends Parser {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, TYPE_UINT=29, TYPE_INT=30, TYPE_CHAR=31, 
-		GLOB_SCOPE=32, LOC_SCOPE=33, TMP_SCOPE=34, DSEG_HEAD=35, CSEG_HEAD=36, 
-		DECL_HEAD=37, FUNC_HEAD=38, FUNC_TAIL=39, LBL=40, ADD=41, SUB=42, MUL=43, 
-		DIV=44, MOD=45, NOT=46, EQ=47, NE=48, LT=49, LE=50, GE=51, GT=52, IDENTIFIER=53, 
-		INT=54, WS=55, COMMENT=56;
+		GLOB_SCOPE=32, LOC_SCOPE=33, TMP_SCOPE=34, PARAM_SCOPE=35, DSEG_HEAD=36, 
+		CSEG_HEAD=37, DECL_HEAD=38, FUNC_HEAD=39, FUNC_TAIL=40, LBL=41, ADD=42, 
+		SUB=43, MUL=44, DIV=45, MOD=46, NOT=47, EQ=48, NE=49, LT=50, LE=51, GE=52, 
+		GT=53, IDENTIFIER=54, INT=55, WS=56, COMMENT=57;
 	public static final int
 		RULE_program = 0, RULE_dataSegment = 1, RULE_varDecl = 2, RULE_varName = 3, 
 		RULE_codeSegment = 4, RULE_function = 5, RULE_statement = 6;
@@ -42,9 +42,9 @@ public class j8086cInterParser extends Parser {
 			"'movmr'", "'add'", "'sub'", "'mul'", "'div'", "'mod'", "'lt'", "'le'", 
 			"'ge'", "'gt'", "'eq'", "'ne'", "'land'", "'lor'", "'jnz'", "'jz'", "'jmp'", 
 			"'call'", "'ret'", "':'", "'u'", "'i'", "'c'", "'GLOBALVAR_'", "'LOCALVAR_'", 
-			"'TMPVAR_'", "'.data'", "'.code'", "'.var'", "'.fun'", "'.endfun'", null, 
-			"'+'", "'-'", "'*'", "'/'", "'%'", "'!'", "'=='", "'!='", "'<'", "'<='", 
-			"'>='", "'>'"
+			"'TMPVAR_'", "'PARAMVAR_'", "'.data'", "'.code'", "'.var'", "'.fun'", 
+			"'.endfun'", null, "'+'", "'-'", "'*'", "'/'", "'%'", "'!'", "'=='", 
+			"'!='", "'<'", "'<='", "'>='", "'>'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -53,9 +53,9 @@ public class j8086cInterParser extends Parser {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, "TYPE_UINT", "TYPE_INT", "TYPE_CHAR", "GLOB_SCOPE", 
-			"LOC_SCOPE", "TMP_SCOPE", "DSEG_HEAD", "CSEG_HEAD", "DECL_HEAD", "FUNC_HEAD", 
-			"FUNC_TAIL", "LBL", "ADD", "SUB", "MUL", "DIV", "MOD", "NOT", "EQ", "NE", 
-			"LT", "LE", "GE", "GT", "IDENTIFIER", "INT", "WS", "COMMENT"
+			"LOC_SCOPE", "TMP_SCOPE", "PARAM_SCOPE", "DSEG_HEAD", "CSEG_HEAD", "DECL_HEAD", 
+			"FUNC_HEAD", "FUNC_TAIL", "LBL", "ADD", "SUB", "MUL", "DIV", "MOD", "NOT", 
+			"EQ", "NE", "LT", "LE", "GE", "GT", "IDENTIFIER", "INT", "WS", "COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -252,6 +252,7 @@ public class j8086cInterParser extends Parser {
 		public TerminalNode GLOB_SCOPE() { return getToken(j8086cInterParser.GLOB_SCOPE, 0); }
 		public TerminalNode LOC_SCOPE() { return getToken(j8086cInterParser.LOC_SCOPE, 0); }
 		public TerminalNode TMP_SCOPE() { return getToken(j8086cInterParser.TMP_SCOPE, 0); }
+		public TerminalNode PARAM_SCOPE() { return getToken(j8086cInterParser.PARAM_SCOPE, 0); }
 		public TerminalNode TYPE_UINT() { return getToken(j8086cInterParser.TYPE_UINT, 0); }
 		public TerminalNode TYPE_INT() { return getToken(j8086cInterParser.TYPE_INT, 0); }
 		public TerminalNode TYPE_CHAR() { return getToken(j8086cInterParser.TYPE_CHAR, 0); }
@@ -278,7 +279,7 @@ public class j8086cInterParser extends Parser {
 			setState(28);
 			((VarNameContext)_localctx).scope = _input.LT(1);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GLOB_SCOPE) | (1L << LOC_SCOPE) | (1L << TMP_SCOPE))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GLOB_SCOPE) | (1L << LOC_SCOPE) | (1L << TMP_SCOPE) | (1L << PARAM_SCOPE))) != 0)) ) {
 				((VarNameContext)_localctx).scope = (Token)_errHandler.recoverInline(this);
 			}
 			else {
@@ -1148,7 +1149,7 @@ public class j8086cInterParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3:\u00c2\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3;\u00c2\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\3\2\3\2\3\3\3\3\7\3"+
 		"\26\n\3\f\3\16\3\31\13\3\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
 		"\5\3\6\3\6\6\6)\n\6\r\6\16\6*\3\7\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\5\b"+
@@ -1160,16 +1161,16 @@ public class j8086cInterParser extends Parser {
 		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
 		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
 		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\7\b\u00b8\n\b\f\b\16\b\u00bb\13\b\3\b\3"+
-		"\b\3\b\5\b\u00c0\n\b\3\b\2\2\t\2\4\6\b\n\f\16\2\4\3\2\"$\3\2\37!\2\u00d4"+
+		"\b\3\b\5\b\u00c0\n\b\3\b\2\2\t\2\4\6\b\n\f\16\2\4\3\2\"%\3\2\37!\2\u00d4"+
 		"\2\20\3\2\2\2\4\23\3\2\2\2\6\32\3\2\2\2\b\35\3\2\2\2\n&\3\2\2\2\f,\3\2"+
 		"\2\2\16\u00bf\3\2\2\2\20\21\5\4\3\2\21\22\5\n\6\2\22\3\3\2\2\2\23\27\7"+
-		"%\2\2\24\26\5\6\4\2\25\24\3\2\2\2\26\31\3\2\2\2\27\25\3\2\2\2\27\30\3"+
-		"\2\2\2\30\5\3\2\2\2\31\27\3\2\2\2\32\33\7\'\2\2\33\34\5\b\5\2\34\7\3\2"+
-		"\2\2\35\36\7\3\2\2\36\37\t\2\2\2\37 \t\3\2\2 !\7\4\2\2!\"\78\2\2\"#\7"+
-		"\4\2\2#$\7\67\2\2$%\7\3\2\2%\t\3\2\2\2&(\7&\2\2\')\5\f\7\2(\'\3\2\2\2"+
-		")*\3\2\2\2*(\3\2\2\2*+\3\2\2\2+\13\3\2\2\2,-\7(\2\2-.\7\67\2\2./\5\16"+
-		"\b\2/\60\7)\2\2\60\r\3\2\2\2\61\62\7\5\2\2\62\63\5\b\5\2\63\65\7\6\2\2"+
-		"\64\66\7,\2\2\65\64\3\2\2\2\65\66\3\2\2\2\66\67\3\2\2\2\678\78\2\28\u00c0"+
+		"&\2\2\24\26\5\6\4\2\25\24\3\2\2\2\26\31\3\2\2\2\27\25\3\2\2\2\27\30\3"+
+		"\2\2\2\30\5\3\2\2\2\31\27\3\2\2\2\32\33\7(\2\2\33\34\5\b\5\2\34\7\3\2"+
+		"\2\2\35\36\7\3\2\2\36\37\t\2\2\2\37 \t\3\2\2 !\7\4\2\2!\"\79\2\2\"#\7"+
+		"\4\2\2#$\78\2\2$%\7\3\2\2%\t\3\2\2\2&(\7\'\2\2\')\5\f\7\2(\'\3\2\2\2)"+
+		"*\3\2\2\2*(\3\2\2\2*+\3\2\2\2+\13\3\2\2\2,-\7)\2\2-.\78\2\2./\5\16\b\2"+
+		"/\60\7*\2\2\60\r\3\2\2\2\61\62\7\5\2\2\62\63\5\b\5\2\63\65\7\6\2\2\64"+
+		"\66\7-\2\2\65\64\3\2\2\2\65\66\3\2\2\2\66\67\3\2\2\2\678\79\2\28\u00c0"+
 		"\3\2\2\29:\7\7\2\2:;\5\b\5\2;<\7\6\2\2<=\5\b\5\2=\u00c0\3\2\2\2>?\7\b"+
 		"\2\2?@\5\b\5\2@A\7\6\2\2AB\7\t\2\2BC\5\b\5\2CD\7\n\2\2D\u00c0\3\2\2\2"+
 		"EF\7\13\2\2FG\7\t\2\2GH\5\b\5\2HI\7\n\2\2IJ\7\6\2\2JK\5\b\5\2K\u00c0\3"+
@@ -1193,13 +1194,13 @@ public class j8086cInterParser extends Parser {
 		"\5\b\5\2\u009f\u00c0\3\2\2\2\u00a0\u00a1\7\30\2\2\u00a1\u00a2\5\b\5\2"+
 		"\u00a2\u00a3\7\6\2\2\u00a3\u00a4\5\b\5\2\u00a4\u00a5\7\6\2\2\u00a5\u00a6"+
 		"\5\b\5\2\u00a6\u00c0\3\2\2\2\u00a7\u00a8\7\31\2\2\u00a8\u00a9\5\b\5\2"+
-		"\u00a9\u00aa\7\6\2\2\u00aa\u00ab\7*\2\2\u00ab\u00c0\3\2\2\2\u00ac\u00ad"+
-		"\7\32\2\2\u00ad\u00ae\5\b\5\2\u00ae\u00af\7\6\2\2\u00af\u00b0\7*\2\2\u00b0"+
-		"\u00c0\3\2\2\2\u00b1\u00b2\7\33\2\2\u00b2\u00c0\7*\2\2\u00b3\u00b4\7\34"+
-		"\2\2\u00b4\u00b9\7\67\2\2\u00b5\u00b6\7\6\2\2\u00b6\u00b8\5\b\5\2\u00b7"+
+		"\u00a9\u00aa\7\6\2\2\u00aa\u00ab\7+\2\2\u00ab\u00c0\3\2\2\2\u00ac\u00ad"+
+		"\7\32\2\2\u00ad\u00ae\5\b\5\2\u00ae\u00af\7\6\2\2\u00af\u00b0\7+\2\2\u00b0"+
+		"\u00c0\3\2\2\2\u00b1\u00b2\7\33\2\2\u00b2\u00c0\7+\2\2\u00b3\u00b4\7\34"+
+		"\2\2\u00b4\u00b9\78\2\2\u00b5\u00b6\7\6\2\2\u00b6\u00b8\5\b\5\2\u00b7"+
 		"\u00b5\3\2\2\2\u00b8\u00bb\3\2\2\2\u00b9\u00b7\3\2\2\2\u00b9\u00ba\3\2"+
 		"\2\2\u00ba\u00c0\3\2\2\2\u00bb\u00b9\3\2\2\2\u00bc\u00c0\7\35\2\2\u00bd"+
-		"\u00be\7*\2\2\u00be\u00c0\7\36\2\2\u00bf\61\3\2\2\2\u00bf9\3\2\2\2\u00bf"+
+		"\u00be\7+\2\2\u00be\u00c0\7\36\2\2\u00bf\61\3\2\2\2\u00bf9\3\2\2\2\u00bf"+
 		">\3\2\2\2\u00bfE\3\2\2\2\u00bfL\3\2\2\2\u00bfS\3\2\2\2\u00bfZ\3\2\2\2"+
 		"\u00bfa\3\2\2\2\u00bfh\3\2\2\2\u00bfo\3\2\2\2\u00bfv\3\2\2\2\u00bf}\3"+
 		"\2\2\2\u00bf\u0084\3\2\2\2\u00bf\u008b\3\2\2\2\u00bf\u0092\3\2\2\2\u00bf"+
