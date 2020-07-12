@@ -75,6 +75,13 @@ public interface j8086cInterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMOVMR(j8086cInterParser.MOVMRContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code LEA}
+	 * labeled alternative in {@link j8086cInterParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLEA(j8086cInterParser.LEAContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ADD}
 	 * labeled alternative in {@link j8086cInterParser#statement}.
 	 * @param ctx the parse tree
@@ -165,6 +172,13 @@ public interface j8086cInterVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLOR(j8086cInterParser.LORContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LNOT}
+	 * labeled alternative in {@link j8086cInterParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLNOT(j8086cInterParser.LNOTContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code JNZ}
 	 * labeled alternative in {@link j8086cInterParser#statement}.

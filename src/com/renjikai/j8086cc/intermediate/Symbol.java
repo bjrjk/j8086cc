@@ -43,7 +43,14 @@ public class Symbol {
 	public Symbol(String name,int dataType,int scope,boolean isParameter) {
 		this(name,dataType,scope);
 		this.isParameter=isParameter;
-		if(isParameter)this.allocateSize=2;
+		if(isParameter)this.allocateSize=InterDefines.stackDataSize;
+	}
+	
+	public Symbol(String name,int dataType,int scope,boolean isParameter,ArrayList<Integer> arrayDimSize) {
+		this(name,dataType,scope,arrayDimSize);
+		this.isParameter=isParameter;
+		if(isParameter)this.allocateSize=InterDefines.stackDataSize;
+		this.isArray=true;
 	}
 	
 	public Symbol(String name,int dataType,int scope,ArrayList<Integer> arrayDimSize) {

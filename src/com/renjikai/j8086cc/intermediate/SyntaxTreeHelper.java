@@ -2,6 +2,8 @@ package com.renjikai.j8086cc.intermediate;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 import com.renjikai.j8086cc.antlr.j8086ccParser;
 
@@ -57,7 +59,11 @@ public class SyntaxTreeHelper {
 			}
 		}
 		String varName=ctx.IDENTIFIER().getText();
-		Symbol s=new Symbol(varName,varBasicType,SymbolTable.LOCAL_VAR,true);
+		Symbol s;
+		if(arrayDimSize==null)
+			s=new Symbol(varName,varBasicType,SymbolTable.LOCAL_VAR,true);
+		else
+			s=new Symbol(varName,varBasicType,SymbolTable.LOCAL_VAR,true,arrayDimSize);
 		return s;
 	}
 	
@@ -75,10 +81,59 @@ public class SyntaxTreeHelper {
 	}
 	
 	public static Symbol genTmpFatherNode(Counter cnter,Symbol s1,Symbol s2) {
+		if(s2==null)return new Symbol(cnter.getNewStringID(),
+				s1.dataType,
+				SymbolTable.TMP_VAR
+				);
 		Symbol res=new Symbol(cnter.getNewStringID(),
 				Math.min(s1.dataType, s2.dataType),
 				SymbolTable.TMP_VAR
 				);
 		return res;
 	}
+	
+	public static Symbol genIntLiteralNode(Counter cnter) {
+		Symbol res=new Symbol(cnter.getNewStringID(),
+				Symbol.TYPE_INT,
+				SymbolTable.TMP_VAR
+				);
+		return res;
+	}
+	
+	public static SymbolTable getSymbolTable(ParseTreeProperty<SymbolTable> symbolTableTree, ParserRuleContext ctx) {
+		if(symbolTableTree==null||ctx==null)return null;
+		while(ctx!=null) {
+			if(ctx instanceof j8086ccParser.FunctionContext) {
+				return symbolTableTree.get(ctx);
+			}
+			ctx=ctx.getParent();
+		}
+		return null;
+	}
+	
+	public static Integer getCtlBeforeLabel(ParseTreeProperty<Integer> CtlBeforeLabel, ParserRuleContext ctx) {
+		if(CtlBeforeLabel==null||ctx==null)return null;
+		while(ctx!=null) {
+			if(ctx instanceof j8086ccParser.WhileSyntaxContext ||
+				ctx instanceof j8086ccParser.DoWhileSyntaxContext) {
+				return CtlBeforeLabel.get(ctx);
+			}
+			ctx=ctx.getParent();
+		}
+		return null;
+	}
+	
+	public static Integer getCtlAfterLabel(ParseTreeProperty<Integer> CtlAfterLabel, ParserRuleContext ctx) {
+		if(CtlAfterLabel==null||ctx==null)return null;
+		while(ctx!=null) {
+			if(ctx instanceof j8086ccParser.WhileSyntaxContext ||
+				ctx instanceof j8086ccParser.DoWhileSyntaxContext) {
+				return CtlAfterLabel.get(ctx);
+			}
+			ctx=ctx.getParent();
+		}
+		return null;
+	}
+	
+	
 }

@@ -11,6 +11,7 @@ statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	'mov' varName ',' varName						# MOV
 			|	'movrm' varName ',' '[' varName ']'				# MOVRM
 			|	'movmr' '[' varName ']' ',' varName				# MOVMR
+			|	'lea' varName ',' varName						# LEA
 			|	'add' varName ',' varName ',' varName			# ADD
 			|	'sub' varName ',' varName ',' varName			# SUB
 			|	'mul' varName ',' varName ',' varName			# MUL
@@ -24,11 +25,12 @@ statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	'ne' varName ',' varName ',' varName			# NE
 			|	'land' varName ',' varName ',' varName			# LAND
 			|	'lor' varName ',' varName ',' varName			# LOR
+			|	'lnot' varName ',' varName						# LNOT
 			|	'jnz' varName ',' LBL							# JNZ
 			|	'jz' varName ',' LBL							# JZ
 			|	'jmp' LBL										# JMP
 			|	'call' IDENTIFIER (',' varName)*				# CALL
-			|	'ret'											# RET
+			|	'ret' varName									# RET
 			|	LBL ':'											# LABEL
 			;
 TYPE_UINT	:	'u' ;
