@@ -1,84 +1,653 @@
 package com.renjikai.j8086cc.codegen;
 
-public class IRVisitor extends j8086cInterBaseVisitor<String> {
+import java.util.HashMap;
+import org.antlr.v4.runtime.*;
 
+import com.renjikai.j8086cc.intermediate.Symbol;
+import com.renjikai.j8086cc.intermediate.Counter;
+
+public class IRVisitor extends j8086cInterBaseVisitor<String> {
+	public String dataSegStr="";
+	public String codeSegStr="";
+	public HashMap<String,Integer> funcBPCnter=new HashMap<String,Integer>();
+	public HashMap<String,String> funcEndLabel=new HashMap<String,String>();
+	public HashMap<String,Integer> varBPShift=new HashMap<String,Integer>();
+	public HashMap<String,Integer> paramCnter=new HashMap<String,Integer>();
+	public Counter lblCnter=new Counter();
+	public String curGlobalFunc="";
+	
+	public String getNewLabel() {
+		return "LI"+lblCnter.getNewStringID();
+	}
+	public Integer getVarBPShiftPostion(String funcName,String varName,j8086cInterParser.VarNameContext ctx) {
+		if(varBPShift.containsKey(varName))return varBPShift.get(varName);
+		Integer tmpBPShift=funcBPCnter.get(funcName);
+		tmpBPShift-=Integer.valueOf(ctx.INT().getText());
+		varBPShift.put(varName, tmpBPShift);
+		funcBPCnter.put(funcName, tmpBPShift);
+		return tmpBPShift;
+	}
+	public String getFuncName(ParserRuleContext ctx) {
+		while(ctx!=null) {
+			if(ctx instanceof j8086cInterParser.FunctionContext) {
+				j8086cInterParser.FunctionContext ctxF=
+						(j8086cInterParser.FunctionContext)ctx;
+				return ctxF.IDENTIFIER().getText();
+			}
+			ctx=ctx.getParent();
+		}
+		return null;
+	}
+	public String formatVarBPShift(j8086cInterParser.VarNameContext varName) {
+		if(varName.scope.getType()==j8086cInterParser.GLOB_SCOPE)
+			return varName.IDENTIFIER().getText();
+		Integer shift=getVarBPShiftPostion(curGlobalFunc,varName.getText(),varName);
+		return String.format("%d[BP]", shift);
+	}
+	public int getVarTypeSize(j8086cInterParser.VarNameContext varName) {
+		return Integer.valueOf(varName.INT().getText());
+	}
+	public int getVarType(j8086cInterParser.VarNameContext varName) {
+		switch(varName.dataType.getType()) {
+			case j8086cInterParser.TYPE_UINT:
+				return Symbol.TYPE_UINT;
+			case j8086cInterParser.TYPE_INT:
+				return Symbol.TYPE_INT;
+			default:
+				return Symbol.TYPE_CHAR;
+		}
+	}
+	
+	@Override
+	public String visitProgram(j8086cInterParser.ProgramContext ctx) {
+		dataSegStr=visit(ctx.dataSegment());
+		codeSegStr=visit(ctx.codeSegment());
+		return dataSegStr+"\n\n"+codeSegStr;
+	}
+	
+	@Override
+	public String visitDataSegment(j8086cInterParser.DataSegmentContext ctx) {
+		String res="";
+		for(int i=0;i<ctx.varDecl().size();i++) {
+			res+=visit(ctx.varDecl(i).varName());
+		}
+		return res;
+	}
+	
+	@Override
+	public String visitVarName(j8086cInterParser.VarNameContext ctx) {
+		return String.format("%s DB %d Dup(0)\n",
+				ctx.IDENTIFIER().getText(),
+				Integer.valueOf(ctx.INT().getText())
+				);
+	}
+
+
+	@Override
+	public String visitCodeSegment(j8086cInterParser.CodeSegmentContext ctx) {
+		for(int i=0;i<ctx.function().size();i++) {
+			funcBPCnter.put(ctx.function(i).IDENTIFIER().getText(), -12);
+		}
+		String res="";
+		for(int i=0;i<ctx.function().size();i++) {
+			res+=visit(ctx.function(i));
+		}
+		return res;
+	}
+
+	@Override
+	public String visitFunction(j8086cInterParser.FunctionContext ctx) {
+		String funcName=ctx.IDENTIFIER().getText();
+		curGlobalFunc=funcName;
+		String funcBegin=String.format("%s PROC\n", funcName)+
+				"PROTECT_SITE\n";
+		String endLabel=getNewLabel();
+		funcEndLabel.put(funcName, endLabel);
+		int paramCount=0;
+		for(int i=0;i<ctx.statement().size();i++) {
+			if(!(ctx.statement(i) instanceof j8086cInterParser.LocalVarDeclContext))continue;
+			j8086cInterParser.VarNameContext curVar=
+					((j8086cInterParser.LocalVarDeclContext)ctx.statement(i)).varDecl().varName();
+			if(curVar.scope.getType()==j8086cInterParser.PARAM_SCOPE) {
+				paramCount++;
+				varBPShift.put(curVar.getText(), paramCount*2+2);
+			}else
+				getVarBPShiftPostion(funcName,curVar.getText(),curVar);
+		}
+		paramCnter.put(funcName, paramCount);
+		String stmt="";
+		for(int i=0;i<ctx.statement().size();i++) {
+			if(ctx.statement(i) instanceof j8086cInterParser.LocalVarDeclContext)continue;
+			stmt+=visit(ctx.statement(i));
+		}
+		String endLabelL=endLabel+":\n";
+		int finalStackSize=funcBPCnter.get(funcName);
+		String subSP=String.format("sub SP,%d\n", finalStackSize);
+		String addSP=String.format("add SP,%d\n", finalStackSize);
+		String funcEnd=String.format("RESTORE_SITE %d\n", paramCount*2)+
+				String.format("%s ENDP\n", funcName);
+		return funcBegin+subSP+stmt+endLabelL+addSP+funcEnd;
+	}
+
+	
+	@Override
+	public String visitMOVI(j8086cInterParser.MOVIContext ctx) {
+		String varShift=formatVarBPShift(ctx.varName());
+		if(getVarTypeSize(ctx.varName())==1)
+			return String.format("mov BYTE PTR %s,%s%s\n", 
+					varShift,ctx.SUB()==null?"":"-",ctx.INT().getText()
+					);
+		else //size==2
+			return String.format("mov WORD PTR %s,%s%s\n", 
+					varShift,ctx.SUB()==null?"":"-",ctx.INT().getText()
+					);
+	}
+
+	
+	@Override
+	public String visitMOV(j8086cInterParser.MOVContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		 String s1,s2;
+		 if(getVarTypeSize(ctx.varName(1))==1)
+			 s1=String.format("mov AL,%s\n", varShift1);
+		 else //size==2
+			 s1=String.format("mov AX,%s\n", varShift1);
+		 if(getVarTypeSize(ctx.varName(0))==1)
+			 s2=String.format("mov %s,AL\n", varShift0);
+		 else //size==2
+			 s2=String.format("mov %s,AX\n", varShift0);
+		 return s1+s2;
+	}
+
+	
+	@Override
+	public String visitMOVRM(j8086cInterParser.MOVRMContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String s1=String.format("mov BX,%s\n", varShift1);
+		String s2=String.format("mov AX,[BX]\n");
+		String s3;
+		if(getVarTypeSize(ctx.varName(0))==1)
+			 s3=String.format("mov %s,AL\n", varShift0);
+		 else //size==2
+			 s3=String.format("mov %s,AX\n", varShift0);
+		return s1+s2+s3;
+	}
+	
+	@Override
+	public String visitMOVMR(j8086cInterParser.MOVMRContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String s1=String.format("mov BX,%s\n", varShift0);
+		String s2=String.format("mov AX,%s\n", varShift1);
+		String s3;
+		if(getVarTypeSize(ctx.varName(0))==1)
+			 s3=String.format("mov [BX],AL\n");
+		 else //size==2
+			 s3=String.format("mov [BX],AX\n");
+		return s1+s2+s3;
+	}
+
+	@Override
+	public String visitLEA(j8086cInterParser.LEAContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String s1=String.format("lea AX,%s\n", varShift1);
+		String s2=String.format("mov %s,AX\n", varShift0);
+		return s1+s2;
+	}
+
+	
+	@Override
+	public String visitADD(j8086cInterParser.ADDContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s1,s2,s3;
+		if(getVarTypeSize(ctx.varName(0))==1) {
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("add AL,BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AL\n", varShift0);
+		}else {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("add AX,BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AX\n", varShift0);	
+		}
+		return s1+s2+s3;
+	}
+
+	
+	@Override
+	public String visitSUB(j8086cInterParser.SUBContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s1,s2,s3;
+		if(getVarTypeSize(ctx.varName(0))==1) {
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("sub AL,BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AL\n", varShift0);
+		}else {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("sub AX,BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AX\n", varShift0);	
+		}
+		return s1+s2+s3;
+	}
+
+	
+	@Override
+	public String visitMUL(j8086cInterParser.MULContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s1,s2,s3;
+		int type=getVarType(ctx.varName(0));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("mul WORD PTR %s\n", varShift2);
+			s3=String.format("mov %s,AX\n", varShift0);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("imul WORD PTR %s\n", varShift2);
+			s3=String.format("mov %s,AX\n", varShift0);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("imul BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AL\n", varShift0);
+		}
+		return s1+s2+s3;
+	}
+
+	
+	@Override
+	public String visitDIV(j8086cInterParser.DIVContext ctx) {
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s0,s1,s2,s3;
+		int type=getVarType(ctx.varName(0));
+		if(type==Symbol.TYPE_UINT) {
+			s0="mov DX,0";
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("div WORD PTR %s\n", varShift2);
+			s3=String.format("mov %s,AX\n", varShift0);
+		}else if(type==Symbol.TYPE_INT) {
+			s0="mov DX,0";
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("idiv WORD PTR %s\n", varShift2);
+			s3=String.format("mov %s,AX\n", varShift0);
+		}else { //type==Symbol.TYPE_CHAR
+			s0="mov AH,0";
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("idiv BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AL\n", varShift0);
+		}
+		return s0+s1+s2+s3;
+	}
+
+	
 	@Override
 	public String visitMOD(j8086cInterParser.MODContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s0,s1,s2,s3;
+		int type=getVarType(ctx.varName(0));
+		if(type==Symbol.TYPE_UINT) {
+			s0="mov DX,0";
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("div WORD PTR %s\n", varShift2);
+			s3=String.format("mov %s,DX\n", varShift0);
+		}else if(type==Symbol.TYPE_INT) {
+			s0="mov DX,0";
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("idiv WORD PTR %s\n", varShift2);
+			s3=String.format("mov %s,DX\n", varShift0);
+		}else { //type==Symbol.TYPE_CHAR
+			s0="mov AH,0";
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("idiv BYTE PTR %s\n", varShift2);
+			s3=String.format("mov %s,AH\n", varShift0);
+		}
+		return s0+s1+s2+s3;
 	}
 
+	
 	@Override
 	public String visitLT(j8086cInterParser.LTContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String lbl1=getNewLabel(),lbl2=getNewLabel();
+		String s1,s2,s3,s4,s5,s6,s7,s8;
+		int type=getVarType(ctx.varName(1));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jb %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jl %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("cmp AL, BYTE PTR %s\n", varShift2);
+			s3=String.format("jl %s\n", lbl1);
+			s4=String.format("mov BYTE PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov BYTE PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}
+		return s1+s2+s3+s4+s5+s6+s7+s8;
 	}
 
+	
 	@Override
 	public String visitLE(j8086cInterParser.LEContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String lbl1=getNewLabel(),lbl2=getNewLabel();
+		String s1,s2,s3,s4,s5,s6,s7,s8;
+		int type=getVarType(ctx.varName(1));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jbe %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jle %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("cmp AL, BYTE PTR %s\n", varShift2);
+			s3=String.format("jle %s\n", lbl1);
+			s4=String.format("mov BYTE PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov BYTE PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}
+		return s1+s2+s3+s4+s5+s6+s7+s8;
 	}
 
+	
 	@Override
 	public String visitGE(j8086cInterParser.GEContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String lbl1=getNewLabel(),lbl2=getNewLabel();
+		String s1,s2,s3,s4,s5,s6,s7,s8;
+		int type=getVarType(ctx.varName(1));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jae %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jge %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("cmp AL, BYTE PTR %s\n", varShift2);
+			s3=String.format("jge %s\n", lbl1);
+			s4=String.format("mov BYTE PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov BYTE PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}
+		return s1+s2+s3+s4+s5+s6+s7+s8;
 	}
 
+	
 	@Override
 	public String visitGT(j8086cInterParser.GTContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String lbl1=getNewLabel(),lbl2=getNewLabel();
+		String s1,s2,s3,s4,s5,s6,s7,s8;
+		int type=getVarType(ctx.varName(1));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("ja %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jg %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("cmp AL, BYTE PTR %s\n", varShift2);
+			s3=String.format("jg %s\n", lbl1);
+			s4=String.format("mov BYTE PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov BYTE PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}
+		return s1+s2+s3+s4+s5+s6+s7+s8;
 	}
 
+	
 	@Override
 	public String visitEQ(j8086cInterParser.EQContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String lbl1=getNewLabel(),lbl2=getNewLabel();
+		String s1,s2,s3,s4,s5,s6,s7,s8;
+		int type=getVarType(ctx.varName(1));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("je %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("je %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("cmp AL, BYTE PTR %s\n", varShift2);
+			s3=String.format("je %s\n", lbl1);
+			s4=String.format("mov BYTE PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov BYTE PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}
+		return s1+s2+s3+s4+s5+s6+s7+s8;
 	}
 
+	
 	@Override
 	public String visitNE(j8086cInterParser.NEContext ctx) {
-		return visitChildren(ctx);
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String lbl1=getNewLabel(),lbl2=getNewLabel();
+		String s1,s2,s3,s4,s5,s6,s7,s8;
+		int type=getVarType(ctx.varName(1));
+		if(type==Symbol.TYPE_UINT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jne %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else if(type==Symbol.TYPE_INT) {
+			s1=String.format("mov AX,WORD PTR %s\n", varShift1);
+			s2=String.format("cmp AX, WORD PTR %s\n", varShift2);
+			s3=String.format("jne %s\n", lbl1);
+			s4=String.format("mov WORD PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov WORD PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}else { //type==Symbol.TYPE_CHAR
+			s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
+			s2=String.format("cmp AL, BYTE PTR %s\n", varShift2);
+			s3=String.format("jne %s\n", lbl1);
+			s4=String.format("mov BYTE PTR %s,0\n", varShift0);
+			s5=String.format("jmp %s\n", lbl2);
+			s6=String.format("%s:\n", lbl1);
+			s7=String.format("mov BYTE PTR %s,1\n", varShift0);
+			s8=String.format("%s:\n", lbl2);
+		}
+		return s1+s2+s3+s4+s5+s6+s7+s8;
 	}
 
+	
 	@Override
-	public String visitLAND(j8086cInterParser.LANDContext ctx) {
-		return visitChildren(ctx);
+	public String visitLAND(j8086cInterParser.LANDContext ctx) { //TODO
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s1,s2,s3;
+		s1=String.format("mov AX, WORD PTR %s\n", varShift1);
+		s2=String.format("and AX, WORD PTR %s\n", varShift2);
+		s3=String.format("mov WORD PTR %s, AX\n", varShift0);
+		return s1+s2+s3;
 	}
 
+	
 	@Override
-	public String visitLOR(j8086cInterParser.LORContext ctx) {
-		return visitChildren(ctx);
+	public String visitLOR(j8086cInterParser.LORContext ctx) { //TODO
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String varShift2=formatVarBPShift(ctx.varName(2));
+		String s1,s2,s3;
+		s1=String.format("mov AX, WORD PTR %s\n", varShift1);
+		s2=String.format("or AX, WORD PTR %s\n", varShift2);
+		s3=String.format("mov WORD PTR %s, AX\n", varShift0);
+		return s1+s2+s3;
 	}
 
+	
 	@Override
-	public String visitLNOT(j8086cInterParser.LNOTContext ctx) {
-		return visitChildren(ctx);
+	public String visitLNOT(j8086cInterParser.LNOTContext ctx) { //TODO
+		String varShift0=formatVarBPShift(ctx.varName(0));
+		String varShift1=formatVarBPShift(ctx.varName(1));
+		String s1,s2,s3;
+		s1=String.format("mov AX, WORD PTR %s\n", varShift1);
+		s2="not AX\n";
+		s3=String.format("mov WORD PTR %s, AX\n", varShift0);
+		return s1+s2+s3;
 	}
 
+	
 	@Override
 	public String visitJNZ(j8086cInterParser.JNZContext ctx) {
-		return visitChildren(ctx);
+		String varShift=formatVarBPShift(ctx.varName());
+		String s1=String.format("mov AX,WORD PTR %s\n", varShift);
+		String s2="cmp AX,0\n";
+		String s3=String.format("jnz %s\n",ctx.LBL().getText());
+		return s1+s2+s3;
 	}
 
+	
 	@Override
 	public String visitJZ(j8086cInterParser.JZContext ctx) {
-		return visitChildren(ctx);
+		String varShift=formatVarBPShift(ctx.varName());
+		String s1=String.format("mov AX,WORD PTR %s\n", varShift);
+		String s2="cmp AX,0\n";
+		String s3=String.format("jz %s\n",ctx.LBL().getText());
+		return s1+s2+s3;
 	}
 
+	
 	@Override
 	public String visitJMP(j8086cInterParser.JMPContext ctx) {
+		return String.format("jmp %s\n",ctx.LBL().getText());
+	}
+
+
+	@Override
+	public String visitCALL(j8086cInterParser.CALLContext ctx) { //TODO
 		return visitChildren(ctx);
 	}
 
-	@Override
-	public String visitCALL(j8086cInterParser.CALLContext ctx) {
-		return visitChildren(ctx);
-	}
 
 	@Override
 	public String visitRET(j8086cInterParser.RETContext ctx) {
-		return visitChildren(ctx);
+		String funcName=getFuncName(ctx);
+		Integer dataSize=Integer.valueOf(ctx.varName().INT().getText());
+		String retIns="";
+		if(dataSize==1) 
+			retIns=String.format("mov AL,%s\n", 
+					formatVarBPShift(ctx.varName())
+					);
+		else
+			retIns=String.format("mov AX,%s\n", 
+					formatVarBPShift(ctx.varName())
+					);
+		String restore=String.format("jmp %s\n", 
+				funcEndLabel.get(funcName)
+				);
+		return retIns+restore;
 	}
 
+	
 	@Override
 	public String visitLABEL(j8086cInterParser.LABELContext ctx) {
-		return visitChildren(ctx);
+		return ctx.getText()+"\n";
 	}
+
 }
