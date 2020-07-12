@@ -343,11 +343,13 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 			Logger.throwError("Argument Count invaild: "+curFunc.name);
 		String exprCal="";
 		String arguments="";
-		for(int i=0;i<ctx.exprList().expr().size();i++) {
+		Symbol retS=new Symbol(tmpVarCnter.getNewStringID(),curFunc.retType,SymbolTable.TMP_VAR);
+		for(int i=0;ctx.exprList()!=null&&i<ctx.exprList().expr().size();i++) {
 			exprCal+=visit(ctx.exprList().expr(i));
 			arguments+=", "+exprSymbol.get(ctx.exprList().expr(i)).toString();
 		}
-		String callIns=String.format(InterDefines.CALL, curFunc.name, arguments)+"\n";
+		String callIns=String.format(InterDefines.CALL, curFunc.name,retS.toString(), arguments)+"\n";
+		exprSymbol.put(ctx,retS);
 		return exprCal+callIns;
 	}
 

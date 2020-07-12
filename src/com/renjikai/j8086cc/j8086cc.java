@@ -1,33 +1,50 @@
 package com.renjikai.j8086cc;
 import com.renjikai.j8086cc.antlr.*;
 import com.renjikai.j8086cc.intermediate.*;
+import com.renjikai.j8086cc.codegen.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
-import java.io.FileInputStream;
+import java.io.*;
 import java.io.IOException;
 
 public class j8086cc {
+	public static void WriteTXT(String s,String path) throws IOException{
+		FileWriter f=new FileWriter(path);
+		f.write(s);
+		f.flush();
+		f.close();
+	}
 	public static void main(String[] args) throws IOException {
 		String filename = args[0];
-		SyntaxTreeVisitor visitor = new SyntaxTreeVisitor();
+		SyntaxTreeVisitor HLLvisitor = new SyntaxTreeVisitor();
 		FileInputStream f = new FileInputStream(filename);
-		ANTLRInputStream input = new ANTLRInputStream(f);
-        j8086ccLexer lexer = new j8086ccLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        j8086ccParser parser = new j8086ccParser(tokens);
-        if(parser.getNumberOfSyntaxErrors()>0) {
+		ANTLRInputStream HLLInput = new ANTLRInputStream(f);
+        j8086ccLexer HLLLexer = new j8086ccLexer(HLLInput);
+        CommonTokenStream HLLTokens = new CommonTokenStream(HLLLexer);
+        j8086ccParser HLLParser = new j8086ccParser(HLLTokens);
+        if(HLLParser.getNumberOfSyntaxErrors()>0) {
         	System.err.println("j8086c Code Syntax Error! Please check!");
         	System.exit(1);
         }
-        ParseTree tree = parser.program();
-        String s=visitor.visit(tree);
-    	System.out.println(s);
-        try {
-        	
-        }catch(Exception e) {
-        	System.err.println("An Unexcepted Exception occured, j8086cc terminated. Please report this incident to developer.");
-        	System.err.println(e);
+        ParseTree HLLTree = HLLParser.program();
+        String IR=HLLvisitor.visit(HLLTree);
+        System.err.println("IR:");
+        System.out.println(IR);
+    	WriteTXT(IR,filename+".j8086cInter");
+    	ANTLRInputStream InterInput = new ANTLRInputStream(IR);
+        j8086cInterLexer InterLexer = new j8086cInterLexer(InterInput);
+        CommonTokenStream InterTokens = new CommonTokenStream(InterLexer);
+        j8086cInterParser InterParser = new j8086cInterParser(InterTokens);
+        if(InterParser.getNumberOfSyntaxErrors()>0) {
+        	System.err.println("j8086cInter Code Syntax Error! Please check!");
+        	System.exit(1);
         }
+        ParseTree InterTree = InterParser.program();
+        IRVisitor InterVisitor = new IRVisitor();
+        String ASM8086=InterVisitor.visit(InterTree);
+        System.err.println("8086:");
+        System.out.println(ASM8086);
+    	WriteTXT(ASM8086,filename+".8086.asm");
 	}
 
 }

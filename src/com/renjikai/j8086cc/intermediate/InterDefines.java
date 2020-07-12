@@ -2,7 +2,8 @@ package com.renjikai.j8086cc.intermediate;
 
 public class InterDefines {
 	// DataType(u,i,c), AllocateSize, VarName
-	public final static String varTypeFormat = "%c_%d_%s";
+	public final static String varTypeFormat = "%c_%d_@%s";
+	public final static String varTmpTypeFormat = "%c_%d_@t%s";
 	public final static String tmpVarFormat = "$TMPVAR_%s$";
 	public final static String localVarFormat = "$LOCALVAR_%s$";
 	public final static String paramVarFormat = "$PARAMVAR_%s$";
@@ -37,7 +38,7 @@ public class InterDefines {
 	public final static String JNZ = "jnz %s, L%d";
 	public final static String JZ = "jz %s, L%d";
 	public final static String JMP = "jmp L%d";
-	public final static String CALL = "call %s%s";
+	public final static String CALL = "call %s,%s%s";
 	public final static String RET = "ret %s";
 	
 	public final static String LABEL = "L%d:";

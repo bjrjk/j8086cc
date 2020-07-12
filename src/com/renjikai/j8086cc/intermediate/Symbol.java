@@ -101,11 +101,19 @@ public class Symbol {
 	
 	@Override
 	public String toString() {
-		String varType=String.format(InterDefines.varTypeFormat, 
+		String varType;
+		varType=String.format(InterDefines.varTypeFormat, 
 				typeID[this.dataType],
 				this.allocateSize,
 				this.name
 						);
+		if(this.scope==SymbolTable.TMP_VAR) {
+			varType=String.format(InterDefines.varTmpTypeFormat, 
+					typeID[this.dataType],
+					this.allocateSize,
+					this.name
+							);
+		}
 		String formatRef;
 		switch(this.scope) {
 		case SymbolTable.GLOBAL_VAR:

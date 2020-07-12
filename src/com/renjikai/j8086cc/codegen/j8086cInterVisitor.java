@@ -221,4 +221,11 @@ public interface j8086cInterVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLABEL(j8086cInterParser.LABELContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LocalVarDecl}
+	 * labeled alternative in {@link j8086cInterParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLocalVarDecl(j8086cInterParser.LocalVarDeclContext ctx);
 }

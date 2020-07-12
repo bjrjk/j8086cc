@@ -4,9 +4,9 @@ dataSegment	:	DSEG_HEAD varDecl* ;
 varDecl		:	DECL_HEAD varName ;
 varName		:	'$' scope=(GLOB_SCOPE|LOC_SCOPE|TMP_SCOPE|PARAM_SCOPE) 
 				dataType=(TYPE_UINT|TYPE_INT|TYPE_CHAR) '_'
-				INT '_' IDENTIFIER '$' ;
+				INT '_@' IDENTIFIER '$' ;
 codeSegment	:	CSEG_HEAD function+ ;
-function	:	FUNC_HEAD IDENTIFIER statement FUNC_TAIL ;
+function	:	FUNC_HEAD IDENTIFIER statement* FUNC_TAIL ;
 statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	'mov' varName ',' varName						# MOV
 			|	'movrm' varName ',' '[' varName ']'				# MOVRM
@@ -32,15 +32,16 @@ statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	'call' IDENTIFIER (',' varName)*				# CALL
 			|	'ret' varName									# RET
 			|	LBL ':'											# LABEL
+			|	varDecl											# LocalVarDecl
 			;
-TYPE_UINT	:	'u' ;
-TYPE_INT	:	'i' ;
-TYPE_CHAR	:	'c' ;
+TYPE_UINT	:	'_u' ;
+TYPE_INT	:	'_i' ;
+TYPE_CHAR	:	'_c' ;
 
-GLOB_SCOPE	:	'GLOBALVAR_' ;
-LOC_SCOPE	:	'LOCALVAR_' ;
-TMP_SCOPE	:	'TMPVAR_' ;
-PARAM_SCOPE	:	'PARAMVAR_' ;
+GLOB_SCOPE	:	'GLOBALVAR' ;
+LOC_SCOPE	:	'LOCALVAR' ;
+TMP_SCOPE	:	'TMPVAR' ;
+PARAM_SCOPE	:	'PARAMVAR' ;
 
 DSEG_HEAD	:	'.data' ;
 CSEG_HEAD	:	'.code' ;

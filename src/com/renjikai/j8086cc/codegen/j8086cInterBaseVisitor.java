@@ -228,4 +228,11 @@ public class j8086cInterBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitLABEL(j8086cInterParser.LABELContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitLocalVarDecl(j8086cInterParser.LocalVarDeclContext ctx) { return visitChildren(ctx); }
 }

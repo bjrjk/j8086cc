@@ -7,6 +7,11 @@ public class FunctionTable {
 	
 	public FunctionTable() {
 		this.functionTable=new HashMap<String,Function>();
+		Function putchar=new Function(Symbol.TYPE_INT,"putchar");
+		putchar.paramList.add(new Symbol("ASCIICode",Symbol.TYPE_CHAR,SymbolTable.LOCAL_VAR,true));
+		this.functionTable.put("putchar", putchar);
+		Function getchar=new Function(Symbol.TYPE_CHAR,"getchar");
+		this.functionTable.put("getchar", getchar);
 	}
 	
 	public boolean insert(Function s) {
