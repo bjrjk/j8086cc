@@ -1,0 +1,39 @@
+int isNumeric(int ASCII){
+	if(48<=ASCII&&ASCII<=57)return 1;
+	else return 0;
+}
+int getint(){
+	int num,flag,c;
+	num=0;flag=0;
+	while(1){
+		c=getchar();
+		if(isNumeric(c))flag=1;
+		if(!isNumeric(c)){
+			if(flag==1)break;
+			else continue;
+		}
+		num=num*10;
+		num=num+(c-48);
+	}
+	return num;
+}
+int putintRec(int x){
+	if(x==0)return 0;
+	int tmp;
+	tmp=x%10;
+	putintRec(x/10);
+	putchar(tmp+48);
+}
+int putint(int x){
+	if(x==0){
+		putchar(48);
+		return 0;
+	}
+	putintRec(x);
+}
+int main(){
+	int x,y;
+	x=getint();
+	y=getint();
+	putint(x+y);
+}

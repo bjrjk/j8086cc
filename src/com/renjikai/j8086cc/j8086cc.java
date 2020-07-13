@@ -14,6 +14,17 @@ public class j8086cc {
 		f.flush();
 		f.close();
 	}
+	public static String ReadTXT(String path) throws IOException{
+		File file = new File(path);
+	    if(!file.exists())return null;
+	    FileInputStream inputStream = new FileInputStream(file);
+	    int length = inputStream.available();
+	    byte bytes[] = new byte[length];
+	    inputStream.read(bytes);
+	    inputStream.close();
+	    String str =new String(bytes);
+	    return str;
+	}
 	public static void main(String[] args) throws IOException {
 		String filename = args[0];
 		SyntaxTreeVisitor HLLvisitor = new SyntaxTreeVisitor();
@@ -41,7 +52,10 @@ public class j8086cc {
         }
         ParseTree InterTree = InterParser.program();
         IRVisitor InterVisitor = new IRVisitor();
-        String ASM8086=InterVisitor.visit(InterTree);
+        InterVisitor.visit(InterTree);
+        String ASM8086=ReadTXT("src/template.asm");
+        ASM8086=ASM8086.replace("%%DATA_TEXT%%", InterVisitor.dataSegStr);
+        ASM8086=ASM8086.replace("%%CODE_TEXT%%", InterVisitor.codeSegStr);
         System.err.println("8086:");
         System.out.println(ASM8086);
     	WriteTXT(ASM8086,filename+".8086.asm");

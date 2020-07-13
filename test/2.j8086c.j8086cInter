@@ -4,15 +4,54 @@
 
 .code
 
+.fun getput
+.var $LOCALVAR_c_8_@str$
+.var $LOCALVAR_i_2_@i$
+movi $TMPVAR_i_2_@t0$, 0
+mov $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t0$
+L0:
+movi $TMPVAR_i_2_@t1$, 8
+lt $TMPVAR_i_2_@t2$, $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t1$
+jz $TMPVAR_i_2_@t2$, L1
+lea $TMPVAR_i_2_@t3$, $LOCALVAR_c_8_@str$
+movi $TMPVAR_i_2_@t4$, 0
+movi $TMPVAR_i_2_@t5$, 1
+mul $TMPVAR_i_2_@t5$, $TMPVAR_i_2_@t5$, $LOCALVAR_i_2_@i$
+add $TMPVAR_i_2_@t4$, $TMPVAR_i_2_@t4$, $TMPVAR_i_2_@t5$
+movi $TMPVAR_i_2_@t6$, 1
+mul $TMPVAR_i_2_@t4$, $TMPVAR_i_2_@t4$, $TMPVAR_i_2_@t6$
+add $TMPVAR_i_2_@t3$, $TMPVAR_i_2_@t3$, $TMPVAR_i_2_@t4$
+call getchar,$TMPVAR_c_1_@t7$
+movmr [$TMPVAR_i_2_@t3$], $TMPVAR_c_1_@t7$
+movi $TMPVAR_i_2_@t8$, 1
+add $TMPVAR_i_2_@t9$, $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t8$
+mov $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t9$
+jmp L0
+L1:
+movi $TMPVAR_i_2_@t10$, 0
+mov $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t10$
+L2:
+movi $TMPVAR_i_2_@t11$, 8
+lt $TMPVAR_i_2_@t12$, $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t11$
+jz $TMPVAR_i_2_@t12$, L3
+lea $TMPVAR_i_2_@t14$, $LOCALVAR_c_8_@str$
+movi $TMPVAR_i_2_@t15$, 0
+movi $TMPVAR_i_2_@t16$, 1
+mul $TMPVAR_i_2_@t16$, $TMPVAR_i_2_@t16$, $LOCALVAR_i_2_@i$
+add $TMPVAR_i_2_@t15$, $TMPVAR_i_2_@t15$, $TMPVAR_i_2_@t16$
+movi $TMPVAR_i_2_@t17$, 1
+mul $TMPVAR_i_2_@t15$, $TMPVAR_i_2_@t15$, $TMPVAR_i_2_@t17$
+add $TMPVAR_i_2_@t14$, $TMPVAR_i_2_@t14$, $TMPVAR_i_2_@t15$
+movrm $TMPVAR_i_2_@t18$, [$TMPVAR_i_2_@t14$]
+call putchar,$TMPVAR_i_2_@t13$, $TMPVAR_i_2_@t18$
+movi $TMPVAR_i_2_@t19$, 1
+add $TMPVAR_i_2_@t20$, $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t19$
+mov $LOCALVAR_i_2_@i$, $TMPVAR_i_2_@t20$
+jmp L2
+L3:
+.endfun
+
 .fun main
-.var $LOCALVAR_i_2_@x$
-.var $LOCALVAR_i_2_@y$
-.var $LOCALVAR_i_2_@z$
-movi $TMPVAR_i_2_@t0$, 1
-mov $LOCALVAR_i_2_@x$, $TMPVAR_i_2_@t0$
-movi $TMPVAR_i_2_@t1$, 2
-mov $LOCALVAR_i_2_@y$, $TMPVAR_i_2_@t1$
-add $TMPVAR_i_2_@t2$, $LOCALVAR_i_2_@x$, $LOCALVAR_i_2_@y$
-mov $LOCALVAR_i_2_@z$, $TMPVAR_i_2_@t2$
+call getput,$TMPVAR_i_2_@t21$
 .endfun
 
