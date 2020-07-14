@@ -9,6 +9,7 @@ public class Symbol {
 	public final static char typeID[]= {'u','i','c'};
 	
 	public String name;
+	public String funcName="";
 	public int dataType;
 	public int scope;
 	public int dataSize;
@@ -105,7 +106,7 @@ public class Symbol {
 		varType=String.format(InterDefines.varTypeFormat, 
 				typeID[this.dataType],
 				this.allocateSize,
-				this.name
+				this.funcName+this.name
 						);
 		if(this.scope==SymbolTable.TMP_VAR) {
 			varType=String.format(InterDefines.varTmpTypeFormat, 

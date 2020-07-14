@@ -41,6 +41,9 @@ RESTORE_SITE MACRO POP_BYTES
 ENDM
 
 data segment
+arr DB 100 Dup(0)
+str1 DB 50 Dup(0)
+str2 DB 50 Dup(0)
 
 data ends
 
@@ -77,7 +80,7 @@ PROTECT_SITE
 add SP,-26
 ;movi$TMPVAR_i_2_@t0$,48
 mov WORD PTR [BP-14],48
-;le$TMPVAR_i_2_@t1$,$TMPVAR_i_2_@t0$,$PARAMVAR_i_2_@ASCII$
+;le$TMPVAR_i_2_@t1$,$TMPVAR_i_2_@t0$,$PARAMVAR_i_2_@isNumericASCII$
 mov AX,WORD PTR [BP-14]
 cmp AX, WORD PTR [BP+4]
 jle LI1
@@ -88,7 +91,7 @@ mov WORD PTR [BP-16],1
 LI2:
 ;movi$TMPVAR_i_2_@t2$,57
 mov WORD PTR [BP-18],57
-;le$TMPVAR_i_2_@t3$,$PARAMVAR_i_2_@ASCII$,$TMPVAR_i_2_@t2$
+;le$TMPVAR_i_2_@t3$,$PARAMVAR_i_2_@isNumericASCII$,$TMPVAR_i_2_@t2$
 mov AX,WORD PTR [BP+4]
 cmp AX, WORD PTR [BP-18]
 jle LI3
@@ -126,246 +129,1552 @@ LI0:
 sub SP,-26
 RESTORE_SITE 2
 isNumeric ENDP
+isBlank PROC
+PROTECT_SITE
+add SP,-32
+;movi$TMPVAR_i_2_@t7$,10
+mov WORD PTR [BP-14],10
+;eq$TMPVAR_i_2_@t8$,$PARAMVAR_i_2_@isBlankASCII$,$TMPVAR_i_2_@t7$
+mov AX,WORD PTR [BP+4]
+cmp AX, WORD PTR [BP-14]
+je LI8
+mov WORD PTR [BP-16],0
+jmp LI9
+LI8:
+mov WORD PTR [BP-16],1
+LI9:
+;movi$TMPVAR_i_2_@t9$,13
+mov WORD PTR [BP-18],13
+;eq$TMPVAR_i_2_@t10$,$PARAMVAR_i_2_@isBlankASCII$,$TMPVAR_i_2_@t9$
+mov AX,WORD PTR [BP+4]
+cmp AX, WORD PTR [BP-18]
+je LI10
+mov WORD PTR [BP-20],0
+jmp LI11
+LI10:
+mov WORD PTR [BP-20],1
+LI11:
+;lor$TMPVAR_i_2_@t11$,$TMPVAR_i_2_@t8$,$TMPVAR_i_2_@t10$
+cmp WORD PTR [BP-16],0
+jnz LI12
+cmp WORD PTR [BP-20],0
+jnz LI12
+mov WORD PTR [BP-22],0
+jmp LI13
+LI12:
+mov WORD PTR [BP-22],1
+LI13:
+;movi$TMPVAR_i_2_@t12$,32
+mov WORD PTR [BP-24],32
+;eq$TMPVAR_i_2_@t13$,$PARAMVAR_i_2_@isBlankASCII$,$TMPVAR_i_2_@t12$
+mov AX,WORD PTR [BP+4]
+cmp AX, WORD PTR [BP-24]
+je LI14
+mov WORD PTR [BP-26],0
+jmp LI15
+LI14:
+mov WORD PTR [BP-26],1
+LI15:
+;lor$TMPVAR_i_2_@t14$,$TMPVAR_i_2_@t11$,$TMPVAR_i_2_@t13$
+cmp WORD PTR [BP-22],0
+jnz LI16
+cmp WORD PTR [BP-26],0
+jnz LI16
+mov WORD PTR [BP-28],0
+jmp LI17
+LI16:
+mov WORD PTR [BP-28],1
+LI17:
+;jz$TMPVAR_i_2_@t14$,L1
+mov AX,WORD PTR [BP-28]
+cmp AX,0
+jz L1
+;movi$TMPVAR_i_2_@t15$,1
+mov WORD PTR [BP-30],1
+;ret$TMPVAR_i_2_@t15$
+mov AX,[BP-30]
+jmp LI7
+L1:
+;movi$TMPVAR_i_2_@t16$,0
+mov WORD PTR [BP-32],0
+;ret$TMPVAR_i_2_@t16$
+mov AX,[BP-32]
+jmp LI7
+LI7:
+sub SP,-32
+RESTORE_SITE 2
+isBlank ENDP
 getint PROC
 PROTECT_SITE
 add SP,-47
-;movi$TMPVAR_i_2_@t7$,0
+;movi$TMPVAR_i_2_@t17$,0
 mov WORD PTR [BP-20],0
-;mov$LOCALVAR_i_2_@num$,$TMPVAR_i_2_@t7$
-mov AX,[BP-20]
-mov [BP-14],AX
-;movi$TMPVAR_i_2_@t8$,0
+;mov$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t17$
+mov AX,WORD PTR [BP-20]
+mov WORD PTR [BP-14],AX
+;movi$TMPVAR_i_2_@t18$,0
 mov WORD PTR [BP-22],0
-;mov$LOCALVAR_i_2_@flag$,$TMPVAR_i_2_@t8$
-mov AX,[BP-22]
-mov [BP-16],AX
-L1:
-;movi$TMPVAR_i_2_@t9$,1
+;mov$LOCALVAR_i_2_@getintflag$,$TMPVAR_i_2_@t18$
+mov AX,WORD PTR [BP-22]
+mov WORD PTR [BP-16],AX
+L2:
+;movi$TMPVAR_i_2_@t19$,1
 mov WORD PTR [BP-24],1
-;jz$TMPVAR_i_2_@t9$,L2
+;jz$TMPVAR_i_2_@t19$,L3
 mov AX,WORD PTR [BP-24]
 cmp AX,0
-jz L2
-;callgetchar,$TMPVAR_c_1_@t10$
+jz L3
+;callgetchar,$TMPVAR_c_1_@t20$
 call getchar
 mov WORD PTR [BP-25], AX
-;mov$LOCALVAR_i_2_@c$,$TMPVAR_c_1_@t10$
-mov AL,[BP-25]
-mov [BP-18],AX
-;callisNumeric,$TMPVAR_i_2_@t11$,$LOCALVAR_i_2_@c$
+;mov$LOCALVAR_i_2_@getintc$,$TMPVAR_c_1_@t20$
+mov AL,BYTE PTR [BP-25]
+mov WORD PTR [BP-18],AX
+;callisNumeric,$TMPVAR_i_2_@t21$,$LOCALVAR_i_2_@getintc$
 mov AX,WORD PTR [BP-18]
 push AX
 call isNumeric
 mov WORD PTR [BP-27], AX
-;jz$TMPVAR_i_2_@t11$,L3
+;jz$TMPVAR_i_2_@t21$,L4
 mov AX,WORD PTR [BP-27]
 cmp AX,0
-jz L3
-;movi$TMPVAR_i_2_@t12$,1
+jz L4
+;movi$TMPVAR_i_2_@t22$,1
 mov WORD PTR [BP-29],1
-;mov$LOCALVAR_i_2_@flag$,$TMPVAR_i_2_@t12$
-mov AX,[BP-29]
-mov [BP-16],AX
-L3:
-;callisNumeric,$TMPVAR_i_2_@t13$,$LOCALVAR_i_2_@c$
+;mov$LOCALVAR_i_2_@getintflag$,$TMPVAR_i_2_@t22$
+mov AX,WORD PTR [BP-29]
+mov WORD PTR [BP-16],AX
+L4:
+;callisNumeric,$TMPVAR_i_2_@t23$,$LOCALVAR_i_2_@getintc$
 mov AX,WORD PTR [BP-18]
 push AX
 call isNumeric
 mov WORD PTR [BP-31], AX
-;lnot$TMPVAR_i_2_@t14$,$TMPVAR_i_2_@t13$
+;lnot$TMPVAR_i_2_@t24$,$TMPVAR_i_2_@t23$
 cmp WORD PTR [BP-31],0
-jz LI8
+jz LI19
 mov WORD PTR [BP-33],0
-jmp LI9
-LI8:
+jmp LI20
+LI19:
 mov WORD PTR [BP-33],1
-LI9:
-;jz$TMPVAR_i_2_@t14$,L4
+LI20:
+;jz$TMPVAR_i_2_@t24$,L5
 mov AX,WORD PTR [BP-33]
 cmp AX,0
-jz L4
-;movi$TMPVAR_i_2_@t15$,1
+jz L5
+;movi$TMPVAR_i_2_@t25$,1
 mov WORD PTR [BP-35],1
-;eq$TMPVAR_i_2_@t16$,$LOCALVAR_i_2_@flag$,$TMPVAR_i_2_@t15$
+;eq$TMPVAR_i_2_@t26$,$LOCALVAR_i_2_@getintflag$,$TMPVAR_i_2_@t25$
 mov AX,WORD PTR [BP-16]
 cmp AX, WORD PTR [BP-35]
-je LI10
+je LI21
 mov WORD PTR [BP-37],0
-jmp LI11
-LI10:
+jmp LI22
+LI21:
 mov WORD PTR [BP-37],1
-LI11:
-;jz$TMPVAR_i_2_@t16$,L5
+LI22:
+;jz$TMPVAR_i_2_@t26$,L6
 mov AX,WORD PTR [BP-37]
 cmp AX,0
-jz L5
+jz L6
+;jmpL3
+jmp L3
+L6:
 ;jmpL2
 jmp L2
 L5:
-;jmpL1
-jmp L1
-L4:
-;movi$TMPVAR_i_2_@t17$,10
+;movi$TMPVAR_i_2_@t27$,10
 mov WORD PTR [BP-39],10
-;mul$TMPVAR_i_2_@t18$,$LOCALVAR_i_2_@num$,$TMPVAR_i_2_@t17$
+;mul$TMPVAR_i_2_@t28$,$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t27$
 mov AX,WORD PTR [BP-14]
 imul WORD PTR [BP-39]
 mov [BP-41],AX
-;mov$LOCALVAR_i_2_@num$,$TMPVAR_i_2_@t18$
-mov AX,[BP-41]
-mov [BP-14],AX
-;movi$TMPVAR_i_2_@t19$,48
+;mov$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t28$
+mov AX,WORD PTR [BP-41]
+mov WORD PTR [BP-14],AX
+;movi$TMPVAR_i_2_@t29$,48
 mov WORD PTR [BP-43],48
-;sub$TMPVAR_i_2_@t20$,$LOCALVAR_i_2_@c$,$TMPVAR_i_2_@t19$
+;sub$TMPVAR_i_2_@t30$,$LOCALVAR_i_2_@getintc$,$TMPVAR_i_2_@t29$
 mov AX,WORD PTR [BP-18]
 sub AX,WORD PTR [BP-43]
 mov [BP-45],AX
-;add$TMPVAR_i_2_@t21$,$LOCALVAR_i_2_@num$,$TMPVAR_i_2_@t20$
+;add$TMPVAR_i_2_@t31$,$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t30$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-45]
 mov [BP-47],AX
-;mov$LOCALVAR_i_2_@num$,$TMPVAR_i_2_@t21$
-mov AX,[BP-47]
-mov [BP-14],AX
-;jmpL1
-jmp L1
-L2:
-;ret$LOCALVAR_i_2_@num$
+;mov$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t31$
+mov AX,WORD PTR [BP-47]
+mov WORD PTR [BP-14],AX
+;jmpL2
+jmp L2
+L3:
+;ret$LOCALVAR_i_2_@getintnum$
 mov AX,[BP-14]
-jmp LI7
-LI7:
+jmp LI18
+LI18:
 sub SP,-47
 RESTORE_SITE 0
 getint ENDP
 putintRec PROC
 PROTECT_SITE
 add SP,-36
-;movi$TMPVAR_i_2_@t22$,0
+;movi$TMPVAR_i_2_@t32$,0
 mov WORD PTR [BP-16],0
-;eq$TMPVAR_i_2_@t23$,$PARAMVAR_i_2_@x$,$TMPVAR_i_2_@t22$
+;eq$TMPVAR_i_2_@t33$,$PARAMVAR_i_2_@putintRecx$,$TMPVAR_i_2_@t32$
 mov AX,WORD PTR [BP+4]
 cmp AX, WORD PTR [BP-16]
-je LI13
+je LI24
 mov WORD PTR [BP-18],0
-jmp LI14
-LI13:
+jmp LI25
+LI24:
 mov WORD PTR [BP-18],1
-LI14:
-;jz$TMPVAR_i_2_@t23$,L6
+LI25:
+;jz$TMPVAR_i_2_@t33$,L7
 mov AX,WORD PTR [BP-18]
 cmp AX,0
-jz L6
-;movi$TMPVAR_i_2_@t24$,0
+jz L7
+;movi$TMPVAR_i_2_@t34$,0
 mov WORD PTR [BP-20],0
-;ret$TMPVAR_i_2_@t24$
+;ret$TMPVAR_i_2_@t34$
 mov AX,[BP-20]
-jmp LI12
-L6:
-;movi$TMPVAR_i_2_@t25$,10
+jmp LI23
+L7:
+;movi$TMPVAR_i_2_@t35$,10
 mov WORD PTR [BP-22],10
-;mod$TMPVAR_i_2_@t26$,$PARAMVAR_i_2_@x$,$TMPVAR_i_2_@t25$
+;mod$TMPVAR_i_2_@t36$,$PARAMVAR_i_2_@putintRecx$,$TMPVAR_i_2_@t35$
 mov DX,0
 mov AX,WORD PTR [BP+4]
 idiv WORD PTR [BP-22]
 mov [BP-24],DX
-;mov$LOCALVAR_i_2_@tmp$,$TMPVAR_i_2_@t26$
-mov AX,[BP-24]
-mov [BP-14],AX
-;movi$TMPVAR_i_2_@t28$,10
+;mov$LOCALVAR_i_2_@putintRectmp$,$TMPVAR_i_2_@t36$
+mov AX,WORD PTR [BP-24]
+mov WORD PTR [BP-14],AX
+;movi$TMPVAR_i_2_@t38$,10
 mov WORD PTR [BP-26],10
-;div$TMPVAR_i_2_@t29$,$PARAMVAR_i_2_@x$,$TMPVAR_i_2_@t28$
+;div$TMPVAR_i_2_@t39$,$PARAMVAR_i_2_@putintRecx$,$TMPVAR_i_2_@t38$
 mov DX,0
 mov AX,WORD PTR [BP+4]
 idiv WORD PTR [BP-26]
 mov [BP-28],AX
-;callputintRec,$TMPVAR_i_2_@t27$,$TMPVAR_i_2_@t29$
+;callputintRec,$TMPVAR_i_2_@t37$,$TMPVAR_i_2_@t39$
 mov AX,WORD PTR [BP-28]
 push AX
 call putintRec
 mov WORD PTR [BP-30], AX
-;movi$TMPVAR_i_2_@t31$,48
+;movi$TMPVAR_i_2_@t41$,48
 mov WORD PTR [BP-32],48
-;add$TMPVAR_i_2_@t32$,$LOCALVAR_i_2_@tmp$,$TMPVAR_i_2_@t31$
+;add$TMPVAR_i_2_@t42$,$LOCALVAR_i_2_@putintRectmp$,$TMPVAR_i_2_@t41$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-32]
 mov [BP-34],AX
-;callputchar,$TMPVAR_i_2_@t30$,$TMPVAR_i_2_@t32$
+;callputchar,$TMPVAR_i_2_@t40$,$TMPVAR_i_2_@t42$
 mov AX,WORD PTR [BP-34]
 push AX
 call putchar
 mov WORD PTR [BP-36], AX
-LI12:
+LI23:
 sub SP,-36
 RESTORE_SITE 2
 putintRec ENDP
 putint PROC
 PROTECT_SITE
 add SP,-24
-;movi$TMPVAR_i_2_@t33$,0
+;movi$TMPVAR_i_2_@t43$,0
 mov WORD PTR [BP-14],0
-;eq$TMPVAR_i_2_@t34$,$PARAMVAR_i_2_@x$,$TMPVAR_i_2_@t33$
+;eq$TMPVAR_i_2_@t44$,$PARAMVAR_i_2_@putintx$,$TMPVAR_i_2_@t43$
 mov AX,WORD PTR [BP+4]
 cmp AX, WORD PTR [BP-14]
-je LI16
+je LI27
 mov WORD PTR [BP-16],0
-jmp LI17
-LI16:
+jmp LI28
+LI27:
 mov WORD PTR [BP-16],1
-LI17:
-;jz$TMPVAR_i_2_@t34$,L7
+LI28:
+;jz$TMPVAR_i_2_@t44$,L8
 mov AX,WORD PTR [BP-16]
 cmp AX,0
-jz L7
-;movi$TMPVAR_i_2_@t36$,48
+jz L8
+;movi$TMPVAR_i_2_@t46$,48
 mov WORD PTR [BP-18],48
-;callputchar,$TMPVAR_i_2_@t35$,$TMPVAR_i_2_@t36$
+;callputchar,$TMPVAR_i_2_@t45$,$TMPVAR_i_2_@t46$
 mov AX,WORD PTR [BP-18]
 push AX
 call putchar
 mov WORD PTR [BP-20], AX
-;movi$TMPVAR_i_2_@t37$,0
+;movi$TMPVAR_i_2_@t47$,0
 mov WORD PTR [BP-22],0
-;ret$TMPVAR_i_2_@t37$
+;ret$TMPVAR_i_2_@t47$
 mov AX,[BP-22]
-jmp LI15
-L7:
-;callputintRec,$TMPVAR_i_2_@t38$,$PARAMVAR_i_2_@x$
+jmp LI26
+L8:
+;callputintRec,$TMPVAR_i_2_@t48$,$PARAMVAR_i_2_@putintx$
 mov AX,WORD PTR [BP+4]
 push AX
 call putintRec
 mov WORD PTR [BP-24], AX
-LI15:
+LI26:
 sub SP,-24
 RESTORE_SITE 2
 putint ENDP
+getstr PROC
+PROTECT_SITE
+add SP,-59
+;movi$TMPVAR_i_2_@t49$,0
+mov WORD PTR [BP-20],0
+;mov$LOCALVAR_i_2_@getstri$,$TMPVAR_i_2_@t49$
+mov AX,WORD PTR [BP-20]
+mov WORD PTR [BP-14],AX
+;movi$TMPVAR_i_2_@t50$,0
+mov WORD PTR [BP-22],0
+;mov$LOCALVAR_i_2_@getstrflag$,$TMPVAR_i_2_@t50$
+mov AX,WORD PTR [BP-22]
+mov WORD PTR [BP-16],AX
+L9:
+;lt$TMPVAR_i_2_@t51$,$LOCALVAR_i_2_@getstri$,$PARAMVAR_i_2_@getstrsize$
+mov AX,WORD PTR [BP-14]
+cmp AX, WORD PTR [BP+6]
+jl LI30
+mov WORD PTR [BP-24],0
+jmp LI31
+LI30:
+mov WORD PTR [BP-24],1
+LI31:
+;jz$TMPVAR_i_2_@t51$,L10
+mov AX,WORD PTR [BP-24]
+cmp AX,0
+jz L10
+;callgetchar,$TMPVAR_c_1_@t52$
+call getchar
+mov WORD PTR [BP-25], AX
+;mov$LOCALVAR_i_2_@getstrc$,$TMPVAR_c_1_@t52$
+mov AL,BYTE PTR [BP-25]
+mov WORD PTR [BP-18],AX
+;callisBlank,$TMPVAR_i_2_@t53$,$LOCALVAR_i_2_@getstrc$
+mov AX,WORD PTR [BP-18]
+push AX
+call isBlank
+mov WORD PTR [BP-27], AX
+;lnot$TMPVAR_i_2_@t54$,$TMPVAR_i_2_@t53$
+cmp WORD PTR [BP-27],0
+jz LI32
+mov WORD PTR [BP-29],0
+jmp LI33
+LI32:
+mov WORD PTR [BP-29],1
+LI33:
+;jz$TMPVAR_i_2_@t54$,L11
+mov AX,WORD PTR [BP-29]
+cmp AX,0
+jz L11
+;movi$TMPVAR_i_2_@t55$,1
+mov WORD PTR [BP-31],1
+;mov$LOCALVAR_i_2_@getstrflag$,$TMPVAR_i_2_@t55$
+mov AX,WORD PTR [BP-31]
+mov WORD PTR [BP-16],AX
+L11:
+;callisBlank,$TMPVAR_i_2_@t56$,$LOCALVAR_i_2_@getstrc$
+mov AX,WORD PTR [BP-18]
+push AX
+call isBlank
+mov WORD PTR [BP-33], AX
+;jz$TMPVAR_i_2_@t56$,L12
+mov AX,WORD PTR [BP-33]
+cmp AX,0
+jz L12
+;movi$TMPVAR_i_2_@t57$,1
+mov WORD PTR [BP-35],1
+;eq$TMPVAR_i_2_@t58$,$LOCALVAR_i_2_@getstrflag$,$TMPVAR_i_2_@t57$
+mov AX,WORD PTR [BP-16]
+cmp AX, WORD PTR [BP-35]
+je LI34
+mov WORD PTR [BP-37],0
+jmp LI35
+LI34:
+mov WORD PTR [BP-37],1
+LI35:
+;jz$TMPVAR_i_2_@t58$,L13
+mov AX,WORD PTR [BP-37]
+cmp AX,0
+jz L13
+;jmpL10
+jmp L10
+L13:
+;jmpL9
+jmp L9
+L12:
+;mov$TMPVAR_i_2_@t59$,$PARAMVAR_c_2_@getstrstorage$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-39],AX
+;movi$TMPVAR_i_2_@t60$,0
+mov WORD PTR [BP-41],0
+;movi$TMPVAR_i_2_@t61$,1
+mov WORD PTR [BP-43],1
+;mul$TMPVAR_i_2_@t61$,$TMPVAR_i_2_@t61$,$LOCALVAR_i_2_@getstri$
+mov AX,WORD PTR [BP-43]
+imul WORD PTR [BP-14]
+mov [BP-43],AX
+;add$TMPVAR_i_2_@t60$,$TMPVAR_i_2_@t60$,$TMPVAR_i_2_@t61$
+mov AX,WORD PTR [BP-41]
+add AX,WORD PTR [BP-43]
+mov [BP-41],AX
+;movi$TMPVAR_i_2_@t62$,1
+mov WORD PTR [BP-45],1
+;mul$TMPVAR_i_2_@t60$,$TMPVAR_i_2_@t60$,$TMPVAR_i_2_@t62$
+mov AX,WORD PTR [BP-41]
+imul WORD PTR [BP-45]
+mov [BP-41],AX
+;add$TMPVAR_i_2_@t59$,$TMPVAR_i_2_@t59$,$TMPVAR_i_2_@t60$
+mov AX,WORD PTR [BP-39]
+add AX,WORD PTR [BP-41]
+mov [BP-39],AX
+;movmr[$TMPVAR_i_2_@t59$],$LOCALVAR_i_2_@getstrc$
+mov BX,WORD PTR [BP-39]
+mov AX,WORD PTR [BP-18]
+mov [BX],AX
+;movi$TMPVAR_i_2_@t63$,1
+mov WORD PTR [BP-47],1
+;add$TMPVAR_i_2_@t64$,$LOCALVAR_i_2_@getstri$,$TMPVAR_i_2_@t63$
+mov AX,WORD PTR [BP-14]
+add AX,WORD PTR [BP-47]
+mov [BP-49],AX
+;mov$LOCALVAR_i_2_@getstri$,$TMPVAR_i_2_@t64$
+mov AX,WORD PTR [BP-49]
+mov WORD PTR [BP-14],AX
+;jmpL9
+jmp L9
+L10:
+;mov$TMPVAR_i_2_@t65$,$PARAMVAR_c_2_@getstrstorage$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-51],AX
+;movi$TMPVAR_i_2_@t66$,0
+mov WORD PTR [BP-53],0
+;movi$TMPVAR_i_2_@t67$,1
+mov WORD PTR [BP-55],1
+;mul$TMPVAR_i_2_@t67$,$TMPVAR_i_2_@t67$,$LOCALVAR_i_2_@getstri$
+mov AX,WORD PTR [BP-55]
+imul WORD PTR [BP-14]
+mov [BP-55],AX
+;add$TMPVAR_i_2_@t66$,$TMPVAR_i_2_@t66$,$TMPVAR_i_2_@t67$
+mov AX,WORD PTR [BP-53]
+add AX,WORD PTR [BP-55]
+mov [BP-53],AX
+;movi$TMPVAR_i_2_@t68$,1
+mov WORD PTR [BP-57],1
+;mul$TMPVAR_i_2_@t66$,$TMPVAR_i_2_@t66$,$TMPVAR_i_2_@t68$
+mov AX,WORD PTR [BP-53]
+imul WORD PTR [BP-57]
+mov [BP-53],AX
+;add$TMPVAR_i_2_@t65$,$TMPVAR_i_2_@t65$,$TMPVAR_i_2_@t66$
+mov AX,WORD PTR [BP-51]
+add AX,WORD PTR [BP-53]
+mov [BP-51],AX
+;movi$TMPVAR_i_2_@t69$,0
+mov WORD PTR [BP-59],0
+;movmr[$TMPVAR_i_2_@t65$],$TMPVAR_i_2_@t69$
+mov BX,WORD PTR [BP-51]
+mov AX,WORD PTR [BP-59]
+mov [BX],AX
+LI29:
+sub SP,-59
+RESTORE_SITE 4
+getstr ENDP
+putstr PROC
+PROTECT_SITE
+add SP,-46
+;movi$TMPVAR_i_2_@t70$,0
+mov WORD PTR [BP-16],0
+;mov$LOCALVAR_i_2_@putstri$,$TMPVAR_i_2_@t70$
+mov AX,WORD PTR [BP-16]
+mov WORD PTR [BP-14],AX
+L14:
+;mov$TMPVAR_i_2_@t71$,$PARAMVAR_c_2_@putstrstorage$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-18],AX
+;movi$TMPVAR_i_2_@t72$,0
+mov WORD PTR [BP-20],0
+;movi$TMPVAR_i_2_@t73$,1
+mov WORD PTR [BP-22],1
+;mul$TMPVAR_i_2_@t73$,$TMPVAR_i_2_@t73$,$LOCALVAR_i_2_@putstri$
+mov AX,WORD PTR [BP-22]
+imul WORD PTR [BP-14]
+mov [BP-22],AX
+;add$TMPVAR_i_2_@t72$,$TMPVAR_i_2_@t72$,$TMPVAR_i_2_@t73$
+mov AX,WORD PTR [BP-20]
+add AX,WORD PTR [BP-22]
+mov [BP-20],AX
+;movi$TMPVAR_i_2_@t74$,1
+mov WORD PTR [BP-24],1
+;mul$TMPVAR_i_2_@t72$,$TMPVAR_i_2_@t72$,$TMPVAR_i_2_@t74$
+mov AX,WORD PTR [BP-20]
+imul WORD PTR [BP-24]
+mov [BP-20],AX
+;add$TMPVAR_i_2_@t71$,$TMPVAR_i_2_@t71$,$TMPVAR_i_2_@t72$
+mov AX,WORD PTR [BP-18]
+add AX,WORD PTR [BP-20]
+mov [BP-18],AX
+;movrm$TMPVAR_i_2_@t75$,[$TMPVAR_i_2_@t71$]
+mov BX,WORD PTR [BP-18]
+mov AX,[BX]
+mov WORD PTR [BP-26],AX
+;movi$TMPVAR_i_2_@t76$,0
+mov WORD PTR [BP-28],0
+;ne$TMPVAR_i_2_@t77$,$TMPVAR_i_2_@t75$,$TMPVAR_i_2_@t76$
+mov AX,WORD PTR [BP-26]
+cmp AX, WORD PTR [BP-28]
+jne LI37
+mov WORD PTR [BP-30],0
+jmp LI38
+LI37:
+mov WORD PTR [BP-30],1
+LI38:
+;jz$TMPVAR_i_2_@t77$,L15
+mov AX,WORD PTR [BP-30]
+cmp AX,0
+jz L15
+;mov$TMPVAR_i_2_@t79$,$PARAMVAR_c_2_@putstrstorage$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-32],AX
+;movi$TMPVAR_i_2_@t80$,0
+mov WORD PTR [BP-34],0
+;movi$TMPVAR_i_2_@t81$,1
+mov WORD PTR [BP-36],1
+;mul$TMPVAR_i_2_@t81$,$TMPVAR_i_2_@t81$,$LOCALVAR_i_2_@putstri$
+mov AX,WORD PTR [BP-36]
+imul WORD PTR [BP-14]
+mov [BP-36],AX
+;add$TMPVAR_i_2_@t80$,$TMPVAR_i_2_@t80$,$TMPVAR_i_2_@t81$
+mov AX,WORD PTR [BP-34]
+add AX,WORD PTR [BP-36]
+mov [BP-34],AX
+;movi$TMPVAR_i_2_@t82$,1
+mov WORD PTR [BP-38],1
+;mul$TMPVAR_i_2_@t80$,$TMPVAR_i_2_@t80$,$TMPVAR_i_2_@t82$
+mov AX,WORD PTR [BP-34]
+imul WORD PTR [BP-38]
+mov [BP-34],AX
+;add$TMPVAR_i_2_@t79$,$TMPVAR_i_2_@t79$,$TMPVAR_i_2_@t80$
+mov AX,WORD PTR [BP-32]
+add AX,WORD PTR [BP-34]
+mov [BP-32],AX
+;movrm$TMPVAR_i_2_@t83$,[$TMPVAR_i_2_@t79$]
+mov BX,WORD PTR [BP-32]
+mov AX,[BX]
+mov WORD PTR [BP-40],AX
+;callputchar,$TMPVAR_i_2_@t78$,$TMPVAR_i_2_@t83$
+mov AX,WORD PTR [BP-40]
+push AX
+call putchar
+mov WORD PTR [BP-42], AX
+;movi$TMPVAR_i_2_@t84$,1
+mov WORD PTR [BP-44],1
+;add$TMPVAR_i_2_@t85$,$LOCALVAR_i_2_@putstri$,$TMPVAR_i_2_@t84$
+mov AX,WORD PTR [BP-14]
+add AX,WORD PTR [BP-44]
+mov [BP-46],AX
+;mov$LOCALVAR_i_2_@putstri$,$TMPVAR_i_2_@t85$
+mov AX,WORD PTR [BP-46]
+mov WORD PTR [BP-14],AX
+;jmpL14
+jmp L14
+L15:
+LI36:
+sub SP,-46
+RESTORE_SITE 2
+putstr ENDP
+putspace PROC
+PROTECT_SITE
+add SP,-16
+;movi$TMPVAR_i_2_@t87$,32
+mov WORD PTR [BP-14],32
+;callputchar,$TMPVAR_i_2_@t86$,$TMPVAR_i_2_@t87$
+mov AX,WORD PTR [BP-14]
+push AX
+call putchar
+mov WORD PTR [BP-16], AX
+LI39:
+sub SP,-16
+RESTORE_SITE 0
+putspace ENDP
+putln PROC
+PROTECT_SITE
+add SP,-20
+;movi$TMPVAR_i_2_@t89$,13
+mov WORD PTR [BP-14],13
+;callputchar,$TMPVAR_i_2_@t88$,$TMPVAR_i_2_@t89$
+mov AX,WORD PTR [BP-14]
+push AX
+call putchar
+mov WORD PTR [BP-16], AX
+;movi$TMPVAR_i_2_@t91$,10
+mov WORD PTR [BP-18],10
+;callputchar,$TMPVAR_i_2_@t90$,$TMPVAR_i_2_@t91$
+mov AX,WORD PTR [BP-18]
+push AX
+call putchar
+mov WORD PTR [BP-20], AX
+LI40:
+sub SP,-20
+RESTORE_SITE 0
+putln ENDP
+sort PROC
+PROTECT_SITE
+add SP,-108
+;movi$TMPVAR_i_2_@t92$,0
+mov WORD PTR [BP-20],0
+;mov$LOCALVAR_i_2_@sorti$,$TMPVAR_i_2_@t92$
+mov AX,WORD PTR [BP-20]
+mov WORD PTR [BP-14],AX
+L16:
+;lt$TMPVAR_i_2_@t93$,$LOCALVAR_i_2_@sorti$,$PARAMVAR_i_2_@sortsize$
+mov AX,WORD PTR [BP-14]
+cmp AX, WORD PTR [BP+6]
+jl LI42
+mov WORD PTR [BP-22],0
+jmp LI43
+LI42:
+mov WORD PTR [BP-22],1
+LI43:
+;jz$TMPVAR_i_2_@t93$,L17
+mov AX,WORD PTR [BP-22]
+cmp AX,0
+jz L17
+;movi$TMPVAR_i_2_@t94$,1
+mov WORD PTR [BP-24],1
+;sub$TMPVAR_i_2_@t95$,$PARAMVAR_i_2_@sortsize$,$TMPVAR_i_2_@t94$
+mov AX,WORD PTR [BP+6]
+sub AX,WORD PTR [BP-24]
+mov [BP-26],AX
+;mov$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t95$
+mov AX,WORD PTR [BP-26]
+mov WORD PTR [BP-16],AX
+L18:
+;movi$TMPVAR_i_2_@t96$,0
+mov WORD PTR [BP-28],0
+;gt$TMPVAR_i_2_@t97$,$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t96$
+mov AX,WORD PTR [BP-16]
+cmp AX, WORD PTR [BP-28]
+jg LI44
+mov WORD PTR [BP-30],0
+jmp LI45
+LI44:
+mov WORD PTR [BP-30],1
+LI45:
+;jz$TMPVAR_i_2_@t97$,L19
+mov AX,WORD PTR [BP-30]
+cmp AX,0
+jz L19
+;mov$TMPVAR_i_2_@t98$,$PARAMVAR_i_2_@sortarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-32],AX
+;movi$TMPVAR_i_2_@t99$,0
+mov WORD PTR [BP-34],0
+;movi$TMPVAR_i_2_@t100$,1
+mov WORD PTR [BP-36],1
+;sub$TMPVAR_i_2_@t101$,$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t100$
+mov AX,WORD PTR [BP-16]
+sub AX,WORD PTR [BP-36]
+mov [BP-38],AX
+;movi$TMPVAR_i_2_@t102$,1
+mov WORD PTR [BP-40],1
+;mul$TMPVAR_i_2_@t102$,$TMPVAR_i_2_@t102$,$TMPVAR_i_2_@t101$
+mov AX,WORD PTR [BP-40]
+imul WORD PTR [BP-38]
+mov [BP-40],AX
+;add$TMPVAR_i_2_@t99$,$TMPVAR_i_2_@t99$,$TMPVAR_i_2_@t102$
+mov AX,WORD PTR [BP-34]
+add AX,WORD PTR [BP-40]
+mov [BP-34],AX
+;movi$TMPVAR_i_2_@t103$,2
+mov WORD PTR [BP-42],2
+;mul$TMPVAR_i_2_@t99$,$TMPVAR_i_2_@t99$,$TMPVAR_i_2_@t103$
+mov AX,WORD PTR [BP-34]
+imul WORD PTR [BP-42]
+mov [BP-34],AX
+;add$TMPVAR_i_2_@t98$,$TMPVAR_i_2_@t98$,$TMPVAR_i_2_@t99$
+mov AX,WORD PTR [BP-32]
+add AX,WORD PTR [BP-34]
+mov [BP-32],AX
+;movrm$TMPVAR_i_2_@t104$,[$TMPVAR_i_2_@t98$]
+mov BX,WORD PTR [BP-32]
+mov AX,[BX]
+mov WORD PTR [BP-44],AX
+;mov$TMPVAR_i_2_@t105$,$PARAMVAR_i_2_@sortarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-46],AX
+;movi$TMPVAR_i_2_@t106$,0
+mov WORD PTR [BP-48],0
+;movi$TMPVAR_i_2_@t107$,1
+mov WORD PTR [BP-50],1
+;mul$TMPVAR_i_2_@t107$,$TMPVAR_i_2_@t107$,$LOCALVAR_i_2_@sortj$
+mov AX,WORD PTR [BP-50]
+imul WORD PTR [BP-16]
+mov [BP-50],AX
+;add$TMPVAR_i_2_@t106$,$TMPVAR_i_2_@t106$,$TMPVAR_i_2_@t107$
+mov AX,WORD PTR [BP-48]
+add AX,WORD PTR [BP-50]
+mov [BP-48],AX
+;movi$TMPVAR_i_2_@t108$,2
+mov WORD PTR [BP-52],2
+;mul$TMPVAR_i_2_@t106$,$TMPVAR_i_2_@t106$,$TMPVAR_i_2_@t108$
+mov AX,WORD PTR [BP-48]
+imul WORD PTR [BP-52]
+mov [BP-48],AX
+;add$TMPVAR_i_2_@t105$,$TMPVAR_i_2_@t105$,$TMPVAR_i_2_@t106$
+mov AX,WORD PTR [BP-46]
+add AX,WORD PTR [BP-48]
+mov [BP-46],AX
+;movrm$TMPVAR_i_2_@t109$,[$TMPVAR_i_2_@t105$]
+mov BX,WORD PTR [BP-46]
+mov AX,[BX]
+mov WORD PTR [BP-54],AX
+;gt$TMPVAR_i_2_@t110$,$TMPVAR_i_2_@t104$,$TMPVAR_i_2_@t109$
+mov AX,WORD PTR [BP-44]
+cmp AX, WORD PTR [BP-54]
+jg LI46
+mov WORD PTR [BP-56],0
+jmp LI47
+LI46:
+mov WORD PTR [BP-56],1
+LI47:
+;jz$TMPVAR_i_2_@t110$,L20
+mov AX,WORD PTR [BP-56]
+cmp AX,0
+jz L20
+;mov$TMPVAR_i_2_@t111$,$PARAMVAR_i_2_@sortarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-58],AX
+;movi$TMPVAR_i_2_@t112$,0
+mov WORD PTR [BP-60],0
+;movi$TMPVAR_i_2_@t113$,1
+mov WORD PTR [BP-62],1
+;sub$TMPVAR_i_2_@t114$,$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t113$
+mov AX,WORD PTR [BP-16]
+sub AX,WORD PTR [BP-62]
+mov [BP-64],AX
+;movi$TMPVAR_i_2_@t115$,1
+mov WORD PTR [BP-66],1
+;mul$TMPVAR_i_2_@t115$,$TMPVAR_i_2_@t115$,$TMPVAR_i_2_@t114$
+mov AX,WORD PTR [BP-66]
+imul WORD PTR [BP-64]
+mov [BP-66],AX
+;add$TMPVAR_i_2_@t112$,$TMPVAR_i_2_@t112$,$TMPVAR_i_2_@t115$
+mov AX,WORD PTR [BP-60]
+add AX,WORD PTR [BP-66]
+mov [BP-60],AX
+;movi$TMPVAR_i_2_@t116$,2
+mov WORD PTR [BP-68],2
+;mul$TMPVAR_i_2_@t112$,$TMPVAR_i_2_@t112$,$TMPVAR_i_2_@t116$
+mov AX,WORD PTR [BP-60]
+imul WORD PTR [BP-68]
+mov [BP-60],AX
+;add$TMPVAR_i_2_@t111$,$TMPVAR_i_2_@t111$,$TMPVAR_i_2_@t112$
+mov AX,WORD PTR [BP-58]
+add AX,WORD PTR [BP-60]
+mov [BP-58],AX
+;movrm$TMPVAR_i_2_@t117$,[$TMPVAR_i_2_@t111$]
+mov BX,WORD PTR [BP-58]
+mov AX,[BX]
+mov WORD PTR [BP-70],AX
+;mov$LOCALVAR_i_2_@sorttmp$,$TMPVAR_i_2_@t117$
+mov AX,WORD PTR [BP-70]
+mov WORD PTR [BP-18],AX
+;mov$TMPVAR_i_2_@t118$,$PARAMVAR_i_2_@sortarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-72],AX
+;movi$TMPVAR_i_2_@t119$,0
+mov WORD PTR [BP-74],0
+;movi$TMPVAR_i_2_@t120$,1
+mov WORD PTR [BP-76],1
+;sub$TMPVAR_i_2_@t121$,$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t120$
+mov AX,WORD PTR [BP-16]
+sub AX,WORD PTR [BP-76]
+mov [BP-78],AX
+;movi$TMPVAR_i_2_@t122$,1
+mov WORD PTR [BP-80],1
+;mul$TMPVAR_i_2_@t122$,$TMPVAR_i_2_@t122$,$TMPVAR_i_2_@t121$
+mov AX,WORD PTR [BP-80]
+imul WORD PTR [BP-78]
+mov [BP-80],AX
+;add$TMPVAR_i_2_@t119$,$TMPVAR_i_2_@t119$,$TMPVAR_i_2_@t122$
+mov AX,WORD PTR [BP-74]
+add AX,WORD PTR [BP-80]
+mov [BP-74],AX
+;movi$TMPVAR_i_2_@t123$,2
+mov WORD PTR [BP-82],2
+;mul$TMPVAR_i_2_@t119$,$TMPVAR_i_2_@t119$,$TMPVAR_i_2_@t123$
+mov AX,WORD PTR [BP-74]
+imul WORD PTR [BP-82]
+mov [BP-74],AX
+;add$TMPVAR_i_2_@t118$,$TMPVAR_i_2_@t118$,$TMPVAR_i_2_@t119$
+mov AX,WORD PTR [BP-72]
+add AX,WORD PTR [BP-74]
+mov [BP-72],AX
+;mov$TMPVAR_i_2_@t124$,$PARAMVAR_i_2_@sortarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-84],AX
+;movi$TMPVAR_i_2_@t125$,0
+mov WORD PTR [BP-86],0
+;movi$TMPVAR_i_2_@t126$,1
+mov WORD PTR [BP-88],1
+;mul$TMPVAR_i_2_@t126$,$TMPVAR_i_2_@t126$,$LOCALVAR_i_2_@sortj$
+mov AX,WORD PTR [BP-88]
+imul WORD PTR [BP-16]
+mov [BP-88],AX
+;add$TMPVAR_i_2_@t125$,$TMPVAR_i_2_@t125$,$TMPVAR_i_2_@t126$
+mov AX,WORD PTR [BP-86]
+add AX,WORD PTR [BP-88]
+mov [BP-86],AX
+;movi$TMPVAR_i_2_@t127$,2
+mov WORD PTR [BP-90],2
+;mul$TMPVAR_i_2_@t125$,$TMPVAR_i_2_@t125$,$TMPVAR_i_2_@t127$
+mov AX,WORD PTR [BP-86]
+imul WORD PTR [BP-90]
+mov [BP-86],AX
+;add$TMPVAR_i_2_@t124$,$TMPVAR_i_2_@t124$,$TMPVAR_i_2_@t125$
+mov AX,WORD PTR [BP-84]
+add AX,WORD PTR [BP-86]
+mov [BP-84],AX
+;movrm$TMPVAR_i_2_@t128$,[$TMPVAR_i_2_@t124$]
+mov BX,WORD PTR [BP-84]
+mov AX,[BX]
+mov WORD PTR [BP-92],AX
+;movmr[$TMPVAR_i_2_@t118$],$TMPVAR_i_2_@t128$
+mov BX,WORD PTR [BP-72]
+mov AX,WORD PTR [BP-92]
+mov [BX],AX
+;mov$TMPVAR_i_2_@t129$,$PARAMVAR_i_2_@sortarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-94],AX
+;movi$TMPVAR_i_2_@t130$,0
+mov WORD PTR [BP-96],0
+;movi$TMPVAR_i_2_@t131$,1
+mov WORD PTR [BP-98],1
+;mul$TMPVAR_i_2_@t131$,$TMPVAR_i_2_@t131$,$LOCALVAR_i_2_@sortj$
+mov AX,WORD PTR [BP-98]
+imul WORD PTR [BP-16]
+mov [BP-98],AX
+;add$TMPVAR_i_2_@t130$,$TMPVAR_i_2_@t130$,$TMPVAR_i_2_@t131$
+mov AX,WORD PTR [BP-96]
+add AX,WORD PTR [BP-98]
+mov [BP-96],AX
+;movi$TMPVAR_i_2_@t132$,2
+mov WORD PTR [BP-100],2
+;mul$TMPVAR_i_2_@t130$,$TMPVAR_i_2_@t130$,$TMPVAR_i_2_@t132$
+mov AX,WORD PTR [BP-96]
+imul WORD PTR [BP-100]
+mov [BP-96],AX
+;add$TMPVAR_i_2_@t129$,$TMPVAR_i_2_@t129$,$TMPVAR_i_2_@t130$
+mov AX,WORD PTR [BP-94]
+add AX,WORD PTR [BP-96]
+mov [BP-94],AX
+;movmr[$TMPVAR_i_2_@t129$],$LOCALVAR_i_2_@sorttmp$
+mov BX,WORD PTR [BP-94]
+mov AX,WORD PTR [BP-18]
+mov [BX],AX
+L20:
+;movi$TMPVAR_i_2_@t133$,1
+mov WORD PTR [BP-102],1
+;sub$TMPVAR_i_2_@t134$,$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t133$
+mov AX,WORD PTR [BP-16]
+sub AX,WORD PTR [BP-102]
+mov [BP-104],AX
+;mov$LOCALVAR_i_2_@sortj$,$TMPVAR_i_2_@t134$
+mov AX,WORD PTR [BP-104]
+mov WORD PTR [BP-16],AX
+;jmpL18
+jmp L18
+L19:
+;movi$TMPVAR_i_2_@t135$,1
+mov WORD PTR [BP-106],1
+;add$TMPVAR_i_2_@t136$,$LOCALVAR_i_2_@sorti$,$TMPVAR_i_2_@t135$
+mov AX,WORD PTR [BP-14]
+add AX,WORD PTR [BP-106]
+mov [BP-108],AX
+;mov$LOCALVAR_i_2_@sorti$,$TMPVAR_i_2_@t136$
+mov AX,WORD PTR [BP-108]
+mov WORD PTR [BP-14],AX
+;jmpL16
+jmp L16
+L17:
+LI41:
+sub SP,-108
+RESTORE_SITE 4
+sort ENDP
+getintarray PROC
+PROTECT_SITE
+add SP,-32
+;movi$TMPVAR_i_2_@t137$,0
+mov WORD PTR [BP-16],0
+;mov$LOCALVAR_i_2_@getintarrayi$,$TMPVAR_i_2_@t137$
+mov AX,WORD PTR [BP-16]
+mov WORD PTR [BP-14],AX
+L21:
+;lt$TMPVAR_i_2_@t138$,$LOCALVAR_i_2_@getintarrayi$,$PARAMVAR_i_2_@getintarraysize$
+mov AX,WORD PTR [BP-14]
+cmp AX, WORD PTR [BP+6]
+jl LI49
+mov WORD PTR [BP-18],0
+jmp LI50
+LI49:
+mov WORD PTR [BP-18],1
+LI50:
+;jz$TMPVAR_i_2_@t138$,L22
+mov AX,WORD PTR [BP-18]
+cmp AX,0
+jz L22
+;mov$TMPVAR_i_2_@t139$,$PARAMVAR_i_2_@getintarrayarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-20],AX
+;movi$TMPVAR_i_2_@t140$,0
+mov WORD PTR [BP-22],0
+;movi$TMPVAR_i_2_@t141$,1
+mov WORD PTR [BP-24],1
+;mul$TMPVAR_i_2_@t141$,$TMPVAR_i_2_@t141$,$LOCALVAR_i_2_@getintarrayi$
+mov AX,WORD PTR [BP-24]
+imul WORD PTR [BP-14]
+mov [BP-24],AX
+;add$TMPVAR_i_2_@t140$,$TMPVAR_i_2_@t140$,$TMPVAR_i_2_@t141$
+mov AX,WORD PTR [BP-22]
+add AX,WORD PTR [BP-24]
+mov [BP-22],AX
+;movi$TMPVAR_i_2_@t142$,2
+mov WORD PTR [BP-26],2
+;mul$TMPVAR_i_2_@t140$,$TMPVAR_i_2_@t140$,$TMPVAR_i_2_@t142$
+mov AX,WORD PTR [BP-22]
+imul WORD PTR [BP-26]
+mov [BP-22],AX
+;add$TMPVAR_i_2_@t139$,$TMPVAR_i_2_@t139$,$TMPVAR_i_2_@t140$
+mov AX,WORD PTR [BP-20]
+add AX,WORD PTR [BP-22]
+mov [BP-20],AX
+;callgetint,$TMPVAR_i_2_@t143$
+call getint
+mov WORD PTR [BP-28], AX
+;movmr[$TMPVAR_i_2_@t139$],$TMPVAR_i_2_@t143$
+mov BX,WORD PTR [BP-20]
+mov AX,WORD PTR [BP-28]
+mov [BX],AX
+;movi$TMPVAR_i_2_@t144$,1
+mov WORD PTR [BP-30],1
+;add$TMPVAR_i_2_@t145$,$LOCALVAR_i_2_@getintarrayi$,$TMPVAR_i_2_@t144$
+mov AX,WORD PTR [BP-14]
+add AX,WORD PTR [BP-30]
+mov [BP-32],AX
+;mov$LOCALVAR_i_2_@getintarrayi$,$TMPVAR_i_2_@t145$
+mov AX,WORD PTR [BP-32]
+mov WORD PTR [BP-14],AX
+;jmpL21
+jmp L21
+L22:
+LI48:
+sub SP,-32
+RESTORE_SITE 4
+getintarray ENDP
+putintarray PROC
+PROTECT_SITE
+add SP,-38
+;movi$TMPVAR_i_2_@t146$,0
+mov WORD PTR [BP-16],0
+;mov$LOCALVAR_i_2_@putintarrayi$,$TMPVAR_i_2_@t146$
+mov AX,WORD PTR [BP-16]
+mov WORD PTR [BP-14],AX
+L23:
+;lt$TMPVAR_i_2_@t147$,$LOCALVAR_i_2_@putintarrayi$,$PARAMVAR_i_2_@putintarraysize$
+mov AX,WORD PTR [BP-14]
+cmp AX, WORD PTR [BP+6]
+jl LI52
+mov WORD PTR [BP-18],0
+jmp LI53
+LI52:
+mov WORD PTR [BP-18],1
+LI53:
+;jz$TMPVAR_i_2_@t147$,L24
+mov AX,WORD PTR [BP-18]
+cmp AX,0
+jz L24
+;mov$TMPVAR_i_2_@t149$,$PARAMVAR_i_2_@putintarrayarr$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-20],AX
+;movi$TMPVAR_i_2_@t150$,0
+mov WORD PTR [BP-22],0
+;movi$TMPVAR_i_2_@t151$,1
+mov WORD PTR [BP-24],1
+;mul$TMPVAR_i_2_@t151$,$TMPVAR_i_2_@t151$,$LOCALVAR_i_2_@putintarrayi$
+mov AX,WORD PTR [BP-24]
+imul WORD PTR [BP-14]
+mov [BP-24],AX
+;add$TMPVAR_i_2_@t150$,$TMPVAR_i_2_@t150$,$TMPVAR_i_2_@t151$
+mov AX,WORD PTR [BP-22]
+add AX,WORD PTR [BP-24]
+mov [BP-22],AX
+;movi$TMPVAR_i_2_@t152$,2
+mov WORD PTR [BP-26],2
+;mul$TMPVAR_i_2_@t150$,$TMPVAR_i_2_@t150$,$TMPVAR_i_2_@t152$
+mov AX,WORD PTR [BP-22]
+imul WORD PTR [BP-26]
+mov [BP-22],AX
+;add$TMPVAR_i_2_@t149$,$TMPVAR_i_2_@t149$,$TMPVAR_i_2_@t150$
+mov AX,WORD PTR [BP-20]
+add AX,WORD PTR [BP-22]
+mov [BP-20],AX
+;movrm$TMPVAR_i_2_@t153$,[$TMPVAR_i_2_@t149$]
+mov BX,WORD PTR [BP-20]
+mov AX,[BX]
+mov WORD PTR [BP-28],AX
+;callputint,$TMPVAR_i_2_@t148$,$TMPVAR_i_2_@t153$
+mov AX,WORD PTR [BP-28]
+push AX
+call putint
+mov WORD PTR [BP-30], AX
+;callputspace,$TMPVAR_i_2_@t154$
+call putspace
+mov WORD PTR [BP-32], AX
+;movi$TMPVAR_i_2_@t155$,1
+mov WORD PTR [BP-34],1
+;add$TMPVAR_i_2_@t156$,$LOCALVAR_i_2_@putintarrayi$,$TMPVAR_i_2_@t155$
+mov AX,WORD PTR [BP-14]
+add AX,WORD PTR [BP-34]
+mov [BP-36],AX
+;mov$LOCALVAR_i_2_@putintarrayi$,$TMPVAR_i_2_@t156$
+mov AX,WORD PTR [BP-36]
+mov WORD PTR [BP-14],AX
+;jmpL23
+jmp L23
+L24:
+;callputln,$TMPVAR_i_2_@t157$
+call putln
+mov WORD PTR [BP-38], AX
+LI51:
+sub SP,-38
+RESTORE_SITE 4
+putintarray ENDP
+strcmp PROC
+PROTECT_SITE
+add SP,-60
+;movi$TMPVAR_i_2_@t158$,0
+mov WORD PTR [BP-16],0
+;mov$LOCALVAR_i_2_@strcmpi$,$TMPVAR_i_2_@t158$
+mov AX,WORD PTR [BP-16]
+mov WORD PTR [BP-14],AX
+L25:
+;mov$TMPVAR_i_2_@t159$,$PARAMVAR_c_2_@strcmpstr1$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-18],AX
+;movi$TMPVAR_i_2_@t160$,0
+mov WORD PTR [BP-20],0
+;movi$TMPVAR_i_2_@t161$,1
+mov WORD PTR [BP-22],1
+;mul$TMPVAR_i_2_@t161$,$TMPVAR_i_2_@t161$,$LOCALVAR_i_2_@strcmpi$
+mov AX,WORD PTR [BP-22]
+imul WORD PTR [BP-14]
+mov [BP-22],AX
+;add$TMPVAR_i_2_@t160$,$TMPVAR_i_2_@t160$,$TMPVAR_i_2_@t161$
+mov AX,WORD PTR [BP-20]
+add AX,WORD PTR [BP-22]
+mov [BP-20],AX
+;movi$TMPVAR_i_2_@t162$,1
+mov WORD PTR [BP-24],1
+;mul$TMPVAR_i_2_@t160$,$TMPVAR_i_2_@t160$,$TMPVAR_i_2_@t162$
+mov AX,WORD PTR [BP-20]
+imul WORD PTR [BP-24]
+mov [BP-20],AX
+;add$TMPVAR_i_2_@t159$,$TMPVAR_i_2_@t159$,$TMPVAR_i_2_@t160$
+mov AX,WORD PTR [BP-18]
+add AX,WORD PTR [BP-20]
+mov [BP-18],AX
+;movrm$TMPVAR_i_2_@t163$,[$TMPVAR_i_2_@t159$]
+mov BX,WORD PTR [BP-18]
+mov AX,[BX]
+mov WORD PTR [BP-26],AX
+;mov$TMPVAR_i_2_@t164$,$PARAMVAR_c_2_@strcmpstr2$
+mov AX,WORD PTR [BP+6]
+mov WORD PTR [BP-28],AX
+;movi$TMPVAR_i_2_@t165$,0
+mov WORD PTR [BP-30],0
+;movi$TMPVAR_i_2_@t166$,1
+mov WORD PTR [BP-32],1
+;mul$TMPVAR_i_2_@t166$,$TMPVAR_i_2_@t166$,$LOCALVAR_i_2_@strcmpi$
+mov AX,WORD PTR [BP-32]
+imul WORD PTR [BP-14]
+mov [BP-32],AX
+;add$TMPVAR_i_2_@t165$,$TMPVAR_i_2_@t165$,$TMPVAR_i_2_@t166$
+mov AX,WORD PTR [BP-30]
+add AX,WORD PTR [BP-32]
+mov [BP-30],AX
+;movi$TMPVAR_i_2_@t167$,1
+mov WORD PTR [BP-34],1
+;mul$TMPVAR_i_2_@t165$,$TMPVAR_i_2_@t165$,$TMPVAR_i_2_@t167$
+mov AX,WORD PTR [BP-30]
+imul WORD PTR [BP-34]
+mov [BP-30],AX
+;add$TMPVAR_i_2_@t164$,$TMPVAR_i_2_@t164$,$TMPVAR_i_2_@t165$
+mov AX,WORD PTR [BP-28]
+add AX,WORD PTR [BP-30]
+mov [BP-28],AX
+;movrm$TMPVAR_i_2_@t168$,[$TMPVAR_i_2_@t164$]
+mov BX,WORD PTR [BP-28]
+mov AX,[BX]
+mov WORD PTR [BP-36],AX
+;eq$TMPVAR_i_2_@t169$,$TMPVAR_i_2_@t163$,$TMPVAR_i_2_@t168$
+mov AX,WORD PTR [BP-26]
+cmp AX, WORD PTR [BP-36]
+je LI55
+mov WORD PTR [BP-38],0
+jmp LI56
+LI55:
+mov WORD PTR [BP-38],1
+LI56:
+;jz$TMPVAR_i_2_@t169$,L26
+mov AX,WORD PTR [BP-38]
+cmp AX,0
+jz L26
+;mov$TMPVAR_i_2_@t170$,$PARAMVAR_c_2_@strcmpstr1$
+mov AX,WORD PTR [BP+4]
+mov WORD PTR [BP-40],AX
+;movi$TMPVAR_i_2_@t171$,0
+mov WORD PTR [BP-42],0
+;movi$TMPVAR_i_2_@t172$,1
+mov WORD PTR [BP-44],1
+;mul$TMPVAR_i_2_@t172$,$TMPVAR_i_2_@t172$,$LOCALVAR_i_2_@strcmpi$
+mov AX,WORD PTR [BP-44]
+imul WORD PTR [BP-14]
+mov [BP-44],AX
+;add$TMPVAR_i_2_@t171$,$TMPVAR_i_2_@t171$,$TMPVAR_i_2_@t172$
+mov AX,WORD PTR [BP-42]
+add AX,WORD PTR [BP-44]
+mov [BP-42],AX
+;movi$TMPVAR_i_2_@t173$,1
+mov WORD PTR [BP-46],1
+;mul$TMPVAR_i_2_@t171$,$TMPVAR_i_2_@t171$,$TMPVAR_i_2_@t173$
+mov AX,WORD PTR [BP-42]
+imul WORD PTR [BP-46]
+mov [BP-42],AX
+;add$TMPVAR_i_2_@t170$,$TMPVAR_i_2_@t170$,$TMPVAR_i_2_@t171$
+mov AX,WORD PTR [BP-40]
+add AX,WORD PTR [BP-42]
+mov [BP-40],AX
+;movrm$TMPVAR_i_2_@t174$,[$TMPVAR_i_2_@t170$]
+mov BX,WORD PTR [BP-40]
+mov AX,[BX]
+mov WORD PTR [BP-48],AX
+;movi$TMPVAR_i_2_@t175$,0
+mov WORD PTR [BP-50],0
+;eq$TMPVAR_i_2_@t176$,$TMPVAR_i_2_@t174$,$TMPVAR_i_2_@t175$
+mov AX,WORD PTR [BP-48]
+cmp AX, WORD PTR [BP-50]
+je LI57
+mov WORD PTR [BP-52],0
+jmp LI58
+LI57:
+mov WORD PTR [BP-52],1
+LI58:
+;jz$TMPVAR_i_2_@t176$,L27
+mov AX,WORD PTR [BP-52]
+cmp AX,0
+jz L27
+;movi$TMPVAR_i_2_@t177$,1
+mov WORD PTR [BP-54],1
+;ret$TMPVAR_i_2_@t177$
+mov AX,[BP-54]
+jmp LI54
+L27:
+;movi$TMPVAR_i_2_@t178$,1
+mov WORD PTR [BP-56],1
+;add$TMPVAR_i_2_@t179$,$LOCALVAR_i_2_@strcmpi$,$TMPVAR_i_2_@t178$
+mov AX,WORD PTR [BP-14]
+add AX,WORD PTR [BP-56]
+mov [BP-58],AX
+;mov$LOCALVAR_i_2_@strcmpi$,$TMPVAR_i_2_@t179$
+mov AX,WORD PTR [BP-58]
+mov WORD PTR [BP-14],AX
+;jmpL25
+jmp L25
+L26:
+;movi$TMPVAR_i_2_@t180$,0
+mov WORD PTR [BP-60],0
+;ret$TMPVAR_i_2_@t180$
+mov AX,[BP-60]
+jmp LI54
+LI54:
+sub SP,-60
+RESTORE_SITE 4
+strcmp ENDP
 main PROC
 mov AX,data
 mov DS,AX
 mov BP,SP
-add SP,-24
-;callgetint,$TMPVAR_i_2_@t39$
-call getint
-mov WORD PTR [BP-18], AX
-;mov$LOCALVAR_i_2_@x$,$TMPVAR_i_2_@t39$
-mov AX,[BP-18]
-mov [BP-14],AX
-;callgetint,$TMPVAR_i_2_@t40$
+add SP,-170
+;callgetint,$TMPVAR_i_2_@t181$
 call getint
 mov WORD PTR [BP-20], AX
-;mov$LOCALVAR_i_2_@y$,$TMPVAR_i_2_@t40$
-mov AX,[BP-20]
-mov [BP-16],AX
-;add$TMPVAR_i_2_@t42$,$LOCALVAR_i_2_@x$,$LOCALVAR_i_2_@y$
+;mov$LOCALVAR_i_2_@mainx$,$TMPVAR_i_2_@t181$
+mov AX,WORD PTR [BP-20]
+mov WORD PTR [BP-14],AX
+;callgetint,$TMPVAR_i_2_@t182$
+call getint
+mov WORD PTR [BP-22], AX
+;mov$LOCALVAR_i_2_@mainy$,$TMPVAR_i_2_@t182$
+mov AX,WORD PTR [BP-22]
+mov WORD PTR [BP-16],AX
+;add$TMPVAR_i_2_@t184$,$LOCALVAR_i_2_@mainx$,$LOCALVAR_i_2_@mainy$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-16]
-mov [BP-22],AX
-;callputint,$TMPVAR_i_2_@t41$,$TMPVAR_i_2_@t42$
-mov AX,WORD PTR [BP-22]
+mov [BP-24],AX
+;callputint,$TMPVAR_i_2_@t183$,$TMPVAR_i_2_@t184$
+mov AX,WORD PTR [BP-24]
 push AX
 call putint
-mov WORD PTR [BP-24], AX
-LI18:
-sub SP,-24
+mov WORD PTR [BP-26], AX
+;callputspace,$TMPVAR_i_2_@t185$
+call putspace
+mov WORD PTR [BP-28], AX
+;sub$TMPVAR_i_2_@t187$,$LOCALVAR_i_2_@mainx$,$LOCALVAR_i_2_@mainy$
+mov AX,WORD PTR [BP-14]
+sub AX,WORD PTR [BP-16]
+mov [BP-30],AX
+;callputint,$TMPVAR_i_2_@t186$,$TMPVAR_i_2_@t187$
+mov AX,WORD PTR [BP-30]
+push AX
+call putint
+mov WORD PTR [BP-32], AX
+;callputspace,$TMPVAR_i_2_@t188$
+call putspace
+mov WORD PTR [BP-34], AX
+;mul$TMPVAR_i_2_@t190$,$LOCALVAR_i_2_@mainx$,$LOCALVAR_i_2_@mainy$
+mov AX,WORD PTR [BP-14]
+imul WORD PTR [BP-16]
+mov [BP-36],AX
+;callputint,$TMPVAR_i_2_@t189$,$TMPVAR_i_2_@t190$
+mov AX,WORD PTR [BP-36]
+push AX
+call putint
+mov WORD PTR [BP-38], AX
+;callputspace,$TMPVAR_i_2_@t191$
+call putspace
+mov WORD PTR [BP-40], AX
+;div$TMPVAR_i_2_@t193$,$LOCALVAR_i_2_@mainx$,$LOCALVAR_i_2_@mainy$
+mov DX,0
+mov AX,WORD PTR [BP-14]
+idiv WORD PTR [BP-16]
+mov [BP-42],AX
+;callputint,$TMPVAR_i_2_@t192$,$TMPVAR_i_2_@t193$
+mov AX,WORD PTR [BP-42]
+push AX
+call putint
+mov WORD PTR [BP-44], AX
+;callputspace,$TMPVAR_i_2_@t194$
+call putspace
+mov WORD PTR [BP-46], AX
+;callputln,$TMPVAR_i_2_@t195$
+call putln
+mov WORD PTR [BP-48], AX
+;lea$TMPVAR_i_2_@t197$,$GLOBALVAR_c_50_@str1$
+lea AX,str1
+mov [BP-50],AX
+;movi$TMPVAR_i_2_@t198$,0
+mov WORD PTR [BP-52],0
+;movi$TMPVAR_i_2_@t199$,1
+mov WORD PTR [BP-54],1
+;mul$TMPVAR_i_2_@t198$,$TMPVAR_i_2_@t198$,$TMPVAR_i_2_@t199$
+mov AX,WORD PTR [BP-52]
+imul WORD PTR [BP-54]
+mov [BP-52],AX
+;add$TMPVAR_i_2_@t197$,$TMPVAR_i_2_@t197$,$TMPVAR_i_2_@t198$
+mov AX,WORD PTR [BP-50]
+add AX,WORD PTR [BP-52]
+mov [BP-50],AX
+;movi$TMPVAR_i_2_@t200$,50
+mov WORD PTR [BP-56],50
+;callgetstr,$TMPVAR_i_2_@t196$,$TMPVAR_i_2_@t197$,$TMPVAR_i_2_@t200$
+mov AX,WORD PTR [BP-56]
+push AX
+mov AX,WORD PTR [BP-50]
+push AX
+call getstr
+mov WORD PTR [BP-58], AX
+;lea$TMPVAR_i_2_@t202$,$GLOBALVAR_c_50_@str1$
+lea AX,str1
+mov [BP-60],AX
+;movi$TMPVAR_i_2_@t203$,0
+mov WORD PTR [BP-62],0
+;movi$TMPVAR_i_2_@t204$,1
+mov WORD PTR [BP-64],1
+;mul$TMPVAR_i_2_@t203$,$TMPVAR_i_2_@t203$,$TMPVAR_i_2_@t204$
+mov AX,WORD PTR [BP-62]
+imul WORD PTR [BP-64]
+mov [BP-62],AX
+;add$TMPVAR_i_2_@t202$,$TMPVAR_i_2_@t202$,$TMPVAR_i_2_@t203$
+mov AX,WORD PTR [BP-60]
+add AX,WORD PTR [BP-62]
+mov [BP-60],AX
+;callputstr,$TMPVAR_i_2_@t201$,$TMPVAR_i_2_@t202$
+mov AX,WORD PTR [BP-60]
+push AX
+call putstr
+mov WORD PTR [BP-66], AX
+;callputln,$TMPVAR_i_2_@t205$
+call putln
+mov WORD PTR [BP-68], AX
+;callgetint,$TMPVAR_i_2_@t206$
+call getint
+mov WORD PTR [BP-70], AX
+;mov$LOCALVAR_i_2_@mainn$,$TMPVAR_i_2_@t206$
+mov AX,WORD PTR [BP-70]
+mov WORD PTR [BP-18],AX
+;lea$TMPVAR_i_2_@t208$,$GLOBALVAR_i_100_@arr$
+lea AX,arr
+mov [BP-72],AX
+;movi$TMPVAR_i_2_@t209$,0
+mov WORD PTR [BP-74],0
+;movi$TMPVAR_i_2_@t210$,2
+mov WORD PTR [BP-76],2
+;mul$TMPVAR_i_2_@t209$,$TMPVAR_i_2_@t209$,$TMPVAR_i_2_@t210$
+mov AX,WORD PTR [BP-74]
+imul WORD PTR [BP-76]
+mov [BP-74],AX
+;add$TMPVAR_i_2_@t208$,$TMPVAR_i_2_@t208$,$TMPVAR_i_2_@t209$
+mov AX,WORD PTR [BP-72]
+add AX,WORD PTR [BP-74]
+mov [BP-72],AX
+;callgetintarray,$TMPVAR_i_2_@t207$,$TMPVAR_i_2_@t208$,$LOCALVAR_i_2_@mainn$
+mov AX,WORD PTR [BP-18]
+push AX
+mov AX,WORD PTR [BP-72]
+push AX
+call getintarray
+mov WORD PTR [BP-78], AX
+;lea$TMPVAR_i_2_@t212$,$GLOBALVAR_i_100_@arr$
+lea AX,arr
+mov [BP-80],AX
+;movi$TMPVAR_i_2_@t213$,0
+mov WORD PTR [BP-82],0
+;movi$TMPVAR_i_2_@t214$,2
+mov WORD PTR [BP-84],2
+;mul$TMPVAR_i_2_@t213$,$TMPVAR_i_2_@t213$,$TMPVAR_i_2_@t214$
+mov AX,WORD PTR [BP-82]
+imul WORD PTR [BP-84]
+mov [BP-82],AX
+;add$TMPVAR_i_2_@t212$,$TMPVAR_i_2_@t212$,$TMPVAR_i_2_@t213$
+mov AX,WORD PTR [BP-80]
+add AX,WORD PTR [BP-82]
+mov [BP-80],AX
+;callsort,$TMPVAR_i_2_@t211$,$TMPVAR_i_2_@t212$,$LOCALVAR_i_2_@mainn$
+mov AX,WORD PTR [BP-18]
+push AX
+mov AX,WORD PTR [BP-80]
+push AX
+call sort
+mov WORD PTR [BP-86], AX
+;lea$TMPVAR_i_2_@t216$,$GLOBALVAR_i_100_@arr$
+lea AX,arr
+mov [BP-88],AX
+;movi$TMPVAR_i_2_@t217$,0
+mov WORD PTR [BP-90],0
+;movi$TMPVAR_i_2_@t218$,2
+mov WORD PTR [BP-92],2
+;mul$TMPVAR_i_2_@t217$,$TMPVAR_i_2_@t217$,$TMPVAR_i_2_@t218$
+mov AX,WORD PTR [BP-90]
+imul WORD PTR [BP-92]
+mov [BP-90],AX
+;add$TMPVAR_i_2_@t216$,$TMPVAR_i_2_@t216$,$TMPVAR_i_2_@t217$
+mov AX,WORD PTR [BP-88]
+add AX,WORD PTR [BP-90]
+mov [BP-88],AX
+;callputintarray,$TMPVAR_i_2_@t215$,$TMPVAR_i_2_@t216$,$LOCALVAR_i_2_@mainn$
+mov AX,WORD PTR [BP-18]
+push AX
+mov AX,WORD PTR [BP-88]
+push AX
+call putintarray
+mov WORD PTR [BP-94], AX
+;lea$TMPVAR_i_2_@t220$,$GLOBALVAR_c_50_@str1$
+lea AX,str1
+mov [BP-96],AX
+;movi$TMPVAR_i_2_@t221$,0
+mov WORD PTR [BP-98],0
+;movi$TMPVAR_i_2_@t222$,1
+mov WORD PTR [BP-100],1
+;mul$TMPVAR_i_2_@t221$,$TMPVAR_i_2_@t221$,$TMPVAR_i_2_@t222$
+mov AX,WORD PTR [BP-98]
+imul WORD PTR [BP-100]
+mov [BP-98],AX
+;add$TMPVAR_i_2_@t220$,$TMPVAR_i_2_@t220$,$TMPVAR_i_2_@t221$
+mov AX,WORD PTR [BP-96]
+add AX,WORD PTR [BP-98]
+mov [BP-96],AX
+;movi$TMPVAR_i_2_@t223$,50
+mov WORD PTR [BP-102],50
+;callgetstr,$TMPVAR_i_2_@t219$,$TMPVAR_i_2_@t220$,$TMPVAR_i_2_@t223$
+mov AX,WORD PTR [BP-102]
+push AX
+mov AX,WORD PTR [BP-96]
+push AX
+call getstr
+mov WORD PTR [BP-104], AX
+;lea$TMPVAR_i_2_@t225$,$GLOBALVAR_c_50_@str2$
+lea AX,str2
+mov [BP-106],AX
+;movi$TMPVAR_i_2_@t226$,0
+mov WORD PTR [BP-108],0
+;movi$TMPVAR_i_2_@t227$,1
+mov WORD PTR [BP-110],1
+;mul$TMPVAR_i_2_@t226$,$TMPVAR_i_2_@t226$,$TMPVAR_i_2_@t227$
+mov AX,WORD PTR [BP-108]
+imul WORD PTR [BP-110]
+mov [BP-108],AX
+;add$TMPVAR_i_2_@t225$,$TMPVAR_i_2_@t225$,$TMPVAR_i_2_@t226$
+mov AX,WORD PTR [BP-106]
+add AX,WORD PTR [BP-108]
+mov [BP-106],AX
+;movi$TMPVAR_i_2_@t228$,50
+mov WORD PTR [BP-112],50
+;callgetstr,$TMPVAR_i_2_@t224$,$TMPVAR_i_2_@t225$,$TMPVAR_i_2_@t228$
+mov AX,WORD PTR [BP-112]
+push AX
+mov AX,WORD PTR [BP-106]
+push AX
+call getstr
+mov WORD PTR [BP-114], AX
+;lea$TMPVAR_i_2_@t231$,$GLOBALVAR_c_50_@str1$
+lea AX,str1
+mov [BP-116],AX
+;movi$TMPVAR_i_2_@t232$,0
+mov WORD PTR [BP-118],0
+;movi$TMPVAR_i_2_@t233$,1
+mov WORD PTR [BP-120],1
+;mul$TMPVAR_i_2_@t232$,$TMPVAR_i_2_@t232$,$TMPVAR_i_2_@t233$
+mov AX,WORD PTR [BP-118]
+imul WORD PTR [BP-120]
+mov [BP-118],AX
+;add$TMPVAR_i_2_@t231$,$TMPVAR_i_2_@t231$,$TMPVAR_i_2_@t232$
+mov AX,WORD PTR [BP-116]
+add AX,WORD PTR [BP-118]
+mov [BP-116],AX
+;lea$TMPVAR_i_2_@t234$,$GLOBALVAR_c_50_@str2$
+lea AX,str2
+mov [BP-122],AX
+;movi$TMPVAR_i_2_@t235$,0
+mov WORD PTR [BP-124],0
+;movi$TMPVAR_i_2_@t236$,1
+mov WORD PTR [BP-126],1
+;mul$TMPVAR_i_2_@t235$,$TMPVAR_i_2_@t235$,$TMPVAR_i_2_@t236$
+mov AX,WORD PTR [BP-124]
+imul WORD PTR [BP-126]
+mov [BP-124],AX
+;add$TMPVAR_i_2_@t234$,$TMPVAR_i_2_@t234$,$TMPVAR_i_2_@t235$
+mov AX,WORD PTR [BP-122]
+add AX,WORD PTR [BP-124]
+mov [BP-122],AX
+;callstrcmp,$TMPVAR_i_2_@t230$,$TMPVAR_i_2_@t231$,$TMPVAR_i_2_@t234$
+mov AX,WORD PTR [BP-122]
+push AX
+mov AX,WORD PTR [BP-116]
+push AX
+call strcmp
+mov WORD PTR [BP-128], AX
+;callputint,$TMPVAR_i_2_@t229$,$TMPVAR_i_2_@t230$
+mov AX,WORD PTR [BP-128]
+push AX
+call putint
+mov WORD PTR [BP-130], AX
+;callputln,$TMPVAR_i_2_@t237$
+call putln
+mov WORD PTR [BP-132], AX
+;lea$TMPVAR_i_2_@t239$,$GLOBALVAR_c_50_@str1$
+lea AX,str1
+mov [BP-134],AX
+;movi$TMPVAR_i_2_@t240$,0
+mov WORD PTR [BP-136],0
+;movi$TMPVAR_i_2_@t241$,1
+mov WORD PTR [BP-138],1
+;mul$TMPVAR_i_2_@t240$,$TMPVAR_i_2_@t240$,$TMPVAR_i_2_@t241$
+mov AX,WORD PTR [BP-136]
+imul WORD PTR [BP-138]
+mov [BP-136],AX
+;add$TMPVAR_i_2_@t239$,$TMPVAR_i_2_@t239$,$TMPVAR_i_2_@t240$
+mov AX,WORD PTR [BP-134]
+add AX,WORD PTR [BP-136]
+mov [BP-134],AX
+;movi$TMPVAR_i_2_@t242$,50
+mov WORD PTR [BP-140],50
+;callgetstr,$TMPVAR_i_2_@t238$,$TMPVAR_i_2_@t239$,$TMPVAR_i_2_@t242$
+mov AX,WORD PTR [BP-140]
+push AX
+mov AX,WORD PTR [BP-134]
+push AX
+call getstr
+mov WORD PTR [BP-142], AX
+;lea$TMPVAR_i_2_@t244$,$GLOBALVAR_c_50_@str2$
+lea AX,str2
+mov [BP-144],AX
+;movi$TMPVAR_i_2_@t245$,0
+mov WORD PTR [BP-146],0
+;movi$TMPVAR_i_2_@t246$,1
+mov WORD PTR [BP-148],1
+;mul$TMPVAR_i_2_@t245$,$TMPVAR_i_2_@t245$,$TMPVAR_i_2_@t246$
+mov AX,WORD PTR [BP-146]
+imul WORD PTR [BP-148]
+mov [BP-146],AX
+;add$TMPVAR_i_2_@t244$,$TMPVAR_i_2_@t244$,$TMPVAR_i_2_@t245$
+mov AX,WORD PTR [BP-144]
+add AX,WORD PTR [BP-146]
+mov [BP-144],AX
+;movi$TMPVAR_i_2_@t247$,50
+mov WORD PTR [BP-150],50
+;callgetstr,$TMPVAR_i_2_@t243$,$TMPVAR_i_2_@t244$,$TMPVAR_i_2_@t247$
+mov AX,WORD PTR [BP-150]
+push AX
+mov AX,WORD PTR [BP-144]
+push AX
+call getstr
+mov WORD PTR [BP-152], AX
+;lea$TMPVAR_i_2_@t250$,$GLOBALVAR_c_50_@str1$
+lea AX,str1
+mov [BP-154],AX
+;movi$TMPVAR_i_2_@t251$,0
+mov WORD PTR [BP-156],0
+;movi$TMPVAR_i_2_@t252$,1
+mov WORD PTR [BP-158],1
+;mul$TMPVAR_i_2_@t251$,$TMPVAR_i_2_@t251$,$TMPVAR_i_2_@t252$
+mov AX,WORD PTR [BP-156]
+imul WORD PTR [BP-158]
+mov [BP-156],AX
+;add$TMPVAR_i_2_@t250$,$TMPVAR_i_2_@t250$,$TMPVAR_i_2_@t251$
+mov AX,WORD PTR [BP-154]
+add AX,WORD PTR [BP-156]
+mov [BP-154],AX
+;lea$TMPVAR_i_2_@t253$,$GLOBALVAR_c_50_@str2$
+lea AX,str2
+mov [BP-160],AX
+;movi$TMPVAR_i_2_@t254$,0
+mov WORD PTR [BP-162],0
+;movi$TMPVAR_i_2_@t255$,1
+mov WORD PTR [BP-164],1
+;mul$TMPVAR_i_2_@t254$,$TMPVAR_i_2_@t254$,$TMPVAR_i_2_@t255$
+mov AX,WORD PTR [BP-162]
+imul WORD PTR [BP-164]
+mov [BP-162],AX
+;add$TMPVAR_i_2_@t253$,$TMPVAR_i_2_@t253$,$TMPVAR_i_2_@t254$
+mov AX,WORD PTR [BP-160]
+add AX,WORD PTR [BP-162]
+mov [BP-160],AX
+;callstrcmp,$TMPVAR_i_2_@t249$,$TMPVAR_i_2_@t250$,$TMPVAR_i_2_@t253$
+mov AX,WORD PTR [BP-160]
+push AX
+mov AX,WORD PTR [BP-154]
+push AX
+call strcmp
+mov WORD PTR [BP-166], AX
+;callputint,$TMPVAR_i_2_@t248$,$TMPVAR_i_2_@t249$
+mov AX,WORD PTR [BP-166]
+push AX
+call putint
+mov WORD PTR [BP-168], AX
+;callputln,$TMPVAR_i_2_@t256$
+call putln
+mov WORD PTR [BP-170], AX
+LI59:
+sub SP,-170
 mov AH,4Ch
 mov AL,0
 int 21h

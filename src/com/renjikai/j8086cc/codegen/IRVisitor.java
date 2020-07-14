@@ -152,13 +152,13 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		 String s1,s2;
 		 if(getVarTypeSize(ctx.varName(1))==1)
-			 s1=String.format("mov AL,%s\n", varShift1);
+			 s1=String.format("mov AL,BYTE PTR %s\n", varShift1);
 		 else //size==2
-			 s1=String.format("mov AX,%s\n", varShift1);
+			 s1=String.format("mov AX,WORD PTR %s\n", varShift1);
 		 if(getVarTypeSize(ctx.varName(0))==1)
-			 s2=String.format("mov %s,AL\n", varShift0);
+			 s2=String.format("mov BYTE PTR %s,AL\n", varShift0);
 		 else //size==2
-			 s2=String.format("mov %s,AX\n", varShift0);
+			 s2=String.format("mov WORD PTR %s,AX\n", varShift0);
 		 return dbg+s1+s2;
 	}
 
@@ -168,13 +168,13 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 		String dbg=";"+ctx.getText()+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
-		String s1=String.format("mov BX,%s\n", varShift1);
+		String s1=String.format("mov BX,WORD PTR %s\n", varShift1);
 		String s2=String.format("mov AX,[BX]\n");
 		String s3;
 		if(getVarTypeSize(ctx.varName(0))==1)
-			 s3=String.format("mov %s,AL\n", varShift0);
+			 s3=String.format("mov BYTE PTR %s,AL\n", varShift0);
 		 else //size==2
-			 s3=String.format("mov %s,AX\n", varShift0);
+			 s3=String.format("mov WORD PTR %s,AX\n", varShift0);
 		return dbg+s1+s2+s3;
 	}
 	
@@ -183,8 +183,8 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 		String dbg=";"+ctx.getText()+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
-		String s1=String.format("mov BX,%s\n", varShift0);
-		String s2=String.format("mov AX,%s\n", varShift1);
+		String s1=String.format("mov BX,WORD PTR %s\n", varShift0);
+		String s2=String.format("mov AX,WORD PTR %s\n", varShift1);
 		String s3;
 		if(getVarTypeSize(ctx.varName(0))==1)
 			 s3=String.format("mov [BX],AL\n");

@@ -25,7 +25,7 @@ public class SyntaxTreeHelper {
 		return varBasicType;
 	}
 	
-	public static ArrayList<Symbol> packVariable(j8086ccParser.VarDeclareContext ctx,int scope) {
+	public static ArrayList<Symbol> packVariable(j8086ccParser.VarDeclareContext ctx,int scope,String funcName) {
 		ArrayList<Symbol> arr=new ArrayList<Symbol>();
 		j8086ccParser.VarTypeContext varTypeRef=ctx.varType();
 		int varBasicType=funcTypeStr2IntType(varTypeRef.basicType().getText());
@@ -43,12 +43,13 @@ public class SyntaxTreeHelper {
 				templateSymbol=new Symbol(varName,varBasicType,scope);
 			else
 				templateSymbol=new Symbol(varName,varBasicType,scope,arrayDimSize);
+			templateSymbol.funcName=funcName;
 			arr.add(templateSymbol);
 		}
 		return arr;
 	}
 	
-	public static Symbol packParameter(j8086ccParser.ParameterContext ctx) {
+	public static Symbol packParameter(j8086ccParser.ParameterContext ctx,String funcName) {
 		j8086ccParser.VarTypeContext varTypeRef=ctx.varType();
 		int varBasicType=funcTypeStr2IntType(varTypeRef.basicType().getText());
 		ArrayList<Integer> arrayDimSize=null;
@@ -64,6 +65,7 @@ public class SyntaxTreeHelper {
 			s=new Symbol(varName,varBasicType,SymbolTable.LOCAL_VAR,true);
 		else
 			s=new Symbol(varName,varBasicType,SymbolTable.LOCAL_VAR,true,arrayDimSize);
+		s.funcName=funcName;
 		return s;
 	}
 	
@@ -75,7 +77,7 @@ public class SyntaxTreeHelper {
 		if(ctx.paramList()==null)return newFunc;
 		List<j8086ccParser.ParameterContext> params=ctx.paramList().parameter();
 		for(int i=0;i<params.size();i++) {
-			paramList.add(packParameter(params.get(i)));
+			paramList.add(packParameter(params.get(i),funcName));
 		}
 		return newFunc;
 	}
@@ -98,6 +100,17 @@ public class SyntaxTreeHelper {
 				SymbolTable.TMP_VAR
 				);
 		return res;
+	}
+	
+	public static String getFatherFuncName(ParserRuleContext ctx) {
+		if(ctx==null)return null;
+		while(ctx!=null) {
+			if(ctx instanceof j8086ccParser.FunctionContext) {
+				return ((j8086ccParser.FunctionContext) ctx).IDENTIFIER().getText();
+			}
+			ctx=ctx.getParent();
+		}
+		return null;
 	}
 	
 	public static SymbolTable getSymbolTable(ParseTreeProperty<SymbolTable> symbolTableTree, ParserRuleContext ctx) {

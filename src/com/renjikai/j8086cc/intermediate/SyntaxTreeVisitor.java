@@ -58,7 +58,7 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 		SymbolTable tmpSymbolTable=new SymbolTable(globalSymbolTable);
 		String dataSeg=InterDefines.DSEG_HEAD+"\n\n";
 		for(int i=0;i<ctx.varDeclare().size();i++) {
-			ArrayList<Symbol> varStorage=SyntaxTreeHelper.packVariable(ctx.varDeclare(i), SymbolTable.GLOBAL_VAR);
+			ArrayList<Symbol> varStorage=SyntaxTreeHelper.packVariable(ctx.varDeclare(i), SymbolTable.GLOBAL_VAR, "");
 			for(int j=0;j<varStorage.size();j++) {
 				boolean flag=tmpSymbolTable.insert(varStorage.get(j));
 				if(!flag)
@@ -104,7 +104,8 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 	@Override
 
 	public String visitVarDeclare(j8086ccParser.VarDeclareContext ctx) {
-		ArrayList<Symbol> arrSymbol=SyntaxTreeHelper.packVariable(ctx,SymbolTable.LOCAL_VAR);
+		String funcName=SyntaxTreeHelper.getFatherFuncName(ctx);
+		ArrayList<Symbol> arrSymbol=SyntaxTreeHelper.packVariable(ctx,SymbolTable.LOCAL_VAR,funcName);
 		SymbolTable curFuncSymbolTable=SyntaxTreeHelper.getSymbolTable(symbolTableTree, ctx);
 		if(curFuncSymbolTable==null) 
 			Logger.throwError("Local Variable Defined outside of Function? Unknown Error! ");
@@ -228,7 +229,13 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 			return expr+movOp;
 		}else { // isArray
 			Symbol arrBaseAddr=SyntaxTreeHelper.genIntLiteralNode(tmpVarCnter);
-			String leaIns=String.format(InterDefines.LEA, 
+			String leaIns;
+			if(s.isParameter&&s.isArray)
+				leaIns=String.format(InterDefines.MOV, 
+					arrBaseAddr.toString(),s.toString()
+						)+"\n";
+			else
+				leaIns=String.format(InterDefines.LEA, 
 					arrBaseAddr.toString(),s.toString()
 						)+"\n";
 			String shiftCalStr=genArrayShiftSize(s,ctx.leftValue());
@@ -365,7 +372,13 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 			return "";
 		}else { // isArray
 			Symbol arrBaseAddr=SyntaxTreeHelper.genIntLiteralNode(tmpVarCnter);
-			String leaIns=String.format(InterDefines.LEA, 
+			String leaIns;
+			if(s.isParameter&&s.isArray)
+				leaIns=String.format(InterDefines.MOV, 
+					arrBaseAddr.toString(),s.toString()
+						)+"\n";
+			else
+				leaIns=String.format(InterDefines.LEA, 
 					arrBaseAddr.toString(),s.toString()
 						)+"\n";
 			String shiftCalStr=genArrayShiftSize(s,ctx.leftValue());
