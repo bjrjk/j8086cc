@@ -6,7 +6,7 @@ int isBlank(int ASCII){
 	if(ASCII==10||ASCII==13||ASCII==32)return 1;
 	else return 0;
 }
-int getint(){
+int getuint(){
 	int num,flag,c;
 	num=0;flag=0;
 	while(1){
@@ -21,19 +21,19 @@ int getint(){
 	}
 	return num;
 }
-int putintRec(int x){
+int putuintRec(int x){
 	if(x==0)return 0;
 	int tmp;
 	tmp=x%10;
-	putintRec(x/10);
+	putuintRec(x/10);
 	putchar(tmp+48);
 }
-int putint(int x){
+int putuint(int x){
 	if(x==0){
 		putchar(48);
 		return 0;
 	}
-	putintRec(x);
+	putuintRec(x);
 }
 int getstr(char[100] storage,int size){
 	int i,flag,c;
@@ -65,7 +65,6 @@ int putln(){
 	putchar(13);
 	putchar(10);
 }
-
 int sort(int[100] arr,int size){
 	int i,j,tmp;
 	i=0;
@@ -82,19 +81,19 @@ int sort(int[100] arr,int size){
 		i=i+1;
 	}
 }
-int getintarray(int[100] arr,int size){
+int getuintarray(int[100] arr,int size){
 	int i;
 	i=0;
 	while(i<size){
-		arr[i]=getint();
+		arr[i]=getuint();
 		i=i+1;
 	}
 }
-int putintarray(int[100] arr,int size){
+int putuintarray(int[100] arr,int size){
 	int i;
 	i=0;
 	while(i<size){
-		putint(arr[i]);
+		putuint(arr[i]);
 		putspace();
 		i=i+1;
 	}
@@ -113,26 +112,26 @@ int[50] arr;
 char[50] str1,str2;
 int main(){
 	int x,y,n;
-	x=getint();
-	y=getint();
-	putint(x+y);putspace();
-	putint(x-y);putspace();
-	putint(x*y);putspace();
-	putint(x/y);putspace();
+	x=getuint();
+	y=getuint();
+	putuint(x+y);putspace();
+	putuint(x-y);putspace();
+	putuint(x*y);putspace();
+	putuint(x/y);putspace();
 	putln();
 	getstr(str1,50);
 	putstr(str1);
 	putln();
-	n=getint();
-	getintarray(arr,n);
+	n=getuint();
+	getuintarray(arr,n);
 	sort(arr,n);
-	putintarray(arr,n);
+	putuintarray(arr,n);
 	getstr(str1,50);
 	getstr(str2,50);
-	putint(strcmp(str1,str2));
+	putuint(strcmp(str1,str2));
 	putln();
 	getstr(str1,50);
 	getstr(str2,50);
-	putint(strcmp(str1,str2));
+	putuint(strcmp(str1,str2));
 	putln();
 }

@@ -345,6 +345,8 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 	@Override
 	public String visitFunctionCallExpr(j8086ccParser.FunctionCallExprContext ctx) {
 		Function curFunc=functionTable.query(ctx.IDENTIFIER().getText());
+		if(curFunc==null)
+			Logger.throwError("Function not exist: "+ ctx.IDENTIFIER().getText());
 		if(!(curFunc.paramList.size()==0&&ctx.exprList()==null ||
 				curFunc.paramList.size()==ctx.exprList().expr().size())) 
 			Logger.throwError("Argument Count invaild: "+curFunc.name);

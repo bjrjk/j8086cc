@@ -204,17 +204,17 @@ LI7:
 sub SP,-32
 RESTORE_SITE 2
 isBlank ENDP
-getint PROC
+getuint PROC
 PROTECT_SITE
 add SP,-47
 ;movi$TMPVAR_i_2_@t17$,0
 mov WORD PTR [BP-20],0
-;mov$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t17$
+;mov$LOCALVAR_i_2_@getuintnum$,$TMPVAR_i_2_@t17$
 mov AX,WORD PTR [BP-20]
 mov WORD PTR [BP-14],AX
 ;movi$TMPVAR_i_2_@t18$,0
 mov WORD PTR [BP-22],0
-;mov$LOCALVAR_i_2_@getintflag$,$TMPVAR_i_2_@t18$
+;mov$LOCALVAR_i_2_@getuintflag$,$TMPVAR_i_2_@t18$
 mov AX,WORD PTR [BP-22]
 mov WORD PTR [BP-16],AX
 L2:
@@ -227,10 +227,10 @@ jz L3
 ;callgetchar,$TMPVAR_c_1_@t20$
 call getchar
 mov WORD PTR [BP-25], AX
-;mov$LOCALVAR_i_2_@getintc$,$TMPVAR_c_1_@t20$
+;mov$LOCALVAR_i_2_@getuintc$,$TMPVAR_c_1_@t20$
 mov AL,BYTE PTR [BP-25]
 mov WORD PTR [BP-18],AX
-;callisNumeric,$TMPVAR_i_2_@t21$,$LOCALVAR_i_2_@getintc$
+;callisNumeric,$TMPVAR_i_2_@t21$,$LOCALVAR_i_2_@getuintc$
 mov AX,WORD PTR [BP-18]
 push AX
 call isNumeric
@@ -241,11 +241,11 @@ cmp AX,0
 jz L4
 ;movi$TMPVAR_i_2_@t22$,1
 mov WORD PTR [BP-29],1
-;mov$LOCALVAR_i_2_@getintflag$,$TMPVAR_i_2_@t22$
+;mov$LOCALVAR_i_2_@getuintflag$,$TMPVAR_i_2_@t22$
 mov AX,WORD PTR [BP-29]
 mov WORD PTR [BP-16],AX
 L4:
-;callisNumeric,$TMPVAR_i_2_@t23$,$LOCALVAR_i_2_@getintc$
+;callisNumeric,$TMPVAR_i_2_@t23$,$LOCALVAR_i_2_@getuintc$
 mov AX,WORD PTR [BP-18]
 push AX
 call isNumeric
@@ -264,7 +264,7 @@ cmp AX,0
 jz L5
 ;movi$TMPVAR_i_2_@t25$,1
 mov WORD PTR [BP-35],1
-;eq$TMPVAR_i_2_@t26$,$LOCALVAR_i_2_@getintflag$,$TMPVAR_i_2_@t25$
+;eq$TMPVAR_i_2_@t26$,$LOCALVAR_i_2_@getuintflag$,$TMPVAR_i_2_@t25$
 mov AX,WORD PTR [BP-16]
 cmp AX, WORD PTR [BP-35]
 je LI21
@@ -285,42 +285,42 @@ jmp L2
 L5:
 ;movi$TMPVAR_i_2_@t27$,10
 mov WORD PTR [BP-39],10
-;mul$TMPVAR_i_2_@t28$,$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t27$
+;mul$TMPVAR_i_2_@t28$,$LOCALVAR_i_2_@getuintnum$,$TMPVAR_i_2_@t27$
 mov AX,WORD PTR [BP-14]
 imul WORD PTR [BP-39]
 mov [BP-41],AX
-;mov$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t28$
+;mov$LOCALVAR_i_2_@getuintnum$,$TMPVAR_i_2_@t28$
 mov AX,WORD PTR [BP-41]
 mov WORD PTR [BP-14],AX
 ;movi$TMPVAR_i_2_@t29$,48
 mov WORD PTR [BP-43],48
-;sub$TMPVAR_i_2_@t30$,$LOCALVAR_i_2_@getintc$,$TMPVAR_i_2_@t29$
+;sub$TMPVAR_i_2_@t30$,$LOCALVAR_i_2_@getuintc$,$TMPVAR_i_2_@t29$
 mov AX,WORD PTR [BP-18]
 sub AX,WORD PTR [BP-43]
 mov [BP-45],AX
-;add$TMPVAR_i_2_@t31$,$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t30$
+;add$TMPVAR_i_2_@t31$,$LOCALVAR_i_2_@getuintnum$,$TMPVAR_i_2_@t30$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-45]
 mov [BP-47],AX
-;mov$LOCALVAR_i_2_@getintnum$,$TMPVAR_i_2_@t31$
+;mov$LOCALVAR_i_2_@getuintnum$,$TMPVAR_i_2_@t31$
 mov AX,WORD PTR [BP-47]
 mov WORD PTR [BP-14],AX
 ;jmpL2
 jmp L2
 L3:
-;ret$LOCALVAR_i_2_@getintnum$
+;ret$LOCALVAR_i_2_@getuintnum$
 mov AX,[BP-14]
 jmp LI18
 LI18:
 sub SP,-47
 RESTORE_SITE 0
-getint ENDP
-putintRec PROC
+getuint ENDP
+putuintRec PROC
 PROTECT_SITE
 add SP,-36
 ;movi$TMPVAR_i_2_@t32$,0
 mov WORD PTR [BP-16],0
-;eq$TMPVAR_i_2_@t33$,$PARAMVAR_i_2_@putintRecx$,$TMPVAR_i_2_@t32$
+;eq$TMPVAR_i_2_@t33$,$PARAMVAR_i_2_@putuintRecx$,$TMPVAR_i_2_@t32$
 mov AX,WORD PTR [BP+4]
 cmp AX, WORD PTR [BP-16]
 je LI24
@@ -341,29 +341,29 @@ jmp LI23
 L7:
 ;movi$TMPVAR_i_2_@t35$,10
 mov WORD PTR [BP-22],10
-;mod$TMPVAR_i_2_@t36$,$PARAMVAR_i_2_@putintRecx$,$TMPVAR_i_2_@t35$
+;mod$TMPVAR_i_2_@t36$,$PARAMVAR_i_2_@putuintRecx$,$TMPVAR_i_2_@t35$
 mov DX,0
 mov AX,WORD PTR [BP+4]
 idiv WORD PTR [BP-22]
 mov [BP-24],DX
-;mov$LOCALVAR_i_2_@putintRectmp$,$TMPVAR_i_2_@t36$
+;mov$LOCALVAR_i_2_@putuintRectmp$,$TMPVAR_i_2_@t36$
 mov AX,WORD PTR [BP-24]
 mov WORD PTR [BP-14],AX
 ;movi$TMPVAR_i_2_@t38$,10
 mov WORD PTR [BP-26],10
-;div$TMPVAR_i_2_@t39$,$PARAMVAR_i_2_@putintRecx$,$TMPVAR_i_2_@t38$
+;div$TMPVAR_i_2_@t39$,$PARAMVAR_i_2_@putuintRecx$,$TMPVAR_i_2_@t38$
 mov DX,0
 mov AX,WORD PTR [BP+4]
 idiv WORD PTR [BP-26]
 mov [BP-28],AX
-;callputintRec,$TMPVAR_i_2_@t37$,$TMPVAR_i_2_@t39$
+;callputuintRec,$TMPVAR_i_2_@t37$,$TMPVAR_i_2_@t39$
 mov AX,WORD PTR [BP-28]
 push AX
-call putintRec
+call putuintRec
 mov WORD PTR [BP-30], AX
 ;movi$TMPVAR_i_2_@t41$,48
 mov WORD PTR [BP-32],48
-;add$TMPVAR_i_2_@t42$,$LOCALVAR_i_2_@putintRectmp$,$TMPVAR_i_2_@t41$
+;add$TMPVAR_i_2_@t42$,$LOCALVAR_i_2_@putuintRectmp$,$TMPVAR_i_2_@t41$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-32]
 mov [BP-34],AX
@@ -375,13 +375,13 @@ mov WORD PTR [BP-36], AX
 LI23:
 sub SP,-36
 RESTORE_SITE 2
-putintRec ENDP
-putint PROC
+putuintRec ENDP
+putuint PROC
 PROTECT_SITE
 add SP,-24
 ;movi$TMPVAR_i_2_@t43$,0
 mov WORD PTR [BP-14],0
-;eq$TMPVAR_i_2_@t44$,$PARAMVAR_i_2_@putintx$,$TMPVAR_i_2_@t43$
+;eq$TMPVAR_i_2_@t44$,$PARAMVAR_i_2_@putuintx$,$TMPVAR_i_2_@t43$
 mov AX,WORD PTR [BP+4]
 cmp AX, WORD PTR [BP-14]
 je LI27
@@ -407,15 +407,15 @@ mov WORD PTR [BP-22],0
 mov AX,[BP-22]
 jmp LI26
 L8:
-;callputintRec,$TMPVAR_i_2_@t48$,$PARAMVAR_i_2_@putintx$
+;callputuintRec,$TMPVAR_i_2_@t48$,$PARAMVAR_i_2_@putuintx$
 mov AX,WORD PTR [BP+4]
 push AX
-call putintRec
+call putuintRec
 mov WORD PTR [BP-24], AX
 LI26:
 sub SP,-24
 RESTORE_SITE 2
-putint ENDP
+putuint ENDP
 getstr PROC
 PROTECT_SITE
 add SP,-59
@@ -1000,16 +1000,16 @@ LI41:
 sub SP,-108
 RESTORE_SITE 4
 sort ENDP
-getintarray PROC
+getuintarray PROC
 PROTECT_SITE
 add SP,-32
 ;movi$TMPVAR_i_2_@t137$,0
 mov WORD PTR [BP-16],0
-;mov$LOCALVAR_i_2_@getintarrayi$,$TMPVAR_i_2_@t137$
+;mov$LOCALVAR_i_2_@getuintarrayi$,$TMPVAR_i_2_@t137$
 mov AX,WORD PTR [BP-16]
 mov WORD PTR [BP-14],AX
 L21:
-;lt$TMPVAR_i_2_@t138$,$LOCALVAR_i_2_@getintarrayi$,$PARAMVAR_i_2_@getintarraysize$
+;lt$TMPVAR_i_2_@t138$,$LOCALVAR_i_2_@getuintarrayi$,$PARAMVAR_i_2_@getuintarraysize$
 mov AX,WORD PTR [BP-14]
 cmp AX, WORD PTR [BP+6]
 jl LI49
@@ -1022,14 +1022,14 @@ LI50:
 mov AX,WORD PTR [BP-18]
 cmp AX,0
 jz L22
-;mov$TMPVAR_i_2_@t139$,$PARAMVAR_i_2_@getintarrayarr$
+;mov$TMPVAR_i_2_@t139$,$PARAMVAR_i_2_@getuintarrayarr$
 mov AX,WORD PTR [BP+4]
 mov WORD PTR [BP-20],AX
 ;movi$TMPVAR_i_2_@t140$,0
 mov WORD PTR [BP-22],0
 ;movi$TMPVAR_i_2_@t141$,1
 mov WORD PTR [BP-24],1
-;mul$TMPVAR_i_2_@t141$,$TMPVAR_i_2_@t141$,$LOCALVAR_i_2_@getintarrayi$
+;mul$TMPVAR_i_2_@t141$,$TMPVAR_i_2_@t141$,$LOCALVAR_i_2_@getuintarrayi$
 mov AX,WORD PTR [BP-24]
 imul WORD PTR [BP-14]
 mov [BP-24],AX
@@ -1047,8 +1047,8 @@ mov [BP-22],AX
 mov AX,WORD PTR [BP-20]
 add AX,WORD PTR [BP-22]
 mov [BP-20],AX
-;callgetint,$TMPVAR_i_2_@t143$
-call getint
+;callgetuint,$TMPVAR_i_2_@t143$
+call getuint
 mov WORD PTR [BP-28], AX
 ;movmr[$TMPVAR_i_2_@t139$],$TMPVAR_i_2_@t143$
 mov BX,WORD PTR [BP-20]
@@ -1056,11 +1056,11 @@ mov AX,WORD PTR [BP-28]
 mov [BX],AX
 ;movi$TMPVAR_i_2_@t144$,1
 mov WORD PTR [BP-30],1
-;add$TMPVAR_i_2_@t145$,$LOCALVAR_i_2_@getintarrayi$,$TMPVAR_i_2_@t144$
+;add$TMPVAR_i_2_@t145$,$LOCALVAR_i_2_@getuintarrayi$,$TMPVAR_i_2_@t144$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-30]
 mov [BP-32],AX
-;mov$LOCALVAR_i_2_@getintarrayi$,$TMPVAR_i_2_@t145$
+;mov$LOCALVAR_i_2_@getuintarrayi$,$TMPVAR_i_2_@t145$
 mov AX,WORD PTR [BP-32]
 mov WORD PTR [BP-14],AX
 ;jmpL21
@@ -1069,17 +1069,17 @@ L22:
 LI48:
 sub SP,-32
 RESTORE_SITE 4
-getintarray ENDP
-putintarray PROC
+getuintarray ENDP
+putuintarray PROC
 PROTECT_SITE
 add SP,-38
 ;movi$TMPVAR_i_2_@t146$,0
 mov WORD PTR [BP-16],0
-;mov$LOCALVAR_i_2_@putintarrayi$,$TMPVAR_i_2_@t146$
+;mov$LOCALVAR_i_2_@putuintarrayi$,$TMPVAR_i_2_@t146$
 mov AX,WORD PTR [BP-16]
 mov WORD PTR [BP-14],AX
 L23:
-;lt$TMPVAR_i_2_@t147$,$LOCALVAR_i_2_@putintarrayi$,$PARAMVAR_i_2_@putintarraysize$
+;lt$TMPVAR_i_2_@t147$,$LOCALVAR_i_2_@putuintarrayi$,$PARAMVAR_i_2_@putuintarraysize$
 mov AX,WORD PTR [BP-14]
 cmp AX, WORD PTR [BP+6]
 jl LI52
@@ -1092,14 +1092,14 @@ LI53:
 mov AX,WORD PTR [BP-18]
 cmp AX,0
 jz L24
-;mov$TMPVAR_i_2_@t149$,$PARAMVAR_i_2_@putintarrayarr$
+;mov$TMPVAR_i_2_@t149$,$PARAMVAR_i_2_@putuintarrayarr$
 mov AX,WORD PTR [BP+4]
 mov WORD PTR [BP-20],AX
 ;movi$TMPVAR_i_2_@t150$,0
 mov WORD PTR [BP-22],0
 ;movi$TMPVAR_i_2_@t151$,1
 mov WORD PTR [BP-24],1
-;mul$TMPVAR_i_2_@t151$,$TMPVAR_i_2_@t151$,$LOCALVAR_i_2_@putintarrayi$
+;mul$TMPVAR_i_2_@t151$,$TMPVAR_i_2_@t151$,$LOCALVAR_i_2_@putuintarrayi$
 mov AX,WORD PTR [BP-24]
 imul WORD PTR [BP-14]
 mov [BP-24],AX
@@ -1121,21 +1121,21 @@ mov [BP-20],AX
 mov BX,WORD PTR [BP-20]
 mov AX,[BX]
 mov WORD PTR [BP-28],AX
-;callputint,$TMPVAR_i_2_@t148$,$TMPVAR_i_2_@t153$
+;callputuint,$TMPVAR_i_2_@t148$,$TMPVAR_i_2_@t153$
 mov AX,WORD PTR [BP-28]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-30], AX
 ;callputspace,$TMPVAR_i_2_@t154$
 call putspace
 mov WORD PTR [BP-32], AX
 ;movi$TMPVAR_i_2_@t155$,1
 mov WORD PTR [BP-34],1
-;add$TMPVAR_i_2_@t156$,$LOCALVAR_i_2_@putintarrayi$,$TMPVAR_i_2_@t155$
+;add$TMPVAR_i_2_@t156$,$LOCALVAR_i_2_@putuintarrayi$,$TMPVAR_i_2_@t155$
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-34]
 mov [BP-36],AX
-;mov$LOCALVAR_i_2_@putintarrayi$,$TMPVAR_i_2_@t156$
+;mov$LOCALVAR_i_2_@putuintarrayi$,$TMPVAR_i_2_@t156$
 mov AX,WORD PTR [BP-36]
 mov WORD PTR [BP-14],AX
 ;jmpL23
@@ -1147,7 +1147,7 @@ mov WORD PTR [BP-38], AX
 LI51:
 sub SP,-38
 RESTORE_SITE 4
-putintarray ENDP
+putuintarray ENDP
 strcmp PROC
 PROTECT_SITE
 add SP,-60
@@ -1304,14 +1304,14 @@ mov AX,data
 mov DS,AX
 mov BP,SP
 add SP,-170
-;callgetint,$TMPVAR_i_2_@t181$
-call getint
+;callgetuint,$TMPVAR_i_2_@t181$
+call getuint
 mov WORD PTR [BP-20], AX
 ;mov$LOCALVAR_i_2_@mainx$,$TMPVAR_i_2_@t181$
 mov AX,WORD PTR [BP-20]
 mov WORD PTR [BP-14],AX
-;callgetint,$TMPVAR_i_2_@t182$
-call getint
+;callgetuint,$TMPVAR_i_2_@t182$
+call getuint
 mov WORD PTR [BP-22], AX
 ;mov$LOCALVAR_i_2_@mainy$,$TMPVAR_i_2_@t182$
 mov AX,WORD PTR [BP-22]
@@ -1320,10 +1320,10 @@ mov WORD PTR [BP-16],AX
 mov AX,WORD PTR [BP-14]
 add AX,WORD PTR [BP-16]
 mov [BP-24],AX
-;callputint,$TMPVAR_i_2_@t183$,$TMPVAR_i_2_@t184$
+;callputuint,$TMPVAR_i_2_@t183$,$TMPVAR_i_2_@t184$
 mov AX,WORD PTR [BP-24]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-26], AX
 ;callputspace,$TMPVAR_i_2_@t185$
 call putspace
@@ -1332,10 +1332,10 @@ mov WORD PTR [BP-28], AX
 mov AX,WORD PTR [BP-14]
 sub AX,WORD PTR [BP-16]
 mov [BP-30],AX
-;callputint,$TMPVAR_i_2_@t186$,$TMPVAR_i_2_@t187$
+;callputuint,$TMPVAR_i_2_@t186$,$TMPVAR_i_2_@t187$
 mov AX,WORD PTR [BP-30]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-32], AX
 ;callputspace,$TMPVAR_i_2_@t188$
 call putspace
@@ -1344,10 +1344,10 @@ mov WORD PTR [BP-34], AX
 mov AX,WORD PTR [BP-14]
 imul WORD PTR [BP-16]
 mov [BP-36],AX
-;callputint,$TMPVAR_i_2_@t189$,$TMPVAR_i_2_@t190$
+;callputuint,$TMPVAR_i_2_@t189$,$TMPVAR_i_2_@t190$
 mov AX,WORD PTR [BP-36]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-38], AX
 ;callputspace,$TMPVAR_i_2_@t191$
 call putspace
@@ -1357,10 +1357,10 @@ mov DX,0
 mov AX,WORD PTR [BP-14]
 idiv WORD PTR [BP-16]
 mov [BP-42],AX
-;callputint,$TMPVAR_i_2_@t192$,$TMPVAR_i_2_@t193$
+;callputuint,$TMPVAR_i_2_@t192$,$TMPVAR_i_2_@t193$
 mov AX,WORD PTR [BP-42]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-44], AX
 ;callputspace,$TMPVAR_i_2_@t194$
 call putspace
@@ -1415,8 +1415,8 @@ mov WORD PTR [BP-66], AX
 ;callputln,$TMPVAR_i_2_@t205$
 call putln
 mov WORD PTR [BP-68], AX
-;callgetint,$TMPVAR_i_2_@t206$
-call getint
+;callgetuint,$TMPVAR_i_2_@t206$
+call getuint
 mov WORD PTR [BP-70], AX
 ;mov$LOCALVAR_i_2_@mainn$,$TMPVAR_i_2_@t206$
 mov AX,WORD PTR [BP-70]
@@ -1436,12 +1436,12 @@ mov [BP-74],AX
 mov AX,WORD PTR [BP-72]
 add AX,WORD PTR [BP-74]
 mov [BP-72],AX
-;callgetintarray,$TMPVAR_i_2_@t207$,$TMPVAR_i_2_@t208$,$LOCALVAR_i_2_@mainn$
+;callgetuintarray,$TMPVAR_i_2_@t207$,$TMPVAR_i_2_@t208$,$LOCALVAR_i_2_@mainn$
 mov AX,WORD PTR [BP-18]
 push AX
 mov AX,WORD PTR [BP-72]
 push AX
-call getintarray
+call getuintarray
 mov WORD PTR [BP-78], AX
 ;lea$TMPVAR_i_2_@t212$,$GLOBALVAR_i_100_@arr$
 lea AX,arr
@@ -1480,12 +1480,12 @@ mov [BP-90],AX
 mov AX,WORD PTR [BP-88]
 add AX,WORD PTR [BP-90]
 mov [BP-88],AX
-;callputintarray,$TMPVAR_i_2_@t215$,$TMPVAR_i_2_@t216$,$LOCALVAR_i_2_@mainn$
+;callputuintarray,$TMPVAR_i_2_@t215$,$TMPVAR_i_2_@t216$,$LOCALVAR_i_2_@mainn$
 mov AX,WORD PTR [BP-18]
 push AX
 mov AX,WORD PTR [BP-88]
 push AX
-call putintarray
+call putuintarray
 mov WORD PTR [BP-94], AX
 ;lea$TMPVAR_i_2_@t220$,$GLOBALVAR_c_50_@str1$
 lea AX,str1
@@ -1572,10 +1572,10 @@ mov AX,WORD PTR [BP-116]
 push AX
 call strcmp
 mov WORD PTR [BP-128], AX
-;callputint,$TMPVAR_i_2_@t229$,$TMPVAR_i_2_@t230$
+;callputuint,$TMPVAR_i_2_@t229$,$TMPVAR_i_2_@t230$
 mov AX,WORD PTR [BP-128]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-130], AX
 ;callputln,$TMPVAR_i_2_@t237$
 call putln
@@ -1665,10 +1665,10 @@ mov AX,WORD PTR [BP-154]
 push AX
 call strcmp
 mov WORD PTR [BP-166], AX
-;callputint,$TMPVAR_i_2_@t248$,$TMPVAR_i_2_@t249$
+;callputuint,$TMPVAR_i_2_@t248$,$TMPVAR_i_2_@t249$
 mov AX,WORD PTR [BP-166]
 push AX
-call putint
+call putuint
 mov WORD PTR [BP-168], AX
 ;callputln,$TMPVAR_i_2_@t256$
 call putln

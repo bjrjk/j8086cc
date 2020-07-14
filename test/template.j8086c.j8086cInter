@@ -40,77 +40,77 @@ movi $TMPVAR_i_2_@t16$, 0
 ret $TMPVAR_i_2_@t16$
 .endfun
 
-.fun getint
-.var $LOCALVAR_i_2_@getintnum$
-.var $LOCALVAR_i_2_@getintflag$
-.var $LOCALVAR_i_2_@getintc$
+.fun getuint
+.var $LOCALVAR_i_2_@getuintnum$
+.var $LOCALVAR_i_2_@getuintflag$
+.var $LOCALVAR_i_2_@getuintc$
 movi $TMPVAR_i_2_@t17$, 0
-mov $LOCALVAR_i_2_@getintnum$, $TMPVAR_i_2_@t17$
+mov $LOCALVAR_i_2_@getuintnum$, $TMPVAR_i_2_@t17$
 movi $TMPVAR_i_2_@t18$, 0
-mov $LOCALVAR_i_2_@getintflag$, $TMPVAR_i_2_@t18$
+mov $LOCALVAR_i_2_@getuintflag$, $TMPVAR_i_2_@t18$
 L2:
 movi $TMPVAR_i_2_@t19$, 1
 jz $TMPVAR_i_2_@t19$, L3
 call getchar,$TMPVAR_c_1_@t20$
-mov $LOCALVAR_i_2_@getintc$, $TMPVAR_c_1_@t20$
-call isNumeric,$TMPVAR_i_2_@t21$, $LOCALVAR_i_2_@getintc$
+mov $LOCALVAR_i_2_@getuintc$, $TMPVAR_c_1_@t20$
+call isNumeric,$TMPVAR_i_2_@t21$, $LOCALVAR_i_2_@getuintc$
 jz $TMPVAR_i_2_@t21$, L4
 movi $TMPVAR_i_2_@t22$, 1
-mov $LOCALVAR_i_2_@getintflag$, $TMPVAR_i_2_@t22$
+mov $LOCALVAR_i_2_@getuintflag$, $TMPVAR_i_2_@t22$
 L4:
-call isNumeric,$TMPVAR_i_2_@t23$, $LOCALVAR_i_2_@getintc$
+call isNumeric,$TMPVAR_i_2_@t23$, $LOCALVAR_i_2_@getuintc$
 lnot $TMPVAR_i_2_@t24$, $TMPVAR_i_2_@t23$
 jz $TMPVAR_i_2_@t24$, L5
 movi $TMPVAR_i_2_@t25$, 1
-eq $TMPVAR_i_2_@t26$, $LOCALVAR_i_2_@getintflag$, $TMPVAR_i_2_@t25$
+eq $TMPVAR_i_2_@t26$, $LOCALVAR_i_2_@getuintflag$, $TMPVAR_i_2_@t25$
 jz $TMPVAR_i_2_@t26$, L6
 jmp L3
 L6:
 jmp L2
 L5:
 movi $TMPVAR_i_2_@t27$, 10
-mul $TMPVAR_i_2_@t28$, $LOCALVAR_i_2_@getintnum$, $TMPVAR_i_2_@t27$
-mov $LOCALVAR_i_2_@getintnum$, $TMPVAR_i_2_@t28$
+mul $TMPVAR_i_2_@t28$, $LOCALVAR_i_2_@getuintnum$, $TMPVAR_i_2_@t27$
+mov $LOCALVAR_i_2_@getuintnum$, $TMPVAR_i_2_@t28$
 movi $TMPVAR_i_2_@t29$, 48
-sub $TMPVAR_i_2_@t30$, $LOCALVAR_i_2_@getintc$, $TMPVAR_i_2_@t29$
-add $TMPVAR_i_2_@t31$, $LOCALVAR_i_2_@getintnum$, $TMPVAR_i_2_@t30$
-mov $LOCALVAR_i_2_@getintnum$, $TMPVAR_i_2_@t31$
+sub $TMPVAR_i_2_@t30$, $LOCALVAR_i_2_@getuintc$, $TMPVAR_i_2_@t29$
+add $TMPVAR_i_2_@t31$, $LOCALVAR_i_2_@getuintnum$, $TMPVAR_i_2_@t30$
+mov $LOCALVAR_i_2_@getuintnum$, $TMPVAR_i_2_@t31$
 jmp L2
 L3:
-ret $LOCALVAR_i_2_@getintnum$
+ret $LOCALVAR_i_2_@getuintnum$
 .endfun
 
-.fun putintRec
-.var $PARAMVAR_i_2_@putintRecx$
+.fun putuintRec
+.var $PARAMVAR_i_2_@putuintRecx$
 movi $TMPVAR_i_2_@t32$, 0
-eq $TMPVAR_i_2_@t33$, $PARAMVAR_i_2_@putintRecx$, $TMPVAR_i_2_@t32$
+eq $TMPVAR_i_2_@t33$, $PARAMVAR_i_2_@putuintRecx$, $TMPVAR_i_2_@t32$
 jz $TMPVAR_i_2_@t33$, L7
 movi $TMPVAR_i_2_@t34$, 0
 ret $TMPVAR_i_2_@t34$
 L7:
-.var $LOCALVAR_i_2_@putintRectmp$
+.var $LOCALVAR_i_2_@putuintRectmp$
 movi $TMPVAR_i_2_@t35$, 10
-mod $TMPVAR_i_2_@t36$, $PARAMVAR_i_2_@putintRecx$, $TMPVAR_i_2_@t35$
-mov $LOCALVAR_i_2_@putintRectmp$, $TMPVAR_i_2_@t36$
+mod $TMPVAR_i_2_@t36$, $PARAMVAR_i_2_@putuintRecx$, $TMPVAR_i_2_@t35$
+mov $LOCALVAR_i_2_@putuintRectmp$, $TMPVAR_i_2_@t36$
 movi $TMPVAR_i_2_@t38$, 10
-div $TMPVAR_i_2_@t39$, $PARAMVAR_i_2_@putintRecx$, $TMPVAR_i_2_@t38$
-call putintRec,$TMPVAR_i_2_@t37$, $TMPVAR_i_2_@t39$
+div $TMPVAR_i_2_@t39$, $PARAMVAR_i_2_@putuintRecx$, $TMPVAR_i_2_@t38$
+call putuintRec,$TMPVAR_i_2_@t37$, $TMPVAR_i_2_@t39$
 movi $TMPVAR_i_2_@t41$, 48
-add $TMPVAR_i_2_@t42$, $LOCALVAR_i_2_@putintRectmp$, $TMPVAR_i_2_@t41$
+add $TMPVAR_i_2_@t42$, $LOCALVAR_i_2_@putuintRectmp$, $TMPVAR_i_2_@t41$
 call putchar,$TMPVAR_i_2_@t40$, $TMPVAR_i_2_@t42$
 .endfun
 
-.fun putint
-.var $PARAMVAR_i_2_@putintx$
+.fun putuint
+.var $PARAMVAR_i_2_@putuintx$
 movi $TMPVAR_i_2_@t43$, 0
-eq $TMPVAR_i_2_@t44$, $PARAMVAR_i_2_@putintx$, $TMPVAR_i_2_@t43$
+eq $TMPVAR_i_2_@t44$, $PARAMVAR_i_2_@putuintx$, $TMPVAR_i_2_@t43$
 jz $TMPVAR_i_2_@t44$, L8
 movi $TMPVAR_i_2_@t46$, 48
 call putchar,$TMPVAR_i_2_@t45$, $TMPVAR_i_2_@t46$
 movi $TMPVAR_i_2_@t47$, 0
 ret $TMPVAR_i_2_@t47$
 L8:
-call putintRec,$TMPVAR_i_2_@t48$, $PARAMVAR_i_2_@putintx$
+call putuintRec,$TMPVAR_i_2_@t48$, $PARAMVAR_i_2_@putuintx$
 .endfun
 
 .fun getstr
@@ -310,55 +310,55 @@ jmp L16
 L17:
 .endfun
 
-.fun getintarray
-.var $PARAMVAR_i_2_@getintarrayarr$
-.var $PARAMVAR_i_2_@getintarraysize$
-.var $LOCALVAR_i_2_@getintarrayi$
+.fun getuintarray
+.var $PARAMVAR_i_2_@getuintarrayarr$
+.var $PARAMVAR_i_2_@getuintarraysize$
+.var $LOCALVAR_i_2_@getuintarrayi$
 movi $TMPVAR_i_2_@t137$, 0
-mov $LOCALVAR_i_2_@getintarrayi$, $TMPVAR_i_2_@t137$
+mov $LOCALVAR_i_2_@getuintarrayi$, $TMPVAR_i_2_@t137$
 L21:
-lt $TMPVAR_i_2_@t138$, $LOCALVAR_i_2_@getintarrayi$, $PARAMVAR_i_2_@getintarraysize$
+lt $TMPVAR_i_2_@t138$, $LOCALVAR_i_2_@getuintarrayi$, $PARAMVAR_i_2_@getuintarraysize$
 jz $TMPVAR_i_2_@t138$, L22
-mov $TMPVAR_i_2_@t139$, $PARAMVAR_i_2_@getintarrayarr$
+mov $TMPVAR_i_2_@t139$, $PARAMVAR_i_2_@getuintarrayarr$
 movi $TMPVAR_i_2_@t140$, 0
 movi $TMPVAR_i_2_@t141$, 1
-mul $TMPVAR_i_2_@t141$, $TMPVAR_i_2_@t141$, $LOCALVAR_i_2_@getintarrayi$
+mul $TMPVAR_i_2_@t141$, $TMPVAR_i_2_@t141$, $LOCALVAR_i_2_@getuintarrayi$
 add $TMPVAR_i_2_@t140$, $TMPVAR_i_2_@t140$, $TMPVAR_i_2_@t141$
 movi $TMPVAR_i_2_@t142$, 2
 mul $TMPVAR_i_2_@t140$, $TMPVAR_i_2_@t140$, $TMPVAR_i_2_@t142$
 add $TMPVAR_i_2_@t139$, $TMPVAR_i_2_@t139$, $TMPVAR_i_2_@t140$
-call getint,$TMPVAR_i_2_@t143$
+call getuint,$TMPVAR_i_2_@t143$
 movmr [$TMPVAR_i_2_@t139$], $TMPVAR_i_2_@t143$
 movi $TMPVAR_i_2_@t144$, 1
-add $TMPVAR_i_2_@t145$, $LOCALVAR_i_2_@getintarrayi$, $TMPVAR_i_2_@t144$
-mov $LOCALVAR_i_2_@getintarrayi$, $TMPVAR_i_2_@t145$
+add $TMPVAR_i_2_@t145$, $LOCALVAR_i_2_@getuintarrayi$, $TMPVAR_i_2_@t144$
+mov $LOCALVAR_i_2_@getuintarrayi$, $TMPVAR_i_2_@t145$
 jmp L21
 L22:
 .endfun
 
-.fun putintarray
-.var $PARAMVAR_i_2_@putintarrayarr$
-.var $PARAMVAR_i_2_@putintarraysize$
-.var $LOCALVAR_i_2_@putintarrayi$
+.fun putuintarray
+.var $PARAMVAR_i_2_@putuintarrayarr$
+.var $PARAMVAR_i_2_@putuintarraysize$
+.var $LOCALVAR_i_2_@putuintarrayi$
 movi $TMPVAR_i_2_@t146$, 0
-mov $LOCALVAR_i_2_@putintarrayi$, $TMPVAR_i_2_@t146$
+mov $LOCALVAR_i_2_@putuintarrayi$, $TMPVAR_i_2_@t146$
 L23:
-lt $TMPVAR_i_2_@t147$, $LOCALVAR_i_2_@putintarrayi$, $PARAMVAR_i_2_@putintarraysize$
+lt $TMPVAR_i_2_@t147$, $LOCALVAR_i_2_@putuintarrayi$, $PARAMVAR_i_2_@putuintarraysize$
 jz $TMPVAR_i_2_@t147$, L24
-mov $TMPVAR_i_2_@t149$, $PARAMVAR_i_2_@putintarrayarr$
+mov $TMPVAR_i_2_@t149$, $PARAMVAR_i_2_@putuintarrayarr$
 movi $TMPVAR_i_2_@t150$, 0
 movi $TMPVAR_i_2_@t151$, 1
-mul $TMPVAR_i_2_@t151$, $TMPVAR_i_2_@t151$, $LOCALVAR_i_2_@putintarrayi$
+mul $TMPVAR_i_2_@t151$, $TMPVAR_i_2_@t151$, $LOCALVAR_i_2_@putuintarrayi$
 add $TMPVAR_i_2_@t150$, $TMPVAR_i_2_@t150$, $TMPVAR_i_2_@t151$
 movi $TMPVAR_i_2_@t152$, 2
 mul $TMPVAR_i_2_@t150$, $TMPVAR_i_2_@t150$, $TMPVAR_i_2_@t152$
 add $TMPVAR_i_2_@t149$, $TMPVAR_i_2_@t149$, $TMPVAR_i_2_@t150$
 movrm $TMPVAR_i_2_@t153$, [$TMPVAR_i_2_@t149$]
-call putint,$TMPVAR_i_2_@t148$, $TMPVAR_i_2_@t153$
+call putuint,$TMPVAR_i_2_@t148$, $TMPVAR_i_2_@t153$
 call putspace,$TMPVAR_i_2_@t154$
 movi $TMPVAR_i_2_@t155$, 1
-add $TMPVAR_i_2_@t156$, $LOCALVAR_i_2_@putintarrayi$, $TMPVAR_i_2_@t155$
-mov $LOCALVAR_i_2_@putintarrayi$, $TMPVAR_i_2_@t156$
+add $TMPVAR_i_2_@t156$, $LOCALVAR_i_2_@putuintarrayi$, $TMPVAR_i_2_@t155$
+mov $LOCALVAR_i_2_@putuintarrayi$, $TMPVAR_i_2_@t156$
 jmp L23
 L24:
 call putln,$TMPVAR_i_2_@t157$
@@ -419,21 +419,21 @@ ret $TMPVAR_i_2_@t180$
 .var $LOCALVAR_i_2_@mainx$
 .var $LOCALVAR_i_2_@mainy$
 .var $LOCALVAR_i_2_@mainn$
-call getint,$TMPVAR_i_2_@t181$
+call getuint,$TMPVAR_i_2_@t181$
 mov $LOCALVAR_i_2_@mainx$, $TMPVAR_i_2_@t181$
-call getint,$TMPVAR_i_2_@t182$
+call getuint,$TMPVAR_i_2_@t182$
 mov $LOCALVAR_i_2_@mainy$, $TMPVAR_i_2_@t182$
 add $TMPVAR_i_2_@t184$, $LOCALVAR_i_2_@mainx$, $LOCALVAR_i_2_@mainy$
-call putint,$TMPVAR_i_2_@t183$, $TMPVAR_i_2_@t184$
+call putuint,$TMPVAR_i_2_@t183$, $TMPVAR_i_2_@t184$
 call putspace,$TMPVAR_i_2_@t185$
 sub $TMPVAR_i_2_@t187$, $LOCALVAR_i_2_@mainx$, $LOCALVAR_i_2_@mainy$
-call putint,$TMPVAR_i_2_@t186$, $TMPVAR_i_2_@t187$
+call putuint,$TMPVAR_i_2_@t186$, $TMPVAR_i_2_@t187$
 call putspace,$TMPVAR_i_2_@t188$
 mul $TMPVAR_i_2_@t190$, $LOCALVAR_i_2_@mainx$, $LOCALVAR_i_2_@mainy$
-call putint,$TMPVAR_i_2_@t189$, $TMPVAR_i_2_@t190$
+call putuint,$TMPVAR_i_2_@t189$, $TMPVAR_i_2_@t190$
 call putspace,$TMPVAR_i_2_@t191$
 div $TMPVAR_i_2_@t193$, $LOCALVAR_i_2_@mainx$, $LOCALVAR_i_2_@mainy$
-call putint,$TMPVAR_i_2_@t192$, $TMPVAR_i_2_@t193$
+call putuint,$TMPVAR_i_2_@t192$, $TMPVAR_i_2_@t193$
 call putspace,$TMPVAR_i_2_@t194$
 call putln,$TMPVAR_i_2_@t195$
 lea $TMPVAR_i_2_@t197$, $GLOBALVAR_c_50_@str1$
@@ -450,14 +450,14 @@ mul $TMPVAR_i_2_@t203$, $TMPVAR_i_2_@t203$, $TMPVAR_i_2_@t204$
 add $TMPVAR_i_2_@t202$, $TMPVAR_i_2_@t202$, $TMPVAR_i_2_@t203$
 call putstr,$TMPVAR_i_2_@t201$, $TMPVAR_i_2_@t202$
 call putln,$TMPVAR_i_2_@t205$
-call getint,$TMPVAR_i_2_@t206$
+call getuint,$TMPVAR_i_2_@t206$
 mov $LOCALVAR_i_2_@mainn$, $TMPVAR_i_2_@t206$
 lea $TMPVAR_i_2_@t208$, $GLOBALVAR_i_100_@arr$
 movi $TMPVAR_i_2_@t209$, 0
 movi $TMPVAR_i_2_@t210$, 2
 mul $TMPVAR_i_2_@t209$, $TMPVAR_i_2_@t209$, $TMPVAR_i_2_@t210$
 add $TMPVAR_i_2_@t208$, $TMPVAR_i_2_@t208$, $TMPVAR_i_2_@t209$
-call getintarray,$TMPVAR_i_2_@t207$, $TMPVAR_i_2_@t208$, $LOCALVAR_i_2_@mainn$
+call getuintarray,$TMPVAR_i_2_@t207$, $TMPVAR_i_2_@t208$, $LOCALVAR_i_2_@mainn$
 lea $TMPVAR_i_2_@t212$, $GLOBALVAR_i_100_@arr$
 movi $TMPVAR_i_2_@t213$, 0
 movi $TMPVAR_i_2_@t214$, 2
@@ -469,7 +469,7 @@ movi $TMPVAR_i_2_@t217$, 0
 movi $TMPVAR_i_2_@t218$, 2
 mul $TMPVAR_i_2_@t217$, $TMPVAR_i_2_@t217$, $TMPVAR_i_2_@t218$
 add $TMPVAR_i_2_@t216$, $TMPVAR_i_2_@t216$, $TMPVAR_i_2_@t217$
-call putintarray,$TMPVAR_i_2_@t215$, $TMPVAR_i_2_@t216$, $LOCALVAR_i_2_@mainn$
+call putuintarray,$TMPVAR_i_2_@t215$, $TMPVAR_i_2_@t216$, $LOCALVAR_i_2_@mainn$
 lea $TMPVAR_i_2_@t220$, $GLOBALVAR_c_50_@str1$
 movi $TMPVAR_i_2_@t221$, 0
 movi $TMPVAR_i_2_@t222$, 1
@@ -495,7 +495,7 @@ movi $TMPVAR_i_2_@t236$, 1
 mul $TMPVAR_i_2_@t235$, $TMPVAR_i_2_@t235$, $TMPVAR_i_2_@t236$
 add $TMPVAR_i_2_@t234$, $TMPVAR_i_2_@t234$, $TMPVAR_i_2_@t235$
 call strcmp,$TMPVAR_i_2_@t230$, $TMPVAR_i_2_@t231$, $TMPVAR_i_2_@t234$
-call putint,$TMPVAR_i_2_@t229$, $TMPVAR_i_2_@t230$
+call putuint,$TMPVAR_i_2_@t229$, $TMPVAR_i_2_@t230$
 call putln,$TMPVAR_i_2_@t237$
 lea $TMPVAR_i_2_@t239$, $GLOBALVAR_c_50_@str1$
 movi $TMPVAR_i_2_@t240$, 0
@@ -522,7 +522,7 @@ movi $TMPVAR_i_2_@t255$, 1
 mul $TMPVAR_i_2_@t254$, $TMPVAR_i_2_@t254$, $TMPVAR_i_2_@t255$
 add $TMPVAR_i_2_@t253$, $TMPVAR_i_2_@t253$, $TMPVAR_i_2_@t254$
 call strcmp,$TMPVAR_i_2_@t249$, $TMPVAR_i_2_@t250$, $TMPVAR_i_2_@t253$
-call putint,$TMPVAR_i_2_@t248$, $TMPVAR_i_2_@t249$
+call putuint,$TMPVAR_i_2_@t248$, $TMPVAR_i_2_@t249$
 call putln,$TMPVAR_i_2_@t256$
 .endfun
 
