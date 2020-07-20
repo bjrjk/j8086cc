@@ -14,15 +14,14 @@ public class j8086cc {
 		f.flush();
 		f.close();
 	}
-	public static String ReadTXT(String path) throws IOException{
-		File file = new File(path);
-	    if(!file.exists())return null;
-	    FileInputStream inputStream = new FileInputStream(file);
-	    int length = inputStream.available();
-	    byte bytes[] = new byte[length];
-	    inputStream.read(bytes);
-	    inputStream.close();
-	    String str =new String(bytes);
+	public static String ReadInnerTXT(String path) throws IOException{
+		BufferedReader in = new BufferedReader(new InputStreamReader(j8086cc.class.getClassLoader().getResourceAsStream(path)));
+		StringBuffer buffer = new StringBuffer();
+		String line = "";
+		while ((line = in.readLine()) != null){
+		    buffer.append(line+"\n");
+		}
+		String str = buffer.toString();
 	    return str;
 	}
 	@SuppressWarnings("deprecation")
@@ -44,8 +43,6 @@ public class j8086cc {
         }
         ParseTree HLLTree = HLLParser.program();
         String IR=HLLvisitor.visit(HLLTree);
-        //System.err.println("IR:");
-        //System.out.println(IR);
     	WriteTXT(IR,filename+".j8086cInter");
     	ANTLRInputStream InterInput = new ANTLRInputStream(IR);
         j8086cInterLexer InterLexer = new j8086cInterLexer(InterInput);
@@ -58,12 +55,10 @@ public class j8086cc {
         ParseTree InterTree = InterParser.program();
         IRVisitor InterVisitor = new IRVisitor();
         InterVisitor.visit(InterTree);
-        String ASM8086=ReadTXT(j8086cc.class.getResource("/template.asm").getPath());
+        String templatePath="template.asm";
+        String ASM8086=ReadInnerTXT(templatePath);
         ASM8086=ASM8086.replace("%%DATA_TEXT%%", InterVisitor.dataSegStr);
         ASM8086=ASM8086.replace("%%CODE_TEXT%%", InterVisitor.codeSegStr);
-        //System.err.println("8086:");
-        //System.out.println(ASM8086);
     	WriteTXT(ASM8086,filename+".8086.asm");
 	}
-
 }

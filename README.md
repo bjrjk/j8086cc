@@ -1,6 +1,6 @@
 # j8086cc
 
-`j8086cc ` is a compiler of Jack's C-like High-Level Programming Language `j8086c` which generates assembly of Intel 8086.
+`j8086cc` is a compiler of Jack's C-like High-Level Programming Language `j8086c` which generates assembly of Intel 8086.
 
 # j8086c Language Grammar
 
@@ -79,3 +79,7 @@ Unary: +. -, !
 Binary: +, -, *, /, %, <, <=, >, >=, ==, !=, &&, ||
 
 Literal: Only Support Integer Literal
+
+# Use j8086cc's binary JAR Package
+
+Execute `java -jar j8086cc-{version}.jar {filename}.j8086c` to compile.
