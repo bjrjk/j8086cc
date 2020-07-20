@@ -25,7 +25,12 @@ public class j8086cc {
 	    String str =new String(bytes);
 	    return str;
 	}
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws IOException {
+		if(args.length==0) {
+			System.err.println("Please pass a j8086c code file!");
+        	System.exit(1);
+		}
 		String filename = args[0];
 		SyntaxTreeVisitor HLLvisitor = new SyntaxTreeVisitor();
 		FileInputStream f = new FileInputStream(filename);
@@ -39,8 +44,8 @@ public class j8086cc {
         }
         ParseTree HLLTree = HLLParser.program();
         String IR=HLLvisitor.visit(HLLTree);
-        System.err.println("IR:");
-        System.out.println(IR);
+        //System.err.println("IR:");
+        //System.out.println(IR);
     	WriteTXT(IR,filename+".j8086cInter");
     	ANTLRInputStream InterInput = new ANTLRInputStream(IR);
         j8086cInterLexer InterLexer = new j8086cInterLexer(InterInput);
@@ -53,11 +58,11 @@ public class j8086cc {
         ParseTree InterTree = InterParser.program();
         IRVisitor InterVisitor = new IRVisitor();
         InterVisitor.visit(InterTree);
-        String ASM8086=ReadTXT("src/template.asm");
+        String ASM8086=ReadTXT(j8086cc.class.getResource("/template.asm").getPath());
         ASM8086=ASM8086.replace("%%DATA_TEXT%%", InterVisitor.dataSegStr);
         ASM8086=ASM8086.replace("%%CODE_TEXT%%", InterVisitor.codeSegStr);
-        System.err.println("8086:");
-        System.out.println(ASM8086);
+        //System.err.println("8086:");
+        //System.out.println(ASM8086);
     	WriteTXT(ASM8086,filename+".8086.asm");
 	}
 
