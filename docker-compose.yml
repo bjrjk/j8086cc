@@ -1,0 +1,6 @@
+version: '2'
+services:
+  j8086cc:
+    build: .
+    ports:
+      - "7778:80"

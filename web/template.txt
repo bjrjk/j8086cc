@@ -1,0 +1,135 @@
+int isNumeric(int ASCII){
+	if(48<=ASCII&&ASCII<=57)return 1;
+	else return 0;
+}
+int isBlank(int ASCII){
+	if(ASCII==10||ASCII==13||ASCII==32)return 1;
+	else return 0;
+}
+int getuint(){
+	int num,flag,c;
+	num=0;flag=0;
+	while(1){
+		c=getchar();
+		if(isNumeric(c))flag=1;
+		if(!isNumeric(c)){
+			if(flag==1)break;
+			else continue;
+		}
+		num=num*10;
+		num=num+(c-48);
+	}
+	return num;
+}
+int putuintRec(int x){
+	if(x==0)return 0;
+	int tmp;
+	tmp=x%10;
+	putuintRec(x/10);
+	putchar(tmp+48);
+}
+int putuint(int x){
+	if(x==0){
+		putchar(48);
+		return 0;
+	}
+	putuintRec(x);
+}
+int getstr(char[100] storage,int size){
+	int i,flag,c;
+	i=0;flag=0;
+	while(i<size){
+		c=getchar();
+		if(!isBlank(c))flag=1;
+		if(isBlank(c)){
+			if(flag==1)break;
+			else continue;
+		}
+		storage[i]=c;
+		i=i+1;
+	}
+	storage[i]=0;
+}
+int putstr(char[100] storage){
+	int i;
+	i=0;
+	while(storage[i]!=0){
+		putchar(storage[i]);
+		i=i+1;
+	}
+}
+int putspace(){
+	putchar(32);
+}
+int putln(){
+	putchar(13);
+	putchar(10);
+}
+int sort(int[100] arr,int size){
+	int i,j,tmp;
+	i=0;
+	while(i<size){
+		j=size-1;
+		while(j>0){
+			if(arr[j-1]>arr[j]){
+				tmp=arr[j-1];
+				arr[j-1]=arr[j];
+				arr[j]=tmp;
+			}
+			j=j-1;
+		}
+		i=i+1;
+	}
+}
+int getuintarray(int[100] arr,int size){
+	int i;
+	i=0;
+	while(i<size){
+		arr[i]=getuint();
+		i=i+1;
+	}
+}
+int putuintarray(int[100] arr,int size){
+	int i;
+	i=0;
+	while(i<size){
+		putuint(arr[i]);
+		putspace();
+		i=i+1;
+	}
+	putln();
+}
+int strcmp(char[100] str1,char[100] str2){
+	int i;
+	i=0;
+	while(str1[i]==str2[i]){
+		if(str1[i]==0)return 1;
+		i=i+1;
+	}
+	return 0;
+}
+int[50] arr; char[50] str1,str2; int main(){
+	int x,y,n;
+	x=getuint();
+	y=getuint();
+	putuint(x+y);putspace();
+	putuint(x-y);putspace();
+	putuint(x*y);putspace();
+	putuint(x/y);putspace();
+	putln();
+	getstr(str1,50);
+	putstr(str1);
+	putln();
+	n=getuint();
+	getuintarray(arr,n);
+	sort(arr,n);
+	putuintarray(arr,n);
+	getstr(str1,50);
+	getstr(str2,50);
+	putuint(strcmp(str1,str2));
+	putln();
+	getstr(str1,50);
+	getstr(str2,50);
+	putuint(strcmp(str1,str2));
+	putln();
+}
