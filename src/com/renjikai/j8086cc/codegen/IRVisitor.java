@@ -2,6 +2,7 @@ package com.renjikai.j8086cc.codegen;
 
 import java.util.HashMap;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.Interval;
 
 import com.renjikai.j8086cc.intermediate.Symbol;
 import com.renjikai.j8086cc.intermediate.Counter;
@@ -16,6 +17,12 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	public Counter lblCnter=new Counter();
 	public String curGlobalFunc="";
 	
+	public static String getFullText(ParserRuleContext ctx) {
+		int s = ctx.start.getStartIndex();
+		int e = ctx.stop.getStopIndex();
+		Interval interval = new Interval(s, e);
+		return ctx.start.getInputStream().getText(interval);
+	}
 	public String getNewLabel() {
 		return "LI"+lblCnter.getNewStringID();
 	}
@@ -132,7 +139,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitMOVI(j8086cInterParser.MOVIContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift=formatVarBPShift(ctx.varName());
 		if(getVarTypeSize(ctx.varName())==1)
 			return dbg+String.format("mov BYTE PTR %s,%s%s\n", 
@@ -147,7 +154,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitMOV(j8086cInterParser.MOVContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		 String s1,s2;
@@ -165,7 +172,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitMOVRM(j8086cInterParser.MOVRMContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String s1=String.format("mov BX,WORD PTR %s\n", varShift1);
@@ -180,7 +187,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitMOVMR(j8086cInterParser.MOVMRContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String s1=String.format("mov BX,WORD PTR %s\n", varShift0);
@@ -195,7 +202,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 
 	@Override
 	public String visitLEA(j8086cInterParser.LEAContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String s1=String.format("lea AX,%s\n", varShift1);
@@ -206,7 +213,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitADD(j8086cInterParser.ADDContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -226,7 +233,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitSUB(j8086cInterParser.SUBContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -246,7 +253,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitMUL(j8086cInterParser.MULContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -271,7 +278,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitDIV(j8086cInterParser.DIVContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -299,7 +306,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitMOD(j8086cInterParser.MODContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -327,7 +334,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitLT(j8086cInterParser.LTContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -368,7 +375,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitLE(j8086cInterParser.LEContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -409,7 +416,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitGE(j8086cInterParser.GEContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -450,7 +457,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitGT(j8086cInterParser.GTContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -491,7 +498,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitEQ(j8086cInterParser.EQContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -532,7 +539,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitNE(j8086cInterParser.NEContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -573,7 +580,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitLAND(j8086cInterParser.LANDContext ctx) { //TODO
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -594,7 +601,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitLOR(j8086cInterParser.LORContext ctx) { //TODO
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String varShift2=formatVarBPShift(ctx.varName(2));
@@ -615,7 +622,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitLNOT(j8086cInterParser.LNOTContext ctx) { //TODO
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift0=formatVarBPShift(ctx.varName(0));
 		String varShift1=formatVarBPShift(ctx.varName(1));
 		String s1,s2,s3,s4,s5,s6,s7;
@@ -633,7 +640,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitJNZ(j8086cInterParser.JNZContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift=formatVarBPShift(ctx.varName());
 		String s1=String.format("mov AX,WORD PTR %s\n", varShift);
 		String s2="cmp AX,0\n";
@@ -644,7 +651,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitJZ(j8086cInterParser.JZContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String varShift=formatVarBPShift(ctx.varName());
 		String s1=String.format("mov AX,WORD PTR %s\n", varShift);
 		String s2="cmp AX,0\n";
@@ -655,14 +662,14 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 	
 	@Override
 	public String visitJMP(j8086cInterParser.JMPContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		return dbg+String.format("jmp %s\n",ctx.LBL().getText());
 	}
 
 
 	@Override
 	public String visitCALL(j8086cInterParser.CALLContext ctx) { //TODO
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String res="";
 		for(int i=ctx.varName().size()-1;i>0;i--) {
 			String varShift=formatVarBPShift(ctx.varName(i));
@@ -678,7 +685,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 
 	@Override
 	public String visitRET(j8086cInterParser.RETContext ctx) {
-		String dbg=";"+ctx.getText()+"\n";
+		String dbg="; "+getFullText(ctx)+"\n";
 		String funcName=getFuncName(ctx);
 		Integer dataSize=Integer.valueOf(ctx.varName().INT().getText());
 		String retIns="";
