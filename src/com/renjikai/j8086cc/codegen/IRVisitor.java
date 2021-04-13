@@ -133,7 +133,7 @@ public class IRVisitor extends j8086cInterBaseVisitor<String> {
 		String addSP=String.format("add SP,%d\n", finalStackSize);
 		String funcEnd=(funcName.equals("main")?"mov AH,4Ch\nmov AL,0\nint 21h\n":String.format("RESTORE_SITE %d\n", paramCount*2))+
 				String.format("%s ENDP\n", funcName);
-		return funcBegin+addSP+stmt+endLabelL+subSP+funcEnd;
+		return funcBegin+addSP+stmt+endLabelL+subSP+funcEnd+"\n";
 	}
 
 	

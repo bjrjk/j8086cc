@@ -1,0 +1,79 @@
+#include ctype.j8086h
+
+uint getuint(){
+	int num,flag,c;
+	num=0;flag=0;
+	while(1){
+		c=getchar();
+		if(isNumeric(c))flag=1;
+		if(!isNumeric(c)){
+			if(flag==1)break;
+			else continue;
+		}
+		num=num*10;
+		num=num+(c-48);
+	}
+	return num;
+}
+int putuintRec(int x){
+	if(x==0)return 0;
+	int tmp;
+	tmp=x%10;
+	putuintRec(x/10);
+	putchar(tmp+48);
+}
+int putuint(int x){
+	if(x==0){
+		putchar(48);
+		return 0;
+	}
+	putuintRec(x);
+}
+int getstr(char[0] storage,int size){
+	int i,flag,c;
+	i=0;flag=0;
+	while(i<size){
+		c=getchar();
+		if(!isBlank(c))flag=1;
+		if(isBlank(c)){
+			if(flag==1)break;
+			else continue;
+		}
+		storage[i]=c;
+		i=i+1;
+	}
+	storage[i]=0;
+}
+int putstr(char[0] storage){
+	int i;
+	i=0;
+	while(storage[i]!=0){
+		putchar(storage[i]);
+		i=i+1;
+	}
+}
+int putspace(){
+	putchar(32);
+}
+int putln(){
+	putchar(13);
+	putchar(10);
+}
+int getuintarray(int[0] arr,int size){
+	int i;
+	i=0;
+	while(i<size){
+		arr[i]=getuint();
+		i=i+1;
+	}
+}
+int putuintarray(int[0] arr,int size){
+	int i;
+	i=0;
+	while(i<size){
+		putuint(arr[i]);
+		putspace();
+		i=i+1;
+	}
+	putln();
+}

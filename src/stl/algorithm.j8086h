@@ -1,0 +1,16 @@
+int sort(int[0] arr,int size){
+	int i,j,tmp;
+	i=0;
+	while(i<size){
+		j=size-1;
+		while(j>0){
+			if(arr[j-1]>arr[j]){
+				tmp=arr[j-1];
+				arr[j-1]=arr[j];
+				arr[j]=tmp;
+			}
+			j=j-1;
+		}
+		i=i+1;
+	}
+}

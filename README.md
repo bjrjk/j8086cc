@@ -2,11 +2,16 @@
 
 `j8086cc` is a compiler of Jack's C-like High-Level Programming Language `j8086c` which generates assembly of Intel 8086.
 
+### Version Log
+v0.2: I'm excited to announce that now `j8086cc` starts to support header files!
+
+v0.1: Basic Implementation
+
 # j8086c Language Grammar
 
 ANTLR Grammar file is located in `src/com/renjikai/j8086cc/antlr/j8086cc.g4`.
 
-There is an example j8086c code located in `test/template.j8086c`.
+There is an example j8086c code located in `test/main.j8086c`.
 
 ## j8086c's DataType
 `uint`(2 Bytes),`int`(2 Bytes) and `char`(1 Byte).
@@ -21,6 +26,9 @@ j8086c doesn't support pointer type. However, you may pass an array pointer to a
 The following is an example:
 
 ```j8086c
+#include stdio.j8086h
+#include string.j8086h
+
 int[20] arr;
 int func(int[20] array){
 	//Body of you function
@@ -67,6 +75,10 @@ Print an ASCII char to STDOUT. You may pass a variable of any type. 15~7 Bits of
 
 Get an ASCII char from STDIN. You may use any type of variable to receive the char. 
 15~7 Bits of the argument will always be 0. 
+
+## j8086c's header support
+
+Header files are located in `src/stl/`.
 
 ## j8086c's Support Statement & Operators
 
