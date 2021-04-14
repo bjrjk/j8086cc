@@ -17,6 +17,12 @@ public interface j8086ccVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(j8086ccParser.ProgramContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link j8086ccParser#arrInit}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrInit(j8086ccParser.ArrInitContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link j8086ccParser#function}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

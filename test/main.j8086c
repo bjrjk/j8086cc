@@ -3,29 +3,52 @@
 #include string.j8086h
 
 int[50] arr;
+char[100] promptInputInt, promptInputStr, promptOutputOp, promptOutputStr;
+char[100] promptInputArrN, promptInputArrElem, promptOutputArrElem, promptStrcmpResult;
 char[50] str1,str2;
+promptInputInt = "Please input two integer: ";
+promptInputStr = "Please input a string: ";
+promptOutputOp = "x+y, x-y, x*y, x/y is: ";
+promptOutputStr = "Output string: ";
+promptInputArrN = "Please input size of array: ";
+promptInputArrElem = "Please input array elements: ";
+promptOutputArrElem = "Sorted Array in ascending order: ";
+promptStrcmpResult = "strcmp Result: ";
 int main(){
 	int x,y,n;
-	x=getuint();
-	y=getuint();
-	putuint(x+y);putspace();
-	putuint(x-y);putspace();
-	putuint(x*y);putspace();
-	putuint(x/y);putspace();
+	
+	putstr(promptInputInt);
+	x=getuint(); y=getuint();
+	putstr(promptOutputOp);
+	putuint(x+y); putspace();
+	putuint(x-y); putspace();
+	putuint(x*y); putspace();
+	putuint(x/y); putspace();
 	putln();
+	
+	putstr(promptInputStr);
 	getstr(str1,50);
-	putstr(str1);
-	putln();
+	putstr(promptOutputStr);
+	putstr(str1); putln();
+	
+	putstr(promptInputArrN);
 	n=getuint();
+	putstr(promptInputArrElem);
 	getuintarray(arr,n);
 	sort(arr,n);
+	putstr(promptOutputArrElem);
 	putuintarray(arr,n);
-	getstr(str1,50);
-	getstr(str2,50);
-	putuint(strcmp(str1,str2));
-	putln();
-	getstr(str1,50);
-	getstr(str2,50);
-	putuint(strcmp(str1,str2));
-	putln();
+	
+	int i;
+	i=0;
+	while(i<2){
+		putstr(promptInputStr);
+		getstr(str1,50);
+		putstr(promptInputStr);
+		getstr(str2,50);
+		putstr(promptStrcmpResult);
+		putuint(strcmp(str1,str2));
+		putln();
+		i=i+1;
+	}
 }

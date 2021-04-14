@@ -9,13 +9,13 @@ public class InterDefines {
 	public final static String paramVarFormat = "$PARAMVAR_%s$";
 	public final static String globalVarFormat = "$GLOBALVAR_%s$";
 	public final static int stackDataSize = 2;
-	
+
 	public final static String DSEG_HEAD = ".data";
 	public final static String CSEG_HEAD = ".code";
 	public final static String DECL_HEAD = ".var";
 	public final static String FUNC_HEAD = ".fun";
 	public final static String FUNC_TAIL = ".endfun";
-	
+
 	public final static String MOVI = "movi %s, %d";
 	public final static String MOV = "mov %s, %s";
 	public final static String MOVRM = "movrm %s, [%s]";
@@ -40,9 +40,9 @@ public class InterDefines {
 	public final static String JMP = "jmp L%d";
 	public final static String CALL = "call %s,%s%s";
 	public final static String RET = "ret %s";
-	
+
 	public final static String LABEL = "L%d:";
-	
+
 	public final static String UINT = "uint";
 	public final static String INT = "int";
 	public final static String CHAR = "char";

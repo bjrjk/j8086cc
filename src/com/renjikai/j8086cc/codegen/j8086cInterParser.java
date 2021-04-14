@@ -24,8 +24,8 @@ public class j8086cInterParser extends Parser {
 		TYPE_UINT=32, TYPE_INT=33, TYPE_CHAR=34, GLOB_SCOPE=35, LOC_SCOPE=36, 
 		TMP_SCOPE=37, PARAM_SCOPE=38, DSEG_HEAD=39, CSEG_HEAD=40, DECL_HEAD=41, 
 		FUNC_HEAD=42, FUNC_TAIL=43, LBL=44, ADD=45, SUB=46, MUL=47, DIV=48, MOD=49, 
-		NOT=50, EQ=51, NE=52, LT=53, LE=54, GE=55, GT=56, IDENTIFIER=57, INT=58, 
-		WS=59, COMMENT=60;
+		NOT=50, EQ=51, NE=52, LT=53, LE=54, GE=55, GT=56, IDENTIFIER=57, STRING=58, 
+		INT=59, WS=60, COMMENT=61;
 	public static final int
 		RULE_program = 0, RULE_dataSegment = 1, RULE_varDecl = 2, RULE_varName = 3, 
 		RULE_codeSegment = 4, RULE_function = 5, RULE_statement = 6;
@@ -57,7 +57,7 @@ public class j8086cInterParser extends Parser {
 			"TYPE_CHAR", "GLOB_SCOPE", "LOC_SCOPE", "TMP_SCOPE", "PARAM_SCOPE", "DSEG_HEAD", 
 			"CSEG_HEAD", "DECL_HEAD", "FUNC_HEAD", "FUNC_TAIL", "LBL", "ADD", "SUB", 
 			"MUL", "DIV", "MOD", "NOT", "EQ", "NE", "LT", "LE", "GE", "GT", "IDENTIFIER", 
-			"INT", "WS", "COMMENT"
+			"STRING", "INT", "WS", "COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -212,6 +212,7 @@ public class j8086cInterParser extends Parser {
 		public VarNameContext varName() {
 			return getRuleContext(VarNameContext.class,0);
 		}
+		public TerminalNode STRING() { return getToken(j8086cInterParser.STRING, 0); }
 		public VarDeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -226,6 +227,7 @@ public class j8086cInterParser extends Parser {
 	public final VarDeclContext varDecl() throws RecognitionException {
 		VarDeclContext _localctx = new VarDeclContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_varDecl);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -233,6 +235,16 @@ public class j8086cInterParser extends Parser {
 			match(DECL_HEAD);
 			setState(25);
 			varName();
+			setState(27);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==STRING) {
+				{
+				setState(26);
+				match(STRING);
+				}
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -276,9 +288,9 @@ public class j8086cInterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(27);
+			setState(29);
 			match(T__0);
-			setState(28);
+			setState(30);
 			((VarNameContext)_localctx).scope = _input.LT(1);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << GLOB_SCOPE) | (1L << LOC_SCOPE) | (1L << TMP_SCOPE) | (1L << PARAM_SCOPE))) != 0)) ) {
@@ -289,7 +301,7 @@ public class j8086cInterParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(29);
+			setState(31);
 			((VarNameContext)_localctx).dataType = _input.LT(1);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TYPE_UINT) | (1L << TYPE_INT) | (1L << TYPE_CHAR))) != 0)) ) {
@@ -300,15 +312,15 @@ public class j8086cInterParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(30);
-			match(T__1);
-			setState(31);
-			match(INT);
 			setState(32);
-			match(T__2);
+			match(T__1);
 			setState(33);
-			match(IDENTIFIER);
+			match(INT);
 			setState(34);
+			match(T__2);
+			setState(35);
+			match(IDENTIFIER);
+			setState(36);
 			match(T__0);
 			}
 		}
@@ -349,19 +361,19 @@ public class j8086cInterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(36);
+			setState(38);
 			match(CSEG_HEAD);
-			setState(38); 
+			setState(40); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(37);
+				setState(39);
 				function();
 				}
 				}
-				setState(40); 
+				setState(42); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==FUNC_HEAD );
@@ -406,25 +418,25 @@ public class j8086cInterParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(42);
+			setState(44);
 			match(FUNC_HEAD);
-			setState(43);
+			setState(45);
 			match(IDENTIFIER);
-			setState(47);
+			setState(49);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__5) | (1L << T__6) | (1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16) | (1L << T__17) | (1L << T__18) | (1L << T__19) | (1L << T__20) | (1L << T__21) | (1L << T__22) | (1L << T__23) | (1L << T__24) | (1L << T__25) | (1L << T__26) | (1L << T__27) | (1L << T__28) | (1L << T__29) | (1L << DECL_HEAD) | (1L << LBL))) != 0)) {
 				{
 				{
-				setState(44);
+				setState(46);
 				statement();
 				}
 				}
-				setState(49);
+				setState(51);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(50);
+			setState(52);
 			match(FUNC_TAIL);
 			}
 		}
@@ -800,30 +812,30 @@ public class j8086cInterParser extends Parser {
 		enterRule(_localctx, 12, RULE_statement);
 		int _la;
 		try {
-			setState(206);
+			setState(208);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__3:
 				_localctx = new MOVIContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(52);
-				match(T__3);
-				setState(53);
-				varName();
 				setState(54);
-				match(T__4);
+				match(T__3);
+				setState(55);
+				varName();
 				setState(56);
+				match(T__4);
+				setState(58);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==SUB) {
 					{
-					setState(55);
+					setState(57);
 					match(SUB);
 					}
 				}
 
-				setState(58);
+				setState(60);
 				match(INT);
 				}
 				break;
@@ -831,13 +843,13 @@ public class j8086cInterParser extends Parser {
 				_localctx = new MOVContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(60);
-				match(T__5);
-				setState(61);
-				varName();
 				setState(62);
-				match(T__4);
+				match(T__5);
 				setState(63);
+				varName();
+				setState(64);
+				match(T__4);
+				setState(65);
 				varName();
 				}
 				break;
@@ -845,17 +857,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new MOVRMContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(65);
-				match(T__6);
-				setState(66);
-				varName();
 				setState(67);
-				match(T__4);
+				match(T__6);
 				setState(68);
-				match(T__7);
-				setState(69);
 				varName();
+				setState(69);
+				match(T__4);
 				setState(70);
+				match(T__7);
+				setState(71);
+				varName();
+				setState(72);
 				match(T__8);
 				}
 				break;
@@ -863,17 +875,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new MOVMRContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(72);
-				match(T__9);
-				setState(73);
-				match(T__7);
 				setState(74);
-				varName();
+				match(T__9);
 				setState(75);
-				match(T__8);
+				match(T__7);
 				setState(76);
-				match(T__4);
+				varName();
 				setState(77);
+				match(T__8);
+				setState(78);
+				match(T__4);
+				setState(79);
 				varName();
 				}
 				break;
@@ -881,13 +893,13 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LEAContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(79);
-				match(T__10);
-				setState(80);
-				varName();
 				setState(81);
-				match(T__4);
+				match(T__10);
 				setState(82);
+				varName();
+				setState(83);
+				match(T__4);
+				setState(84);
 				varName();
 				}
 				break;
@@ -895,17 +907,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new ADDContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(84);
-				match(T__11);
-				setState(85);
-				varName();
 				setState(86);
-				match(T__4);
+				match(T__11);
 				setState(87);
 				varName();
 				setState(88);
 				match(T__4);
 				setState(89);
+				varName();
+				setState(90);
+				match(T__4);
+				setState(91);
 				varName();
 				}
 				break;
@@ -913,17 +925,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new SUBContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(91);
-				match(T__12);
-				setState(92);
-				varName();
 				setState(93);
-				match(T__4);
+				match(T__12);
 				setState(94);
 				varName();
 				setState(95);
 				match(T__4);
 				setState(96);
+				varName();
+				setState(97);
+				match(T__4);
+				setState(98);
 				varName();
 				}
 				break;
@@ -931,17 +943,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new MULContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(98);
-				match(T__13);
-				setState(99);
-				varName();
 				setState(100);
-				match(T__4);
+				match(T__13);
 				setState(101);
 				varName();
 				setState(102);
 				match(T__4);
 				setState(103);
+				varName();
+				setState(104);
+				match(T__4);
+				setState(105);
 				varName();
 				}
 				break;
@@ -949,17 +961,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new DIVContext(_localctx);
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(105);
-				match(T__14);
-				setState(106);
-				varName();
 				setState(107);
-				match(T__4);
+				match(T__14);
 				setState(108);
 				varName();
 				setState(109);
 				match(T__4);
 				setState(110);
+				varName();
+				setState(111);
+				match(T__4);
+				setState(112);
 				varName();
 				}
 				break;
@@ -967,17 +979,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new MODContext(_localctx);
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(112);
-				match(T__15);
-				setState(113);
-				varName();
 				setState(114);
-				match(T__4);
+				match(T__15);
 				setState(115);
 				varName();
 				setState(116);
 				match(T__4);
 				setState(117);
+				varName();
+				setState(118);
+				match(T__4);
+				setState(119);
 				varName();
 				}
 				break;
@@ -985,17 +997,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LTContext(_localctx);
 				enterOuterAlt(_localctx, 11);
 				{
-				setState(119);
-				match(T__16);
-				setState(120);
-				varName();
 				setState(121);
-				match(T__4);
+				match(T__16);
 				setState(122);
 				varName();
 				setState(123);
 				match(T__4);
 				setState(124);
+				varName();
+				setState(125);
+				match(T__4);
+				setState(126);
 				varName();
 				}
 				break;
@@ -1003,17 +1015,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LEContext(_localctx);
 				enterOuterAlt(_localctx, 12);
 				{
-				setState(126);
-				match(T__17);
-				setState(127);
-				varName();
 				setState(128);
-				match(T__4);
+				match(T__17);
 				setState(129);
 				varName();
 				setState(130);
 				match(T__4);
 				setState(131);
+				varName();
+				setState(132);
+				match(T__4);
+				setState(133);
 				varName();
 				}
 				break;
@@ -1021,17 +1033,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new GEContext(_localctx);
 				enterOuterAlt(_localctx, 13);
 				{
-				setState(133);
-				match(T__18);
-				setState(134);
-				varName();
 				setState(135);
-				match(T__4);
+				match(T__18);
 				setState(136);
 				varName();
 				setState(137);
 				match(T__4);
 				setState(138);
+				varName();
+				setState(139);
+				match(T__4);
+				setState(140);
 				varName();
 				}
 				break;
@@ -1039,17 +1051,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new GTContext(_localctx);
 				enterOuterAlt(_localctx, 14);
 				{
-				setState(140);
-				match(T__19);
-				setState(141);
-				varName();
 				setState(142);
-				match(T__4);
+				match(T__19);
 				setState(143);
 				varName();
 				setState(144);
 				match(T__4);
 				setState(145);
+				varName();
+				setState(146);
+				match(T__4);
+				setState(147);
 				varName();
 				}
 				break;
@@ -1057,17 +1069,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new EQContext(_localctx);
 				enterOuterAlt(_localctx, 15);
 				{
-				setState(147);
-				match(T__20);
-				setState(148);
-				varName();
 				setState(149);
-				match(T__4);
+				match(T__20);
 				setState(150);
 				varName();
 				setState(151);
 				match(T__4);
 				setState(152);
+				varName();
+				setState(153);
+				match(T__4);
+				setState(154);
 				varName();
 				}
 				break;
@@ -1075,17 +1087,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new NEContext(_localctx);
 				enterOuterAlt(_localctx, 16);
 				{
-				setState(154);
-				match(T__21);
-				setState(155);
-				varName();
 				setState(156);
-				match(T__4);
+				match(T__21);
 				setState(157);
 				varName();
 				setState(158);
 				match(T__4);
 				setState(159);
+				varName();
+				setState(160);
+				match(T__4);
+				setState(161);
 				varName();
 				}
 				break;
@@ -1093,17 +1105,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LANDContext(_localctx);
 				enterOuterAlt(_localctx, 17);
 				{
-				setState(161);
-				match(T__22);
-				setState(162);
-				varName();
 				setState(163);
-				match(T__4);
+				match(T__22);
 				setState(164);
 				varName();
 				setState(165);
 				match(T__4);
 				setState(166);
+				varName();
+				setState(167);
+				match(T__4);
+				setState(168);
 				varName();
 				}
 				break;
@@ -1111,17 +1123,17 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LORContext(_localctx);
 				enterOuterAlt(_localctx, 18);
 				{
-				setState(168);
-				match(T__23);
-				setState(169);
-				varName();
 				setState(170);
-				match(T__4);
+				match(T__23);
 				setState(171);
 				varName();
 				setState(172);
 				match(T__4);
 				setState(173);
+				varName();
+				setState(174);
+				match(T__4);
+				setState(175);
 				varName();
 				}
 				break;
@@ -1129,13 +1141,13 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LNOTContext(_localctx);
 				enterOuterAlt(_localctx, 19);
 				{
-				setState(175);
-				match(T__24);
-				setState(176);
-				varName();
 				setState(177);
-				match(T__4);
+				match(T__24);
 				setState(178);
+				varName();
+				setState(179);
+				match(T__4);
+				setState(180);
 				varName();
 				}
 				break;
@@ -1143,13 +1155,13 @@ public class j8086cInterParser extends Parser {
 				_localctx = new JNZContext(_localctx);
 				enterOuterAlt(_localctx, 20);
 				{
-				setState(180);
-				match(T__25);
-				setState(181);
-				varName();
 				setState(182);
-				match(T__4);
+				match(T__25);
 				setState(183);
+				varName();
+				setState(184);
+				match(T__4);
+				setState(185);
 				match(LBL);
 				}
 				break;
@@ -1157,13 +1169,13 @@ public class j8086cInterParser extends Parser {
 				_localctx = new JZContext(_localctx);
 				enterOuterAlt(_localctx, 21);
 				{
-				setState(185);
-				match(T__26);
-				setState(186);
-				varName();
 				setState(187);
-				match(T__4);
+				match(T__26);
 				setState(188);
+				varName();
+				setState(189);
+				match(T__4);
+				setState(190);
 				match(LBL);
 				}
 				break;
@@ -1171,9 +1183,9 @@ public class j8086cInterParser extends Parser {
 				_localctx = new JMPContext(_localctx);
 				enterOuterAlt(_localctx, 22);
 				{
-				setState(190);
+				setState(192);
 				match(T__27);
-				setState(191);
+				setState(193);
 				match(LBL);
 				}
 				break;
@@ -1181,23 +1193,23 @@ public class j8086cInterParser extends Parser {
 				_localctx = new CALLContext(_localctx);
 				enterOuterAlt(_localctx, 23);
 				{
-				setState(192);
+				setState(194);
 				match(T__28);
-				setState(193);
+				setState(195);
 				match(IDENTIFIER);
-				setState(198);
+				setState(200);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==T__4) {
 					{
 					{
-					setState(194);
+					setState(196);
 					match(T__4);
-					setState(195);
+					setState(197);
 					varName();
 					}
 					}
-					setState(200);
+					setState(202);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -1207,9 +1219,9 @@ public class j8086cInterParser extends Parser {
 				_localctx = new RETContext(_localctx);
 				enterOuterAlt(_localctx, 24);
 				{
-				setState(201);
+				setState(203);
 				match(T__29);
-				setState(202);
+				setState(204);
 				varName();
 				}
 				break;
@@ -1217,9 +1229,9 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LABELContext(_localctx);
 				enterOuterAlt(_localctx, 25);
 				{
-				setState(203);
+				setState(205);
 				match(LBL);
-				setState(204);
+				setState(206);
 				match(T__30);
 				}
 				break;
@@ -1227,7 +1239,7 @@ public class j8086cInterParser extends Parser {
 				_localctx = new LocalVarDeclContext(_localctx);
 				enterOuterAlt(_localctx, 26);
 				{
-				setState(205);
+				setState(207);
 				varDecl();
 				}
 				break;
@@ -1247,71 +1259,72 @@ public class j8086cInterParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3>\u00d3\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3?\u00d5\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\3\2\3\2\3\3\3\3\7\3"+
-		"\26\n\3\f\3\16\3\31\13\3\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
-		"\5\3\6\3\6\6\6)\n\6\r\6\16\6*\3\7\3\7\3\7\7\7\60\n\7\f\7\16\7\63\13\7"+
-		"\3\7\3\7\3\b\3\b\3\b\3\b\5\b;\n\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
-		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
+		"\26\n\3\f\3\16\3\31\13\3\3\4\3\4\3\4\5\4\36\n\4\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\3\5\3\5\3\6\3\6\6\6+\n\6\r\6\16\6,\3\7\3\7\3\7\7\7\62\n\7\f\7\16"+
+		"\7\65\13\7\3\7\3\7\3\b\3\b\3\b\3\b\5\b=\n\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
 		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
 		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
 		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
 		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
 		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
 		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3"+
-		"\b\3\b\3\b\3\b\3\b\3\b\3\b\7\b\u00c7\n\b\f\b\16\b\u00ca\13\b\3\b\3\b\3"+
-		"\b\3\b\3\b\5\b\u00d1\n\b\3\b\2\2\t\2\4\6\b\n\f\16\2\4\3\2%(\3\2\"$\2\u00e9"+
-		"\2\20\3\2\2\2\4\23\3\2\2\2\6\32\3\2\2\2\b\35\3\2\2\2\n&\3\2\2\2\f,\3\2"+
-		"\2\2\16\u00d0\3\2\2\2\20\21\5\4\3\2\21\22\5\n\6\2\22\3\3\2\2\2\23\27\7"+
-		")\2\2\24\26\5\6\4\2\25\24\3\2\2\2\26\31\3\2\2\2\27\25\3\2\2\2\27\30\3"+
-		"\2\2\2\30\5\3\2\2\2\31\27\3\2\2\2\32\33\7+\2\2\33\34\5\b\5\2\34\7\3\2"+
-		"\2\2\35\36\7\3\2\2\36\37\t\2\2\2\37 \t\3\2\2 !\7\4\2\2!\"\7<\2\2\"#\7"+
-		"\5\2\2#$\7;\2\2$%\7\3\2\2%\t\3\2\2\2&(\7*\2\2\')\5\f\7\2(\'\3\2\2\2)*"+
-		"\3\2\2\2*(\3\2\2\2*+\3\2\2\2+\13\3\2\2\2,-\7,\2\2-\61\7;\2\2.\60\5\16"+
-		"\b\2/.\3\2\2\2\60\63\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\64\3\2\2\2\63"+
-		"\61\3\2\2\2\64\65\7-\2\2\65\r\3\2\2\2\66\67\7\6\2\2\678\5\b\5\28:\7\7"+
-		"\2\29;\7\60\2\2:9\3\2\2\2:;\3\2\2\2;<\3\2\2\2<=\7<\2\2=\u00d1\3\2\2\2"+
-		">?\7\b\2\2?@\5\b\5\2@A\7\7\2\2AB\5\b\5\2B\u00d1\3\2\2\2CD\7\t\2\2DE\5"+
-		"\b\5\2EF\7\7\2\2FG\7\n\2\2GH\5\b\5\2HI\7\13\2\2I\u00d1\3\2\2\2JK\7\f\2"+
-		"\2KL\7\n\2\2LM\5\b\5\2MN\7\13\2\2NO\7\7\2\2OP\5\b\5\2P\u00d1\3\2\2\2Q"+
-		"R\7\r\2\2RS\5\b\5\2ST\7\7\2\2TU\5\b\5\2U\u00d1\3\2\2\2VW\7\16\2\2WX\5"+
-		"\b\5\2XY\7\7\2\2YZ\5\b\5\2Z[\7\7\2\2[\\\5\b\5\2\\\u00d1\3\2\2\2]^\7\17"+
-		"\2\2^_\5\b\5\2_`\7\7\2\2`a\5\b\5\2ab\7\7\2\2bc\5\b\5\2c\u00d1\3\2\2\2"+
-		"de\7\20\2\2ef\5\b\5\2fg\7\7\2\2gh\5\b\5\2hi\7\7\2\2ij\5\b\5\2j\u00d1\3"+
-		"\2\2\2kl\7\21\2\2lm\5\b\5\2mn\7\7\2\2no\5\b\5\2op\7\7\2\2pq\5\b\5\2q\u00d1"+
-		"\3\2\2\2rs\7\22\2\2st\5\b\5\2tu\7\7\2\2uv\5\b\5\2vw\7\7\2\2wx\5\b\5\2"+
-		"x\u00d1\3\2\2\2yz\7\23\2\2z{\5\b\5\2{|\7\7\2\2|}\5\b\5\2}~\7\7\2\2~\177"+
-		"\5\b\5\2\177\u00d1\3\2\2\2\u0080\u0081\7\24\2\2\u0081\u0082\5\b\5\2\u0082"+
-		"\u0083\7\7\2\2\u0083\u0084\5\b\5\2\u0084\u0085\7\7\2\2\u0085\u0086\5\b"+
-		"\5\2\u0086\u00d1\3\2\2\2\u0087\u0088\7\25\2\2\u0088\u0089\5\b\5\2\u0089"+
-		"\u008a\7\7\2\2\u008a\u008b\5\b\5\2\u008b\u008c\7\7\2\2\u008c\u008d\5\b"+
-		"\5\2\u008d\u00d1\3\2\2\2\u008e\u008f\7\26\2\2\u008f\u0090\5\b\5\2\u0090"+
-		"\u0091\7\7\2\2\u0091\u0092\5\b\5\2\u0092\u0093\7\7\2\2\u0093\u0094\5\b"+
-		"\5\2\u0094\u00d1\3\2\2\2\u0095\u0096\7\27\2\2\u0096\u0097\5\b\5\2\u0097"+
-		"\u0098\7\7\2\2\u0098\u0099\5\b\5\2\u0099\u009a\7\7\2\2\u009a\u009b\5\b"+
-		"\5\2\u009b\u00d1\3\2\2\2\u009c\u009d\7\30\2\2\u009d\u009e\5\b\5\2\u009e"+
-		"\u009f\7\7\2\2\u009f\u00a0\5\b\5\2\u00a0\u00a1\7\7\2\2\u00a1\u00a2\5\b"+
-		"\5\2\u00a2\u00d1\3\2\2\2\u00a3\u00a4\7\31\2\2\u00a4\u00a5\5\b\5\2\u00a5"+
-		"\u00a6\7\7\2\2\u00a6\u00a7\5\b\5\2\u00a7\u00a8\7\7\2\2\u00a8\u00a9\5\b"+
-		"\5\2\u00a9\u00d1\3\2\2\2\u00aa\u00ab\7\32\2\2\u00ab\u00ac\5\b\5\2\u00ac"+
-		"\u00ad\7\7\2\2\u00ad\u00ae\5\b\5\2\u00ae\u00af\7\7\2\2\u00af\u00b0\5\b"+
-		"\5\2\u00b0\u00d1\3\2\2\2\u00b1\u00b2\7\33\2\2\u00b2\u00b3\5\b\5\2\u00b3"+
-		"\u00b4\7\7\2\2\u00b4\u00b5\5\b\5\2\u00b5\u00d1\3\2\2\2\u00b6\u00b7\7\34"+
-		"\2\2\u00b7\u00b8\5\b\5\2\u00b8\u00b9\7\7\2\2\u00b9\u00ba\7.\2\2\u00ba"+
-		"\u00d1\3\2\2\2\u00bb\u00bc\7\35\2\2\u00bc\u00bd\5\b\5\2\u00bd\u00be\7"+
-		"\7\2\2\u00be\u00bf\7.\2\2\u00bf\u00d1\3\2\2\2\u00c0\u00c1\7\36\2\2\u00c1"+
-		"\u00d1\7.\2\2\u00c2\u00c3\7\37\2\2\u00c3\u00c8\7;\2\2\u00c4\u00c5\7\7"+
-		"\2\2\u00c5\u00c7\5\b\5\2\u00c6\u00c4\3\2\2\2\u00c7\u00ca\3\2\2\2\u00c8"+
-		"\u00c6\3\2\2\2\u00c8\u00c9\3\2\2\2\u00c9\u00d1\3\2\2\2\u00ca\u00c8\3\2"+
-		"\2\2\u00cb\u00cc\7 \2\2\u00cc\u00d1\5\b\5\2\u00cd\u00ce\7.\2\2\u00ce\u00d1"+
-		"\7!\2\2\u00cf\u00d1\5\6\4\2\u00d0\66\3\2\2\2\u00d0>\3\2\2\2\u00d0C\3\2"+
-		"\2\2\u00d0J\3\2\2\2\u00d0Q\3\2\2\2\u00d0V\3\2\2\2\u00d0]\3\2\2\2\u00d0"+
-		"d\3\2\2\2\u00d0k\3\2\2\2\u00d0r\3\2\2\2\u00d0y\3\2\2\2\u00d0\u0080\3\2"+
-		"\2\2\u00d0\u0087\3\2\2\2\u00d0\u008e\3\2\2\2\u00d0\u0095\3\2\2\2\u00d0"+
-		"\u009c\3\2\2\2\u00d0\u00a3\3\2\2\2\u00d0\u00aa\3\2\2\2\u00d0\u00b1\3\2"+
-		"\2\2\u00d0\u00b6\3\2\2\2\u00d0\u00bb\3\2\2\2\u00d0\u00c0\3\2\2\2\u00d0"+
-		"\u00c2\3\2\2\2\u00d0\u00cb\3\2\2\2\u00d0\u00cd\3\2\2\2\u00d0\u00cf\3\2"+
-		"\2\2\u00d1\17\3\2\2\2\b\27*\61:\u00c8\u00d0";
+		"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b"+
+		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\7\b\u00c9\n\b\f\b\16\b\u00cc\13\b"+
+		"\3\b\3\b\3\b\3\b\3\b\5\b\u00d3\n\b\3\b\2\2\t\2\4\6\b\n\f\16\2\4\3\2%("+
+		"\3\2\"$\2\u00ec\2\20\3\2\2\2\4\23\3\2\2\2\6\32\3\2\2\2\b\37\3\2\2\2\n"+
+		"(\3\2\2\2\f.\3\2\2\2\16\u00d2\3\2\2\2\20\21\5\4\3\2\21\22\5\n\6\2\22\3"+
+		"\3\2\2\2\23\27\7)\2\2\24\26\5\6\4\2\25\24\3\2\2\2\26\31\3\2\2\2\27\25"+
+		"\3\2\2\2\27\30\3\2\2\2\30\5\3\2\2\2\31\27\3\2\2\2\32\33\7+\2\2\33\35\5"+
+		"\b\5\2\34\36\7<\2\2\35\34\3\2\2\2\35\36\3\2\2\2\36\7\3\2\2\2\37 \7\3\2"+
+		"\2 !\t\2\2\2!\"\t\3\2\2\"#\7\4\2\2#$\7=\2\2$%\7\5\2\2%&\7;\2\2&\'\7\3"+
+		"\2\2\'\t\3\2\2\2(*\7*\2\2)+\5\f\7\2*)\3\2\2\2+,\3\2\2\2,*\3\2\2\2,-\3"+
+		"\2\2\2-\13\3\2\2\2./\7,\2\2/\63\7;\2\2\60\62\5\16\b\2\61\60\3\2\2\2\62"+
+		"\65\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\66\3\2\2\2\65\63\3\2\2\2\66"+
+		"\67\7-\2\2\67\r\3\2\2\289\7\6\2\29:\5\b\5\2:<\7\7\2\2;=\7\60\2\2<;\3\2"+
+		"\2\2<=\3\2\2\2=>\3\2\2\2>?\7=\2\2?\u00d3\3\2\2\2@A\7\b\2\2AB\5\b\5\2B"+
+		"C\7\7\2\2CD\5\b\5\2D\u00d3\3\2\2\2EF\7\t\2\2FG\5\b\5\2GH\7\7\2\2HI\7\n"+
+		"\2\2IJ\5\b\5\2JK\7\13\2\2K\u00d3\3\2\2\2LM\7\f\2\2MN\7\n\2\2NO\5\b\5\2"+
+		"OP\7\13\2\2PQ\7\7\2\2QR\5\b\5\2R\u00d3\3\2\2\2ST\7\r\2\2TU\5\b\5\2UV\7"+
+		"\7\2\2VW\5\b\5\2W\u00d3\3\2\2\2XY\7\16\2\2YZ\5\b\5\2Z[\7\7\2\2[\\\5\b"+
+		"\5\2\\]\7\7\2\2]^\5\b\5\2^\u00d3\3\2\2\2_`\7\17\2\2`a\5\b\5\2ab\7\7\2"+
+		"\2bc\5\b\5\2cd\7\7\2\2de\5\b\5\2e\u00d3\3\2\2\2fg\7\20\2\2gh\5\b\5\2h"+
+		"i\7\7\2\2ij\5\b\5\2jk\7\7\2\2kl\5\b\5\2l\u00d3\3\2\2\2mn\7\21\2\2no\5"+
+		"\b\5\2op\7\7\2\2pq\5\b\5\2qr\7\7\2\2rs\5\b\5\2s\u00d3\3\2\2\2tu\7\22\2"+
+		"\2uv\5\b\5\2vw\7\7\2\2wx\5\b\5\2xy\7\7\2\2yz\5\b\5\2z\u00d3\3\2\2\2{|"+
+		"\7\23\2\2|}\5\b\5\2}~\7\7\2\2~\177\5\b\5\2\177\u0080\7\7\2\2\u0080\u0081"+
+		"\5\b\5\2\u0081\u00d3\3\2\2\2\u0082\u0083\7\24\2\2\u0083\u0084\5\b\5\2"+
+		"\u0084\u0085\7\7\2\2\u0085\u0086\5\b\5\2\u0086\u0087\7\7\2\2\u0087\u0088"+
+		"\5\b\5\2\u0088\u00d3\3\2\2\2\u0089\u008a\7\25\2\2\u008a\u008b\5\b\5\2"+
+		"\u008b\u008c\7\7\2\2\u008c\u008d\5\b\5\2\u008d\u008e\7\7\2\2\u008e\u008f"+
+		"\5\b\5\2\u008f\u00d3\3\2\2\2\u0090\u0091\7\26\2\2\u0091\u0092\5\b\5\2"+
+		"\u0092\u0093\7\7\2\2\u0093\u0094\5\b\5\2\u0094\u0095\7\7\2\2\u0095\u0096"+
+		"\5\b\5\2\u0096\u00d3\3\2\2\2\u0097\u0098\7\27\2\2\u0098\u0099\5\b\5\2"+
+		"\u0099\u009a\7\7\2\2\u009a\u009b\5\b\5\2\u009b\u009c\7\7\2\2\u009c\u009d"+
+		"\5\b\5\2\u009d\u00d3\3\2\2\2\u009e\u009f\7\30\2\2\u009f\u00a0\5\b\5\2"+
+		"\u00a0\u00a1\7\7\2\2\u00a1\u00a2\5\b\5\2\u00a2\u00a3\7\7\2\2\u00a3\u00a4"+
+		"\5\b\5\2\u00a4\u00d3\3\2\2\2\u00a5\u00a6\7\31\2\2\u00a6\u00a7\5\b\5\2"+
+		"\u00a7\u00a8\7\7\2\2\u00a8\u00a9\5\b\5\2\u00a9\u00aa\7\7\2\2\u00aa\u00ab"+
+		"\5\b\5\2\u00ab\u00d3\3\2\2\2\u00ac\u00ad\7\32\2\2\u00ad\u00ae\5\b\5\2"+
+		"\u00ae\u00af\7\7\2\2\u00af\u00b0\5\b\5\2\u00b0\u00b1\7\7\2\2\u00b1\u00b2"+
+		"\5\b\5\2\u00b2\u00d3\3\2\2\2\u00b3\u00b4\7\33\2\2\u00b4\u00b5\5\b\5\2"+
+		"\u00b5\u00b6\7\7\2\2\u00b6\u00b7\5\b\5\2\u00b7\u00d3\3\2\2\2\u00b8\u00b9"+
+		"\7\34\2\2\u00b9\u00ba\5\b\5\2\u00ba\u00bb\7\7\2\2\u00bb\u00bc\7.\2\2\u00bc"+
+		"\u00d3\3\2\2\2\u00bd\u00be\7\35\2\2\u00be\u00bf\5\b\5\2\u00bf\u00c0\7"+
+		"\7\2\2\u00c0\u00c1\7.\2\2\u00c1\u00d3\3\2\2\2\u00c2\u00c3\7\36\2\2\u00c3"+
+		"\u00d3\7.\2\2\u00c4\u00c5\7\37\2\2\u00c5\u00ca\7;\2\2\u00c6\u00c7\7\7"+
+		"\2\2\u00c7\u00c9\5\b\5\2\u00c8\u00c6\3\2\2\2\u00c9\u00cc\3\2\2\2\u00ca"+
+		"\u00c8\3\2\2\2\u00ca\u00cb\3\2\2\2\u00cb\u00d3\3\2\2\2\u00cc\u00ca\3\2"+
+		"\2\2\u00cd\u00ce\7 \2\2\u00ce\u00d3\5\b\5\2\u00cf\u00d0\7.\2\2\u00d0\u00d3"+
+		"\7!\2\2\u00d1\u00d3\5\6\4\2\u00d28\3\2\2\2\u00d2@\3\2\2\2\u00d2E\3\2\2"+
+		"\2\u00d2L\3\2\2\2\u00d2S\3\2\2\2\u00d2X\3\2\2\2\u00d2_\3\2\2\2\u00d2f"+
+		"\3\2\2\2\u00d2m\3\2\2\2\u00d2t\3\2\2\2\u00d2{\3\2\2\2\u00d2\u0082\3\2"+
+		"\2\2\u00d2\u0089\3\2\2\2\u00d2\u0090\3\2\2\2\u00d2\u0097\3\2\2\2\u00d2"+
+		"\u009e\3\2\2\2\u00d2\u00a5\3\2\2\2\u00d2\u00ac\3\2\2\2\u00d2\u00b3\3\2"+
+		"\2\2\u00d2\u00b8\3\2\2\2\u00d2\u00bd\3\2\2\2\u00d2\u00c2\3\2\2\2\u00d2"+
+		"\u00c4\3\2\2\2\u00d2\u00cd\3\2\2\2\u00d2\u00cf\3\2\2\2\u00d2\u00d1\3\2"+
+		"\2\2\u00d3\17\3\2\2\2\t\27\35,\63<\u00ca\u00d2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

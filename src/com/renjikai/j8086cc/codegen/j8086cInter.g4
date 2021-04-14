@@ -1,7 +1,7 @@
 grammar j8086cInter; 
 program		:	dataSegment codeSegment ;
 dataSegment	:	DSEG_HEAD varDecl* ;
-varDecl		:	DECL_HEAD varName ;
+varDecl		:	DECL_HEAD varName (STRING)? ;
 varName		:	'$' scope=(GLOB_SCOPE|LOC_SCOPE|TMP_SCOPE|PARAM_SCOPE) 
 				dataType=(TYPE_UINT|TYPE_INT|TYPE_CHAR) '_'
 				INT '_@' IDENTIFIER '$' ;
@@ -34,6 +34,7 @@ statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	LBL ':'											# LABEL
 			|	varDecl											# LocalVarDecl
 			;
+
 TYPE_UINT	:	'_u' ;
 TYPE_INT	:	'_i' ;
 TYPE_CHAR	:	'_c' ;
@@ -64,7 +65,8 @@ LT			:	'<' ;
 LE			:	'<=' ;
 GE			:	'>=' ;
 GT			:	'>' ;
-IDENTIFIER	:	[a-zA-Z] ([a-zA-Z] | [0-9])* ;
+IDENTIFIER	:	[a-zA-Z] ([a-zA-Z0-9])* ;
+STRING		:	'"' ( '\\"' | . )*? '"' ;
 INT			:	[0-9]+ ;
 WS			:	[ \t\n\r]+ -> skip ;
 COMMENT		:	'//' .*? '\n' -> skip ;
