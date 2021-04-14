@@ -3,6 +3,8 @@
 `j8086cc` is a compiler of Jack's C-like High-Level Programming Language `j8086c` which generates assembly of Intel 8086.
 
 ### Version Log
+v0.2.1: `j8086cc` Added Global Char Array Initialization Support.
+
 v0.2: I'm excited to announce that now `j8086cc` starts to support header files!
 
 v0.1: Basic Implementation
@@ -29,11 +31,14 @@ The following is an example:
 #include stdio.j8086h
 #include string.j8086h
 
+char[50] str;
 int[20] arr;
+str = "Hello, World!";
 int func(int[20] array){
 	//Body of you function
 }
 int main(){
+	putstr(str);
 	func(arr);
 }
 ```
