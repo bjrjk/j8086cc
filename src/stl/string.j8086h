@@ -7,3 +7,12 @@ int strcmp(char[0] str1,char[0] str2){
 	}
 	return 0;
 }
+int strcpy(char[0] dst, char[0] src){
+	int i;
+	i=0;
+	while(src[i]!=0){
+		dst[i]=src[i];
+		i=i+1;
+	}
+	dst[i]=0;
+}

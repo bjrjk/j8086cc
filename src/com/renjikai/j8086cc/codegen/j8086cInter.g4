@@ -3,8 +3,8 @@ program		:	dataSegment codeSegment ;
 dataSegment	:	DSEG_HEAD varDecl* ;
 varDecl		:	DECL_HEAD varName (STRING)? ;
 varName		:	'$' scope=(GLOB_SCOPE|LOC_SCOPE|TMP_SCOPE|PARAM_SCOPE) 
-				dataType=(TYPE_UINT|TYPE_INT|TYPE_CHAR) '_'
-				INT '_@' IDENTIFIER '$' ;
+				dataType=(TYPE_UINT|TYPE_INT|TYPE_CHAR) '-'
+				INT '-@' IDENTIFIER '$' ;
 codeSegment	:	CSEG_HEAD function+ ;
 function	:	FUNC_HEAD IDENTIFIER statement* FUNC_TAIL ;
 statement	:	'movi' varName ',' SUB? INT						# MOVI
@@ -35,9 +35,9 @@ statement	:	'movi' varName ',' SUB? INT						# MOVI
 			|	varDecl											# LocalVarDecl
 			;
 
-TYPE_UINT	:	'_u' ;
-TYPE_INT	:	'_i' ;
-TYPE_CHAR	:	'_c' ;
+TYPE_UINT	:	'-u' ;
+TYPE_INT	:	'-i' ;
+TYPE_CHAR	:	'-c' ;
 
 GLOB_SCOPE	:	'GLOBALVAR' ;
 LOC_SCOPE	:	'LOCALVAR' ;
@@ -65,7 +65,7 @@ LT			:	'<' ;
 LE			:	'<=' ;
 GE			:	'>=' ;
 GT			:	'>' ;
-IDENTIFIER	:	[a-zA-Z] ([a-zA-Z0-9])* ;
+IDENTIFIER	:	[a-zA-Z_] ([a-zA-Z0-9_])* ;
 STRING		:	'"' ( '\\"' | . )*? '"' ;
 INT			:	[0-9]+ ;
 WS			:	[ \t\n\r]+ -> skip ;

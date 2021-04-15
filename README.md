@@ -3,6 +3,16 @@
 `j8086cc` is a compiler of Jack's C-like High-Level Programming Language `j8086c` which generates assembly of Intel 8086.
 
 ### Version Log
+v0.3: I'm excited to announce the new v0.3 version has the following improvement:
+
+Fixed a major bug in If Syntax Semantic Analysis
+
+Identifier starts to support underline
+
+Changed part of function names in standard library
+
+Perfect the functionality of standard library
+
 v0.2.1: `j8086cc` Added Global Char Array Initialization Support.
 
 v0.2: I'm excited to announce that now `j8086cc` starts to support header files!

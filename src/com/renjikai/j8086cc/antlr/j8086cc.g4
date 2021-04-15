@@ -52,7 +52,7 @@ GT			:	'>' ;
 ASSIGN		:	'=' ;
 LAND		:	'&&' ;
 LOR			:	'||' ;
-IDENTIFIER	:	[a-zA-Z] ([a-zA-Z0-9])* ;
+IDENTIFIER	:	[a-zA-Z_] ([a-zA-Z0-9_])* ;
 STRING		:	'"' ( '\\"' | . )*? '"' ;
 INT			:	[0-9]+ ;
 WS			:	[ \t\n\r]+ -> skip ;

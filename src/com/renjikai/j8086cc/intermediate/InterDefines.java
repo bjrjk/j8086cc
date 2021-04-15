@@ -2,12 +2,12 @@ package com.renjikai.j8086cc.intermediate;
 
 public class InterDefines {
 	// DataType(u,i,c), AllocateSize, VarName
-	public final static String varTypeFormat = "%c_%d_@%s";
-	public final static String varTmpTypeFormat = "%c_%d_@t%s";
-	public final static String tmpVarFormat = "$TMPVAR_%s$";
-	public final static String localVarFormat = "$LOCALVAR_%s$";
-	public final static String paramVarFormat = "$PARAMVAR_%s$";
-	public final static String globalVarFormat = "$GLOBALVAR_%s$";
+	public final static String varTypeFormat = "%c-%d-@%s";
+	public final static String varTmpTypeFormat = "%c-%d-@t%s";
+	public final static String tmpVarFormat = "$TMPVAR-%s$";
+	public final static String localVarFormat = "$LOCALVAR-%s$";
+	public final static String paramVarFormat = "$PARAMVAR-%s$";
+	public final static String globalVarFormat = "$GLOBALVAR-%s$";
 	public final static int stackDataSize = 2;
 
 	public final static String DSEG_HEAD = ".data";

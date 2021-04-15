@@ -1,8 +1,8 @@
-int isNumeric(int ASCII){
+int isdigit(int ASCII){
 	if(48<=ASCII&&ASCII<=57)return 1;
 	else return 0;
 }
-int isBlank(int ASCII){
+int isspace(int ASCII){
 	if(ASCII==10||ASCII==13||ASCII==32)return 1;
 	else return 0;
 }

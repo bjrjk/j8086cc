@@ -1,12 +1,49 @@
 #include ctype.j8086h
 
-uint getuint(){
-	int num,flag,c;
-	num=0;flag=0;
+int getint(){
+	int num, c;
+	int flag, neg;
+	num=0; flag=0; neg=0;
 	while(1){
 		c=getchar();
-		if(isNumeric(c))flag=1;
-		if(!isNumeric(c)){
+		if(isdigit(c) || c==45)
+			flag=1;
+		else{
+			if(flag==1)break;
+			else continue;
+		}
+		if(c==45){
+			neg=1;
+			continue;
+		}
+		num=num*10;
+		num=num+(c-48);
+	}
+	if(neg==0)
+		return num;
+	else
+		return -num;
+}
+int putint(int x){
+	if(x==0){
+		putchar(48);
+		return 0;
+	}
+	if(x<0){
+		x=-x;
+		putchar(45);
+	}
+	putuint_rec(x);
+}
+uint getuint(){
+	uint num;
+	int flag,c;
+	num=0; flag=0;
+	while(1){
+		c=getchar();
+		if(isdigit(c))
+			flag=1;
+		else{
 			if(flag==1)break;
 			else continue;
 		}
@@ -15,27 +52,28 @@ uint getuint(){
 	}
 	return num;
 }
-int putuintRec(int x){
+int putuint_rec(uint x){
 	if(x==0)return 0;
 	int tmp;
 	tmp=x%10;
-	putuintRec(x/10);
+	putuint_rec(x/10);
 	putchar(tmp+48);
 }
-int putuint(int x){
+int putuint(uint x){
 	if(x==0){
 		putchar(48);
 		return 0;
 	}
-	putuintRec(x);
+	putuint_rec(x);
 }
 int getstr(char[0] storage,int size){
 	int i,flag,c;
 	i=0;flag=0;
 	while(i<size){
 		c=getchar();
-		if(!isBlank(c))flag=1;
-		if(isBlank(c)){
+		if(!isspace(c))
+			flag=1;
+		else{
 			if(flag==1)break;
 			else continue;
 		}
@@ -52,6 +90,22 @@ int putstr(char[0] storage){
 		i=i+1;
 	}
 }
+int getline(char[0] storage,int size){
+	int i,flag,c;
+	i=0;flag=0;
+	while(i<size){
+		c=getchar();
+		if(c==13)
+			break;
+		storage[i]=c;
+		i=i+1;
+	}
+	storage[i]=0;
+}
+int putline(char[0] storage){
+	putstr(storage);
+	putln();
+}
 int putspace(){
 	putchar(32);
 }
@@ -59,19 +113,19 @@ int putln(){
 	putchar(13);
 	putchar(10);
 }
-int getuintarray(int[0] arr,int size){
+int getintarray(int[0] arr,int size){
 	int i;
 	i=0;
 	while(i<size){
-		arr[i]=getuint();
+		arr[i]=getint();
 		i=i+1;
 	}
 }
-int putuintarray(int[0] arr,int size){
+int putintarray(int[0] arr,int size){
 	int i;
 	i=0;
 	while(i<size){
-		putuint(arr[i]);
+		putint(arr[i]);
 		putspace();
 		i=i+1;
 	}

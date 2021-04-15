@@ -154,14 +154,18 @@ public class SyntaxTreeVisitor extends j8086ccBaseVisitor<String> {
 		String condition = visit(ctx.expr());
 		Symbol exprResult = exprSymbol.get(ctx.expr());
 		int elseLabel = lblCnter.getNewID();
-		String jmpLbl = String.format(InterDefines.LABEL, elseLabel) + "\n";
+		int finishLabel = lblCnter.getNewID();
 		CtlBeforeLabel.put(ctx, elseLabel);
+		CtlAfterLabel.put(ctx, finishLabel);
+		String jmpLbl = String.format(InterDefines.LABEL, elseLabel) + "\n";
 		String jmpIns = String.format(InterDefines.JZ, exprResult.toString(), elseLabel) + "\n";
 		String thenStmt = visit(ctx.statement(0));
+		String thenJmpIns = String.format(InterDefines.JMP, finishLabel) + "\n";
 		String elseStmt = "";
 		if (ctx.statement().size() != 1)
 			elseStmt = visit(ctx.statement(1));
-		return condition + jmpIns + thenStmt + jmpLbl + elseStmt;
+		String finishLbl = String.format(InterDefines.LABEL, finishLabel) + "\n";
+		return condition + jmpIns + thenStmt + thenJmpIns + jmpLbl + elseStmt + finishLbl;
 	}
 
 	@Override

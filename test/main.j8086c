@@ -16,29 +16,29 @@ promptOutputArrElem = "Sorted Array in ascending order: ";
 promptStrcmpResult = "strcmp Result: ";
 int main(){
 	int x,y,n;
-	
+	//do integer calculation
 	putstr(promptInputInt);
-	x=getuint(); y=getuint();
+	x=getint(); y=getint();
 	putstr(promptOutputOp);
-	putuint(x+y); putspace();
-	putuint(x-y); putspace();
-	putuint(x*y); putspace();
-	putuint(x/y); putspace();
+	putint(x+y); putspace();
+	putint(x-y); putspace();
+	putint(x*y); putspace();
+	putint(x/y); putspace();
 	putln();
-	
+	//get a line of string and output it
 	putstr(promptInputStr);
-	getstr(str1,50);
+	getline(str1,50);
 	putstr(promptOutputStr);
-	putstr(str1); putln();
-	
+	putline(str1);
+	//get size of array and its elements then sort and output them
 	putstr(promptInputArrN);
-	n=getuint();
+	n=getint();
 	putstr(promptInputArrElem);
-	getuintarray(arr,n);
+	getintarray(arr,n);
 	sort(arr,n);
 	putstr(promptOutputArrElem);
-	putuintarray(arr,n);
-	
+	putintarray(arr,n);
+	//do string compare
 	int i;
 	i=0;
 	while(i<2){
@@ -51,4 +51,15 @@ int main(){
 		putln();
 		i=i+1;
 	}
+	//test string copy
+	putstr(promptInputStr);
+	getstr(str1,50);
+	strcpy(str2,str1);
+	i=0;
+	while(str2[i]!=0){
+		str2[i]=str2[i]+1;
+		i=i+1;
+	}
+	putstr(promptOutputStr);
+	putline(str2);
 }
