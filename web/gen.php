@@ -15,8 +15,10 @@ fclose($f);
 $command = "java -jar j8086cc.jar $j8086cName 2>&1";
 exec($command,$message,$retcode);
 if($retcode != 0){
-	var_dump($message);
-	die("\nCompilation failed due to the above error.\n");
+	foreach ($message as $value) {
+		echo "$value \n <br> \n";
+	}
+	die("Compilation failed due to the above error. <br> \n");
 }
 
 $j8086c = file_get_contents($j8086cName);
