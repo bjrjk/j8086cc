@@ -5,19 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/clike/clike.min.js"></script>
+    <style>
+        .center {
+            text-align: center;
+        }
+    </style>
     <title>Online j8086cc Compiler</title>
 </head>
 <body>
-<div style="text-align: center;" class="container">
-    <div class="alert alert-primary" role="alert">
+<div class="container">
+    <div class="alert alert-primary center" role="alert">
         Online j8086cc Compiler
     </div>
 <form method="post" action="gen.php" role="form">
-<p>j8086c Code:</p>
-<textarea cols="80" rows="20" name="code"></textarea>
+<p class="center">j8086c Code:</p>
+<textarea cols="80" rows="20" name="code" id="code">
+#include stdio.j8086h
+#include algorithm.j8086h
+#include string.j8086h
+
+char[50] HelloWorld;
+HelloWorld = "Hello, World!";
+
+int main(){
+	putstr(HelloWorld);
+}
+</textarea>
 <br>
+<div class="center">
 <button type="submit" class="btn btn-primary">Submit</button>
+</div>
 </form>
+<div class="center">
 <p>j8086c Example Code:
 <a href="https://raw.githubusercontent.com/bjrjk/j8086cc/master/test/main.j8086c">https://raw.githubusercontent.com/bjrjk/j8086cc/master/test/main.j8086c</a>
 </p>
@@ -28,6 +50,13 @@
 <a href="https://github.com/bjrjk/j8086cc/">bjrjk/j8086cc</a>
 </p>
 <br>
-<div>
+</div>
+</div>
+<script>
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    mode: "text/x-csrc",
+    lineNumbers: true,
+});
+</script>
 </body>
 </html>
