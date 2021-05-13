@@ -1,3 +1,27 @@
+int min(int a, int b){
+  if(a<b)
+    return a;
+  return b;
+}
+
+int max(int a, int b){
+  if(a>b)
+    return a;
+  return b;
+}
+
+uint umin(uint a, uint b){
+  if(a<b)
+    return a;
+  return b;
+}
+
+uint umax(uint a, uint b){
+  if(a>b)
+    return a;
+  return b;
+}
+
 int sort(int[0] arr,int size){
 	int i,j,tmp;
 	i=0;
