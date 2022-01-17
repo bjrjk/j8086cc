@@ -1,6 +1,8 @@
 version: '2'
 services:
-  j8086cc:
+  web:
     build: .
     ports:
       - "7778:80"
+    restart: always
+    
